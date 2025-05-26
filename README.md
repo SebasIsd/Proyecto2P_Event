@@ -1,4 +1,4 @@
-# 🎉 Proyecto2P_Event 🎊  
+# 🎉 Proyecto Segundo Parcial 🎊  
 
 Este repositorio contiene el proyecto **Proyecto2P_Event**, una plataforma para la gestión de eventos. ¡Organiza tus eventos de manera fácil!  
 
