@@ -310,6 +310,8 @@ footer {
     min-width: 140px;
     display: inline-block;
 }
+
+
 /* Responsive */
 @media (max-width: 768px) {
     .profile-header {
@@ -331,6 +333,7 @@ footer {
     }
 }
 
+
 @media (max-width: 480px) {
     .profile-card {
         padding: 1.5rem;
@@ -344,4 +347,3 @@ footer {
         padding: 1.2rem;
     }
 }
-
