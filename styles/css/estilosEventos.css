@@ -78,4 +78,66 @@ button:hover {
     background-color: #664040;
 }
 
+/* ver eventos */
+.contenedor-eventos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.evento-card {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.evento-card h3 {
+  margin-top: 0;
+}
+
+form#form-editar {
+  max-width: 500px;
+  margin: 40px auto;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form#form-editar label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+form#form-editar input,
+form#form-editar textarea {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 5px;
+}
+
+form#form-editar button {
+  padding: 10px;
+  background-color: #007BFF;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+form#form-editar button:hover {
+  background-color: #0056b3;
+}
+
+
 
