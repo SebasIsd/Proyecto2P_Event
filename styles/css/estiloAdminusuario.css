@@ -10,7 +10,7 @@ h2 {
 }
 
 form {
-    background-color: #fff;
+    background-color: #6c1313;
     max-width: 600px;
     margin: 0 auto;
     padding: 25px 30px;
@@ -22,7 +22,7 @@ label {
     display: block;
     margin-top: 15px;
     font-weight: bold;
-    color:  #000000;;
+    color:  #000000;
 }
 
 input[type="text"],
@@ -38,7 +38,8 @@ input[type="date"] {
     transition: border-color 0.3s ease;
 }
 
-input[type="text"]:focus,
+
+
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="date"]:focus {
@@ -94,3 +95,12 @@ input:disabled {
     color: #888;
     cursor: not-allowed;
 }
+#ced_usu {
+  width: 300px;
+  padding: 8px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  outline: none;
+}
+
