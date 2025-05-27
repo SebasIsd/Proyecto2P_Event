@@ -14,9 +14,10 @@ body {
   padding: 30px 40px;
   border-radius: 10px;
   box-shadow: 0 0 10px #696969;
-  width: 450px;
+  width: 80%;
+  max-width: 1000px;
 }
-h2 {
+h2, h3 {
   margin-bottom: 20px;
   text-align: center;
   color: #ffffff;
@@ -45,7 +46,6 @@ select {
   color: #fff;
 }
 button {
-  width: 100%;
   background-color: #6c1313;
   border: none;
   padding: 12px;
@@ -59,12 +59,11 @@ button {
 button:hover {
   background-color: #930f0f;
 }
-.user-info, .event-section {
+.user-info {
   margin-top: 20px;
   background-color: #111;
   padding: 15px;
   border-radius: 8px;
-  display: none;
 }
 .user-info p {
   margin: 5px 0;
@@ -73,7 +72,7 @@ button:hover {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 th, td {
   border: 1px solid #696969;
@@ -83,4 +82,16 @@ th, td {
 }
 th {
   background-color: #222;
+}
+.estado-pagado {
+  color: #4CAF50;
+  font-weight: bold;
+}
+.estado-pendiente {
+  color: #FFC107;
+  font-weight: bold;
+}
+#resultados {
+  margin-top: 20px;
+  width: 100%;
 }
