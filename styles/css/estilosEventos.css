@@ -139,5 +139,35 @@ form#form-editar button:hover {
   background-color: #0056b3;
 }
 
+/* Botón de Editar */
+/* Evita heredar estilos globales */
+.evento-card .btn-editar,
+.evento-card .btn-eliminar {
+  all: unset; /* esto reinicia los estilos heredados */
+  display: block;
+  text-align: center;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
 
+/* Estilo personalizado */
+.btn-editar {
+  background-color: #28a745;
+  color: white;
+}
 
+.btn-editar:hover {
+  background-color: #218838;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #c82333;
+}
