@@ -13,7 +13,5 @@ class CConexion {
         } catch (PDOException $exp) {
         return $null;
         }
-
-        
     }
 }
