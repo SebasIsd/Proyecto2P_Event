@@ -8,10 +8,11 @@ class CConexion {
         $port = "48148";
         try {
             $conn = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $username, $password);
-
-            return $conn;
+            echo "✅ Se conectó correctamente a la base";
         } catch (PDOException $exp) {
-        return $null;
+            echo "❌ No se puede conectar a la base: $exp";
         }
+
+        return $conn;
     }
 }
