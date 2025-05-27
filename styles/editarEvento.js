@@ -2,6 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
 
+  const costoInput = document.getElementById('cos_eve_cur');
+  const modalidadSelect = document.getElementById('mod_eve_cur');
+
+  const manejarCosto = () => {
+    if (modalidadSelect.value === 'Gratis') {
+      costoInput.value = 0;
+      costoInput.disabled = true;
+    } else {
+      costoInput.disabled = false;
+    }
+  };
+
   fetch(`../admin/obtenerEventoPorId.php?id=${id}`)
     .then(res => res.json())
     .then(evento => {
@@ -13,8 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('cos_eve_cur').value = evento.cos_eve_cur;
       document.getElementById('tip_eve').value = evento.tip_eve;
       document.getElementById('mod_eve_cur').value = evento.mod_eve_cur;
+    manejarCosto();
     });
 
+     modalidadSelect.addEventListener('change', manejarCosto);
+     
   document.getElementById('form-editar').addEventListener('submit', function(e) {
     e.preventDefault();
 

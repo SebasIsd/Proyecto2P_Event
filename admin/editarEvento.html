@@ -26,9 +26,27 @@
     <label>Descripción: <textarea id="des_eve_cur"></textarea></label><br>
     <label>Fecha Inicio: <input type="date" id="fec_ini_eve_cur"></label><br>
     <label>Fecha Fin: <input type="date" id="fec_fin_eve_cur"></label><br>
-    <label>Costo: <input type="number" id="cos_eve_cur"></label><br>
-    <label>Tipo: <input type="text" id="tip_eve"></label><br>
-    <label>Modalidad: <input type="text" id="mod_eve_cur"></label><br>
+    <label>Tipo de Evento:
+  <select id="tip_eve" required>
+    <option value="">Selecciona una opción</option>
+    <option value="curso">Curso</option>
+    <option value="congreso">Congreso</option>
+    <option value="webinar">Webinar</option>
+    <option value="conferencia">Conferencia</option>
+    <option value="socializacion">Socialización</option>
+    </select>
+    </label>
+    <label>Modalidad:
+    <select id="mod_eve_cur" required>
+    <option value="">Selecciona una opción</option>
+    <option value="Gratis">Gratis</option>
+    <option value="Pagado">Pagado</option>
+    </select>
+    </label>
+    <label for="cos_eve_cur">Costo:
+  <input type="number" id="cos_eve_cur" min="0">
+</label><br>
+
     <button type="submit">Guardar Cambios</button>
   </form>
   <footer>
