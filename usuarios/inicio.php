@@ -57,15 +57,18 @@ if ($usuario = pg_fetch_assoc($result)) {
                 </p>
             </div>
             <nav>
-                <ul>
-                    <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-                    <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
-                    <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
-                    <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-                </ul>
-            </nav>
+    <ul>
+        <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+        <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+        <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
+        <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
+        <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
+        <li class="profile-link">
+            <a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
+        </li>
+        <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+    </ul>
+</nav>
         </div>
     </header>
 
