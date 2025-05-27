@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function eliminarEvento(id) {
   if (confirm('¿Estás seguro de que deseas eliminar este evento?')) {
-    fetch(`eliminarEvento.php?id=${id}`, { method: 'GET' })
+    fetch(`../admin/eliminarEvento.php?id=${id}`, { method: 'GET' })
       .then(res => res.json())
       .then(data => {
         alert(data.mensaje);
