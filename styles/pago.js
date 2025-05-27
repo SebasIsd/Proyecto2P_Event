@@ -1,10 +1,8 @@
 const buscarBtn = document.getElementById('buscarBtn');
 const cedulaInput = document.getElementById('cedula');
-const resultadosDiv = document.getElementById('resultados') || document.createElement('div');
-resultadosDiv.id = 'resultados';
-document.body.appendChild(resultadosDiv);
-
+const resultadosDiv = document.getElementById('resultados');
 const infoUsuarioDiv = document.getElementById('infoUsuario');
+
 const nombreUsuario = document.getElementById('nombreUsuario');
 const cedulaUsuario = document.getElementById('cedulaUsuario');
 const correoUsuario = document.getElementById('correoUsuario');
@@ -29,7 +27,7 @@ buscarBtn.addEventListener('click', async () => {
     });
 
     const data = await res.json();
-    
+
     if (data.error) {
       alert(data.error);
       return;
@@ -37,10 +35,10 @@ buscarBtn.addEventListener('click', async () => {
 
     // Mostrar información del usuario
     mostrarInfoUsuario(data.usuario);
-    
+
     // Mostrar inscripciones
     mostrarInscripciones(data.inscripciones);
-    
+
   } catch (error) {
     console.error('Error:', error);
     alert("Ocurrió un error al buscar la información.");
@@ -102,10 +100,14 @@ function mostrarInscripciones(inscripciones) {
               <strong>Método:</strong> ${row.metodo_pago}
             ` : 'Sin registro de pago'}
           </td>
-        </tr>`).join('')}
+        </tr>
+      `).join('')}
     </tbody>
   `;
 
+  resultadosDiv.appendChild(table);
+
+  // Crear botón Guardar Cambios
   const guardarBtn = document.createElement('button');
   guardarBtn.textContent = "Guardar Cambios";
   guardarBtn.addEventListener('click', async () => {
@@ -113,34 +115,41 @@ function mostrarInscripciones(inscripciones) {
     for (let fila of filas) {
       const id = fila.getAttribute('data-id');
       const nuevoEstado = fila.querySelector('.estadoSelect').value;
+      const estadoActual = fila.querySelector('.estado').textContent.trim();
 
-      const formData = new FormData();
-      formData.append('accion', 'actualizar');
-      formData.append('id_inscripcion', id);
-      formData.append('estado_pago', nuevoEstado);
+      if (nuevoEstado !== estadoActual) {
+        const formData = new FormData();
+        formData.append('accion', 'actualizar');
+        formData.append('id_inscripcion', id);
+        formData.append('estado_pago', nuevoEstado);
 
-      try {
-        const res = await fetch('conexion/pagos.php', {
-          method: 'POST',
-          body: formData
-        });
-        
-        const data = await res.json();
-        
-        if (data.success) {
-          const estadoCell = fila.querySelector('.estado');
-          estadoCell.textContent = nuevoEstado;
-          estadoCell.className = `estado ${nuevoEstado === 'Pagado' ? 'estado-pagado' : 'estado-pendiente'}`;
+        try {
+          const res = await fetch('conexion/pagos.php', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await res.json();
+
+          if (result.success) {
+            // Actualizar visualmente el estado
+            const estadoCelda = fila.querySelector('.estado');
+            estadoCelda.textContent = nuevoEstado;
+            estadoCelda.className = `estado ${nuevoEstado === 'Pagado' ? 'estado-pagado' : 'estado-pendiente'}`;
+          } else {
+            alert(`Error al actualizar inscripción ${id}`);
+          }
+        } catch (error) {
+          console.error('Error al guardar:', error);
+          alert(`Error al actualizar inscripción ${id}`);
         }
-      } catch (error) {
-        console.error('Error al actualizar:', error);
       }
     }
 
-    alert("✅ Cambios guardados correctamente.");
+    alert('Cambios guardados correctamente.');
   });
 
-  resultadosDiv.appendChild(table);
   resultadosDiv.appendChild(guardarBtn);
 }
+
 
