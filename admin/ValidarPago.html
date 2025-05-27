@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verificar Pagos</title>
+  <link rel="stylesheet" href="pagoestilo.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Verificar Pagos</h2>
+    <label for="correo">Correo</label>
+    <input type="email" id="correo" placeholder="Ingrese correo del usuario" />
+    <button id="buscarBtn">Buscar Inscripciones</button>
+
+    <table id="tablaPagos" style="display:none;">
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Fecha</th>
+          <th>Estado de Pago</th>
+          <th>Cambiar Estado</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button id="guardarCambios" style="display:none;">Guardar Cambios</button>
+  </div>
+
+  <script src="pago.js"></script>
+</body>
+</html>

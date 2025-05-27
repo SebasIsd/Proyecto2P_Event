@@ -1,0 +1,86 @@
+body {
+  background-color: #6c1313;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0; padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px 0;
+}
+.container {
+  background-color: #000000;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #696969;
+  width: 450px;
+}
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffffff;
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #696969;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 15px;
+  border: 1px solid #696969;
+  border-radius: 5px;
+  background-color: #222;
+  color: #fff;
+}
+select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 15px;
+  border: 1px solid #696969;
+  border-radius: 5px;
+  background-color: #222;
+  color: #fff;
+}
+button {
+  width: 100%;
+  background-color: #6c1313;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+button:hover {
+  background-color: #930f0f;
+}
+.user-info, .event-section {
+  margin-top: 20px;
+  background-color: #111;
+  padding: 15px;
+  border-radius: 8px;
+  display: none;
+}
+.user-info p {
+  margin: 5px 0;
+  color: #ccc;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+th, td {
+  border: 1px solid #696969;
+  padding: 8px;
+  text-align: left;
+  color: #ddd;
+}
+th {
+  background-color: #222;
+}
