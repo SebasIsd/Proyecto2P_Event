@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verificar Pagos</title>
+  <link rel="stylesheet" href="../styles/css/pagoestilo.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Verificar Pagos</h2>
+    <label for="cedula">Cédula del Usuario</label>
+    <input type="text" id="cedula" placeholder="Ingrese cédula del usuario" />
+    <button id="buscarBtn">Buscar Inscripciones</button>
+
+    <div id="infoUsuario" class="user-info" style="display: none;">
+      <h3>Información del Usuario</h3>
+      <p><strong>Nombre:</strong> <span id="nombreUsuario"></span></p>
+      <p><strong>Cédula:</strong> <span id="cedulaUsuario"></span></p>
+      <p><strong>Correo:</strong> <span id="correoUsuario"></span></p>
+      <p><strong>Teléfono:</strong> <span id="telefonoUsuario"></span></p>
+      <p><strong>Carrera:</strong> <span id="carreraUsuario"></span></p>
+    </div>
+
+    <div id="resultados"></div>
+  </div>
+
+  <script src="../styles/pago.js"></script>
+</body>
+</html>
