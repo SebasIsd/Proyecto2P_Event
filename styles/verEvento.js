@@ -54,5 +54,5 @@ function eliminarEvento(id) {
 }
 
 function editarEvento(id) {
-  window.location.href = `editarEvento.html?id=${id}`;
+  window.location.href = `../admin/editarEvento.html?id=${id}`;
 }

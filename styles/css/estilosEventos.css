@@ -171,3 +171,75 @@ form#form-editar button:hover {
 .btn-eliminar:hover {
   background-color: #c82333;
 }
+/* editar eventos */
+#form-editar {
+  max-width: 800px;
+  margin: 40px auto;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+  gap: 20px;
+  font-family: Arial, sans-serif;
+}
+
+#form-editar * {
+  box-sizing: border-box;
+}
+
+#form-editar label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  gap: 5px;
+}
+
+#form-editar input,
+#form-editar textarea {
+  all: unset;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+}
+
+#form-editar textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+#form-editar .full-width {
+  grid-column: span 2;
+}
+
+#form-editar button {
+  all: unset;
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  background-color: #007BFF;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#form-editar button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 600px) {
+  #form-editar {
+    grid-template-columns: 1fr;
+  }
+
+  #form-editar .full-width {
+    grid-column: span 1 !important;
+  }
+}
