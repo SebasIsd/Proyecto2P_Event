@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar y Editar Usuario</title>
+<link rel="stylesheet" href="../styles/css/estiloAdminusuario.css">
+
+    <script src="../styles/buscarusuario.js"></script>
+</head>
+<body>
+    <h2>Buscar Usuario por Cédula</h2>
+    <label for="ced_usu">Cédula:</label>
+    <input type="text" id="ced_usu" />
+    <button onclick="buscarUsuario()">Buscar</button>
+
+    <h3>Datos del Usuario</h3>
+    <form id="formUsuario">
+        <input type="text" id="nom_pri_usu" placeholder="Nombre 1" disabled />
+        <input type="text" id="nom_seg_usu" placeholder="Nombre 2" disabled />
+        <input type="text" id="ape_pri_usu" placeholder="Apellido 1" disabled />
+        <input type="text" id="ape_seg_usu" placeholder="Apellido 2" disabled />
+        <input type="email" id="cor_usu" placeholder="Correo" disabled />
+        <input type="text" id="pas_usu" placeholder="Contraseña" disabled />
+        <input type="text" id="tel_usu" placeholder="Teléfono" disabled />
+        <input type="text" id="dir_usu" placeholder="Dirección" disabled />
+        <input type="date" id="fec_nac_usu" placeholder="Fecha Nacimiento" disabled />
+        <br><br>
+        <button type="button" onclick="habilitarCampos()">Editar</button>
+        <button type="button" onclick="actualizarUsuario()" style="display:none;" id="btnGuardar">Guardar</button>
+    </form>
+</body>
+</html>
