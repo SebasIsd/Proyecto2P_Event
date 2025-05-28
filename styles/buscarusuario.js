@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             llenarFormulario(data);
             userDataSection.style.display = 'block';
-            cedulaInput.readOnly = true;
             btnEditar.style.display = 'inline-block';
             btnGuardar.style.display = 'none';
 
@@ -67,24 +66,32 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ape_pri_usu').value = usuario.ape_pri_usu || '';
         document.getElementById('ape_seg_usu').value = usuario.ape_seg_usu || '';
         document.getElementById('cor_usu').value = usuario.cor_usu || '';
+        document.getElementById('pas_usu').value = usuario.pas_usu || '';
         document.getElementById('tel_usu').value = usuario.tel_usu || '';
         document.getElementById('dir_usu').value = usuario.dir_usu || '';
         document.getElementById('fec_nac_usu').value = usuario.fec_nac_usu || '';
 
         // Deshabilitar los campos por defecto
-        const campos = document.querySelectorAll('#formUsuario input:not([type="hidden"])');
-        campos.forEach(campo => campo.disabled = true);
+        deshabilitarCampos();
     }
 
     function habilitarEdicion() {
+        // Habilitar todos los campos excepto el hidden
         const campos = document.querySelectorAll('#formUsuario input:not([type="hidden"])');
         campos.forEach(campo => {
-            if (campo.id !== 'ced_usu') {
-                campo.disabled = false;
-            }
+            campo.disabled = false;
         });
+        
+        // Cambiar visibilidad de botones
         btnEditar.style.display = 'none';
         btnGuardar.style.display = 'inline-block';
+    }
+
+    function deshabilitarCampos() {
+        const campos = document.querySelectorAll('#formUsuario input:not([type="hidden"])');
+        campos.forEach(campo => {
+            campo.disabled = true;
+        });
     }
 
     async function actualizarUsuario() {
@@ -101,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('ape_pri_usu', document.getElementById('ape_pri_usu').value);
             formData.append('ape_seg_usu', document.getElementById('ape_seg_usu').value);
             formData.append('cor_usu', document.getElementById('cor_usu').value);
+            formData.append('pas_usu', document.getElementById('pas_usu').value);
             formData.append('tel_usu', document.getElementById('tel_usu').value);
             formData.append('dir_usu', document.getElementById('dir_usu').value);
             formData.append('fec_nac_usu', document.getElementById('fec_nac_usu').value);
@@ -119,8 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert(data.mensaje || 'Datos actualizados correctamente');
 
             // Volver a bloquear los campos
-            const campos = document.querySelectorAll('#formUsuario input:not([type="hidden"])');
-            campos.forEach(campo => campo.disabled = true);
+            deshabilitarCampos();
 
             btnEditar.style.display = 'inline-block';
             btnGuardar.style.display = 'none';

@@ -48,55 +48,41 @@
         <div id="userData" style="display: none;">
             <h3>Datos del Usuario</h3>
             <form id="formUsuario">
-                <input type="hidden" id="ced_usu_hidden">
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Primer Nombre</label>
-                        <input type="text" id="nom_pri_usu" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Segundo Nombre</label>
-                        <input type="text" id="nom_seg_usu" disabled>
-                    </div>
-                </div>
+                <input type="hidden" id="ced_usu_hidden" name="ced_usu">
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Primer Apellido</label>
-                        <input type="text" id="ape_pri_usu" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Segundo Apellido</label>
-                        <input type="text" id="ape_seg_usu" disabled>
-                    </div>
-                </div>
+                <label for="nom_pri_usu">Nombre:</label>
+                <input type="text" id="nom_pri_usu" name="nom_pri_usu" disabled required><br>
 
-                <div class="form-group">
-                    <label>Correo Electrónico</label>
-                    <input type="email" id="cor_usu" disabled>
-                </div>
+                <label for="nom_seg_usu">Segundo Nombre:</label>
+                <input type="text" id="nom_seg_usu" name="nom_seg_usu" disabled><br>
 
-                <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="tel" id="tel_usu" disabled>
-                </div>
+                <label for="ape_pri_usu">Apellido:</label>
+                <input type="text" id="ape_pri_usu" name="ape_pri_usu" disabled required><br>
 
-                <div class="form-group">
-                    <label>Dirección</label>
-                    <input type="text" id="dir_usu" disabled>
-                </div>
+                <label for="ape_seg_usu">Segundo Apellido:</label>
+                <input type="text" id="ape_seg_usu" name="ape_seg_usu" disabled><br>
 
-                <div class="form-group">
-                    <label>Fecha de Nacimiento</label>
-                    <input type="date" id="fec_nac_usu" disabled>
-                </div>
+                <label for="cor_usu">Correo:</label>
+                <input type="email" id="cor_usu" name="cor_usu" disabled required><br>
 
-                <div class="form-actions">
-                    <button type="button" id="btnEditar" class="btn-edit"><i class="fas fa-edit"></i> Editar</button>
-                    <button type="button" id="btnGuardar" class="btn-save" style="display: none;"><i class="fas fa-save"></i> Guardar</button>
-                </div>
+                <label for="pas_usu">Contraseña:</label>
+                <input type="password" id="pas_usu" name="pas_usu" disabled required><br>
+
+                <label for="tel_usu">Teléfono:</label>
+                <input type="text" id="tel_usu" name="tel_usu" disabled><br>
+
+                <label for="dir_usu">Dirección:</label>
+                <input type="text" id="dir_usu" name="dir_usu" disabled><br>
+
+                <label for="fec_nac_usu">Fecha de Nacimiento:</label>
+                <input type="date" id="fec_nac_usu" name="fec_nac_usu" disabled><br>
+
+
+                <button type="button" id="btnEditar" onclick="habilitarEdicion()">Editar</button>
+                <button type="button" id="btnGuardar" onclick="actualizarUsuario()" style="display:none;">Guardar</button>
+                <span id="loading" style="display:none;">Guardando...</span>
             </form>
+            <p id="error" style="color: red;"></p>
         </div>
     </main>
 
