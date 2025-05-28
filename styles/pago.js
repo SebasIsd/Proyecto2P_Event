@@ -61,11 +61,19 @@ function mostrarError(mensaje) {
 
 function mostrarInfoUsuario(usuario) {
   infoUsuarioDiv.style.display = 'block';
-  nombreUsuario.textContent = `${usuario.NOM_PRI_USU} ${usuario.NOM_SEG_USU} ${usuario.APE_PRI_USU} ${usuario.APE_SEG_USU}`;
-  cedulaUsuario.textContent = usuario.CED_USU;
-  correoUsuario.textContent = usuario.COR_USU;
-  telefonoUsuario.textContent = usuario.TEL_USU;
-  carreraUsuario.textContent = usuario.CAR_USU;
+  
+  // Construir el nombre completo solo con los campos que no sean null/undefined
+  let nombreCompleto = [];
+  if (usuario.NOM_PRI_USU) nombreCompleto.push(usuario.NOM_PRI_USU);
+  if (usuario.NOM_SEG_USU) nombreCompleto.push(usuario.NOM_SEG_USU);
+  if (usuario.APE_PRI_USU) nombreCompleto.push(usuario.APE_PRI_USU);
+  if (usuario.APE_SEG_USU) nombreCompleto.push(usuario.APE_SEG_USU);
+  
+  nombreUsuario.textContent = nombreCompleto.join(' ') || 'No disponible';
+  cedulaUsuario.textContent = usuario.CED_USU || 'revisar por que no llega la info del';
+  correoUsuario.textContent = usuario.COR_USU || 'No disponible';
+  telefonoUsuario.textContent = usuario.TEL_USU || 'No disponible';
+  carreraUsuario.textContent = usuario.CAR_USU || 'No disponible';
 }
 
 function mostrarInscripciones(inscripciones) {
