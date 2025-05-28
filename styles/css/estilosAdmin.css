@@ -1,57 +1,55 @@
-body {
-      font-family: 'Montserrat', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+.admin-panel.full-width {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
 
-    .admin-panel {
-      padding: 40px;
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-    }
+.admin-panel:not(.full-width) {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
 
-    .admin-card {
-      background-color: #f9f9f9;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
+.admin-card {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
 
-    .admin-card:hover {
-      transform: translateY(-5px);
-    }
+.admin-card:hover {
+  transform: translateY(-5px);
+}
 
-    .admin-card i {
-      font-size: 40px;
-      color: #6c1313;
-      margin-bottom: 15px;
-    }
+.admin-card i {
+  font-size: 40px;
+  color: #6c1313;
+  margin-bottom: 15px;
+}
 
-    .admin-card a {
-      display: block;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #333;
-      text-decoration: none;
-    }
+.admin-card a {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+}
 
-    @media (max-width: 992px) {
-      .admin-panel {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+@media (max-width: 992px) {
+  .admin-panel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-    @media (max-width: 600px) {
-      .admin-panel {
-        grid-template-columns: 1fr;
-      }
-    }
-    .cerrar-sesion {
+@media (max-width: 600px) {
+  .admin-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cerrar-sesion {
   float: right;
   margin-top: 25px;
   margin-left: 20px;
