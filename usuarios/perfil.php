@@ -62,7 +62,7 @@ if ($usuario = pg_fetch_assoc($result)) {
                     <li class="profile-link">
                         <a href="perfil.php" class="active"><i class="fas fa-user-circle"></i> Perfil</a>
                     </li>
-                    <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                    <li><a href="../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
                 </ul>
             </nav>
         </div>

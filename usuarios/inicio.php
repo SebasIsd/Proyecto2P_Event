@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['usuario'])) {
-    header("Location: usuarios/login.php");
+    header("Location: login.php");
     exit();
 }
 
@@ -20,7 +20,7 @@ $sql = "SELECT nom_pri_usu, nom_seg_usu, ape_pri_usu, ape_seg_usu, car_usu
 $result = pg_query_params($conn, $sql, array($cedula));
 
 if ($usuario = pg_fetch_assoc($result)) {
-    $nombreCompleto = $usuario['nom_pri_usu'] . ' ' . $usuario['nom_seg_usu'] . ' ' . $usuario['ape_pri_usu'] . ' ' . $usuario['ape_seg_usu'];
+    $nombreCompleto = $usuario['nom_pri_usu'] . ' ' . $usuario['ape_pri_usu'];
     $carrera = $usuario['car_usu'];
 } else {
     $nombreCompleto = "Usuario desconocido";
@@ -66,7 +66,7 @@ if ($usuario = pg_fetch_assoc($result)) {
             <li class="profile-link">
                 <a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
             </li>
-            <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="./logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
         </ul>
     </nav>
             </div>
@@ -125,6 +125,6 @@ if ($usuario = pg_fetch_assoc($result)) {
         </div>
     </footer>
 
-    <script src="/styles/script.js"></script>
+    <script src="../styles/script.js"></script>
 </body>
 </html>
