@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../includes/conexion.php');
+require_once('../includes/conexion1.php');
 
 $conexion = new Conexion();
 $conn = $conexion->getConexion();

@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-require_once "../includes/conexion.php";
+require_once "../includes/conexion1.php";
 
 $conexion = new Conexion();
 $conn = $conexion->getConexion();

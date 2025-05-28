@@ -6,7 +6,7 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-require_once "../includes/conexion.php";
+require_once "../includes/conexion1.php";
 
 $conexion = new Conexion();
 $conn = $conexion->getConexion();
@@ -48,29 +48,29 @@ if ($usuario = pg_fetch_assoc($result)) {
     />
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Bienvenido, <span><?= htmlspecialchars($nombreCompleto) ?></span></h1>
-                <p style="font-size: 14px; color: #ccc;">
-                    Carrera: <?= htmlspecialchars($carrera) ?>
-                </p>
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <h1>Bienvenido, <span><?= htmlspecialchars($nombreCompleto) ?></span></h1>
+                    <p style="font-size: 14px; color: #ccc;">
+                        Carrera: <?= htmlspecialchars($carrera) ?>
+                    </p>
+                </div>
+                <nav>
+        <ul>
+            <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+            <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
+            <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
+            <li class="profile-link">
+                <a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
+            </li>
+            <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        </ul>
+    </nav>
             </div>
-            <nav>
-    <ul>
-        <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-        <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
-        <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
-        <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
-        <li class="profile-link">
-            <a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
-        </li>
-        <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-    </ul>
-</nav>
-        </div>
-    </header>
+        </header>
 
     <main class="container">
         <section class="hero">
