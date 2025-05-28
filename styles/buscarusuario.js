@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Elementos del DOM
     const buscarBtn = document.getElementById('buscarBtn');
     const cedulaInput = document.getElementById('ced_usu');
@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     buscarBtn.addEventListener('click', buscarUsuario);
     btnEditar.addEventListener('click', habilitarEdicion);
     btnGuardar.addEventListener('click', actualizarUsuario);
-    
-    cedulaInput.addEventListener('keypress', function(e) {
+
+    cedulaInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             buscarUsuario();
         }
@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
     async function buscarUsuario() {
         const cedula = cedulaInput.value.trim();
         errorMsg.textContent = '';
-        
+        userDataSection.style.display = 'none';
+
         if (!cedula) {
             errorMsg.textContent = 'Por favor ingrese una cédula';
             return;
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             mostrarCargando(true);
-            
+
             const response = await fetch('../conexion/buscar_usuario.php', {
                 method: 'POST',
                 headers: {
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const data = await response.json();
-            
+
             if (!response.ok || data.error) {
                 throw new Error(data.error || 'Error en la respuesta del servidor');
             }
@@ -48,11 +49,12 @@ document.addEventListener('DOMContentLoaded', function() {
             llenarFormulario(data);
             userDataSection.style.display = 'block';
             cedulaInput.readOnly = true;
-            
+            btnEditar.style.display = 'inline-block';
+            btnGuardar.style.display = 'none';
+
         } catch (error) {
             console.error('Error:', error);
             errorMsg.textContent = error.message;
-            userDataSection.style.display = 'none';
         } finally {
             mostrarCargando(false);
         }
@@ -68,6 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('tel_usu').value = usuario.tel_usu || '';
         document.getElementById('dir_usu').value = usuario.dir_usu || '';
         document.getElementById('fec_nac_usu').value = usuario.fec_nac_usu || '';
+
+        // Deshabilitar los campos por defecto
+        const campos = document.querySelectorAll('#formUsuario input:not([type="hidden"])');
+        campos.forEach(campo => campo.disabled = true);
     }
 
     function habilitarEdicion() {
@@ -82,9 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function actualizarUsuario() {
+        errorMsg.textContent = '';
+
         try {
             mostrarCargando(true);
-            
+
             const formData = new FormData();
             formData.append('accion', 'actualizar');
             formData.append('ced_usu', document.getElementById('ced_usu_hidden').value);
@@ -103,14 +111,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const data = await response.json();
-            
-            if (!response.ok || !data.success) {
+
+            if (!response.ok || data.error || !data.success) {
                 throw new Error(data.error || 'Error al actualizar los datos');
             }
 
-            alert('Datos actualizados correctamente');
-            deshabilitarEdicion();
-            
+            alert(data.mensaje || 'Datos actualizados correctamente');
+
+            // Volver a bloquear los campos
+            const campos = document.querySelectorAll('#formUsuario input:not([type="hidden"])');
+            campos.forEach(campo => campo.disabled = true);
+
+            btnEditar.style.display = 'inline-block';
+            btnGuardar.style.display = 'none';
+
         } catch (error) {
             console.error('Error:', error);
             errorMsg.textContent = error.message;
@@ -119,15 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function deshabilitarEdicion() {
-        const campos = document.querySelectorAll('#formUsuario input');
-        campos.forEach(campo => campo.disabled = true);
-        btnEditar.style.display = 'inline-block';
-        btnGuardar.style.display = 'none';
-    }
-
     function mostrarCargando(mostrar) {
         loadingIndicator.style.display = mostrar ? 'inline-block' : 'none';
-        buscarBtn.disabled = mostrar;
     }
 });

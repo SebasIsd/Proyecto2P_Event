@@ -1,12 +1,15 @@
 <?php
 require_once 'conexionusu.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
 try {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception("Método no permitido", 405);
     }
@@ -36,10 +39,19 @@ try {
             throw new Exception("Usuario no encontrado", 404);
         }
 
-        http_response_code(200);
         echo json_encode($usuario);
-    }
-    elseif ($accion === 'actualizar') {
+    } elseif ($accion === 'actualizar') {
+        $campos = [
+            'nom_pri_usu', 'nom_seg_usu', 'ape_pri_usu', 'ape_seg_usu',
+            'cor_usu', 'pas_usu', 'tel_usu', 'dir_usu', 'fec_nac_usu', 'ced_usu'
+        ];
+
+        foreach ($campos as $campo) {
+            if (!isset($_POST[$campo])) {
+                throw new Exception("Campo faltante: $campo", 400);
+            }
+        }
+
         $sql = "UPDATE usuarios SET 
                     nom_pri_usu = $1,
                     nom_seg_usu = $2,
@@ -51,8 +63,8 @@ try {
                     dir_usu = $8,
                     fec_nac_usu = $9
                 WHERE ced_usu = $10";
-                
-        $resultado = pg_query_params($conexion, $sql, [
+        
+        $params = [
             $_POST['nom_pri_usu'],
             $_POST['nom_seg_usu'],
             $_POST['ape_pri_usu'],
@@ -63,17 +75,19 @@ try {
             $_POST['dir_usu'],
             $_POST['fec_nac_usu'],
             $_POST['ced_usu']
-        ]);
+        ];
+
+        $resultado = pg_query_params($conexion, $sql, $params);
 
         if ($resultado) {
             echo json_encode(['success' => true, 'mensaje' => 'Datos actualizados correctamente']);
         } else {
             throw new Exception("Error al actualizar: " . pg_last_error($conexion), 500);
         }
-    }
-    else {
+    } else {
         throw new Exception("Acción no válida", 400);
     }
+
 } catch (Exception $e) {
     http_response_code($e->getCode() ?: 500);
     echo json_encode([
