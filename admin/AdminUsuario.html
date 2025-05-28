@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Usuarios</title>
+    <link rel="stylesheet" href="../styles/css/estiloAdminusuario.css">
+    <link rel="stylesheet" href="../styles/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .loading {
+            display: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Bienvenido, <span>Administrador</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2>Buscar Usuario por Cédula</h2>
+        <div class="search-box">
+            <input type="text" id="ced_usu" placeholder="Ingrese la cédula" maxlength="20">
+            <button id="buscarBtn"><i class="fas fa-search"></i> Buscar</button>
+            <span id="loading" class="loading">Buscando...</span>
+            <span id="errorMsg" class="error"></span>
+        </div>
+
+        <div id="userData" style="display: none;">
+            <h3>Datos del Usuario</h3>
+            <form id="formUsuario">
+                <input type="hidden" id="ced_usu_hidden" name="ced_usu">
+
+                <label for="nom_pri_usu">Nombre:</label>
+                <input type="text" id="nom_pri_usu" name="nom_pri_usu" disabled required><br>
+
+                <label for="nom_seg_usu">Segundo Nombre:</label>
+                <input type="text" id="nom_seg_usu" name="nom_seg_usu" disabled><br>
+
+                <label for="ape_pri_usu">Apellido:</label>
+                <input type="text" id="ape_pri_usu" name="ape_pri_usu" disabled required><br>
+
+                <label for="ape_seg_usu">Segundo Apellido:</label>
+                <input type="text" id="ape_seg_usu" name="ape_seg_usu" disabled><br>
+
+                <label for="cor_usu">Correo:</label>
+                <input type="email" id="cor_usu" name="cor_usu" disabled required><br>
+
+                <label for="pas_usu">Contraseña:</label>
+                <input type="password" id="pas_usu" name="pas_usu" disabled required><br>
+
+                <label for="tel_usu">Teléfono:</label>
+                <input type="text" id="tel_usu" name="tel_usu" disabled><br>
+
+                <label for="dir_usu">Dirección:</label>
+                <input type="text" id="dir_usu" name="dir_usu" disabled><br>
+
+                <label for="fec_nac_usu">Fecha de Nacimiento:</label>
+                <input type="date" id="fec_nac_usu" name="fec_nac_usu" disabled><br>
+
+
+                <button type="button" id="btnEditar" onclick="habilitarEdicion()">Editar</button>
+                <button type="button" id="btnGuardar" onclick="actualizarUsuario()" style="display:none;">Guardar</button>
+                <span id="loading" style="display:none;">Guardando...</span>
+            </form>
+            <p id="error" style="color: red;"></p>
+        </div>
+    </main>
+
+    <script src="../styles/buscarusuario.js"></script>
+</body>
+</html>

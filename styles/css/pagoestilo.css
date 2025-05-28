@@ -1,0 +1,66 @@
+/* Estilos para la sección de pagos */
+.cargando {
+  color: #FFC107;
+  text-align: center;
+  padding: 20px;
+}
+
+.error {
+  color: #F44336;
+  text-align: center;
+  padding: 20px;
+}
+
+.info {
+  color: #2196F3;
+  text-align: center;
+  padding: 20px;
+}
+
+.estado-pagado {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.estado-pendiente {
+  color: #FFC107;
+  font-weight: bold;
+}
+
+.pago-item {
+  
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.sin-pago {
+  color: #9E9E9E;
+  font-style: italic;
+}
+
+.guardar-btn {
+  background-color: #9E9E9E;
+  margin-top: 20px;
+  padding: 12px 24px;
+}
+
+.guardar-btn:hover {
+  background-color:  #5a0f0f;
+}
+table {
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid black;
+}
+
+table {
+  border: 1px solid black; /* Esto añade borde solo alrededor de la tabla */
+}
+
+
+
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Cambios</title>
+    <link rel="stylesheet" href="/styles/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <div class="logo">
+            <h1>Sistema de <span>Inscripciones</span></h1>
+          </div>
+          <nav>
+            <ul>
+              <li><a href="/index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+              <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+              <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
+              <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
+              <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      
+  <main>
+    <section class="formulario">
+      <h2>Formulario de Cambios</h2>
+
+      <div class="info-codigo">
+        <p><strong>Código</strong><br>01121</p>
+        <p><strong>Fecha</strong><br>21/05/2025</p>
+      </div>
+
+      <form>
+        <label for="titulo">Título de la Solicitud</label>
+        <input type="text" id="titulo" placeholder="Escribe el Título">
+
+        <fieldset>
+          <legend>Tipo de Cambio:</legend>
+          <label><input type="radio" name="tipo" value="estetico"> Estético</label>
+          <label><input type="radio" name="tipo" value="funcional"> Funcional</label>
+          <label><input type="radio" name="tipo" value="error"> Corrección de Error</label>
+        </fieldset>
+
+        <div class="fallo-opciones">
+          <div class="fallos">
+            <p><strong>Tipo de Fallo:</strong></p>
+            <label><input type="checkbox" name="fallo" value="sistema"> Errores de sistema</label>
+            <label><input type="checkbox" name="fallo" value="no_encontradas"> Páginas no encontradas</label>
+            <label><input type="checkbox" name="fallo" value="rechazadas"> Solicitudes Rechazadas</label>
+            <label><input type="checkbox" name="fallo" value="pagos"> Pagos Registrados</label>
+            <label><input type="checkbox" name="fallo" value="inscripcion"> Inscripción no Registrada</label>
+            <label><input type="checkbox" name="fallo" value="curso"> Curso no Encontrado</label>
+          </div>
+
+          <div class="opciones">
+            <label>Ventana encontrada:
+              <select><option>Seleccione una ventana</option></select>
+            </label>
+            <label>Opción encontrada:
+              <select><option>Seleccione una opción</option></select>
+            </label>
+            <label>Tipo de Archivo intentado subir:
+              <input type="file">
+            </label>
+          </div>
+        </div>
+
+        <label>Descripción:</label>
+        <textarea placeholder="Describe que hacías antes que sucediera esa acción..."></textarea>
+
+        <label>Motivo:</label>
+        <textarea placeholder="Escribe el motivo del cambio..."></textarea>
+
+        <button type="submit">ENVIAR</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
