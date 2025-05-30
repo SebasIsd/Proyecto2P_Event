@@ -125,6 +125,6 @@ if ($usuario = pg_fetch_assoc($result)) {
         </div>
     </footer>
 
-    <script src="../styles/script.js"></script>
+    <script src="styles/script.js"></script>
 </body>
 </html>
