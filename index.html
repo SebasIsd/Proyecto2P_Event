@@ -19,98 +19,34 @@
             <nav>
                 <ul>
                     <li><a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="./admin/indexEvento.html"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-                    <li><a href="./usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
-                    <li><a href="./usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes</a></li>
-                    <li><a href="#" id="loginBtnNav" class="login-btn"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                    <li><a href="./usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Modal de Inicio de Sesión -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username"><i class="fas fa-user"></i> Usuario:</label>
-                    <input type="text" id="username" class="form-control" placeholder="Ingrese su usuario" required>
-                </div>
-                <div class="form-group">
-                    <label for="password"><i class="fas fa-lock"></i> Contraseña:</label>
-                    <input type="password" id="password" class="form-control" placeholder="Ingrese su contraseña" required>
-                </div>
-                <button type="submit" class="btn-submit"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
-                <div class="form-footer">
-                    <a href="#" id="forgotPassword"><i class="fas fa-question-circle"></i> ¿Olvidaste tu contraseña?</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <main class="container">
         <section class="hero">
             <h2>Bienvenido al Sistema de Inscripciones</h2>
             <p>Gestiona eventos, cursos y participantes de manera eficiente</p>
-            <div class="hero-buttons">
-                <a href="#" id="loginBtnHero" class="btn-secondary"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
-            </div>
+            <a href="./usuarios/login.php" class="btn-primary">Iniciar Sesion</a>
         </section>
 
         <section class="dashboard">
             <div class="card">
                 <i class="fas fa-users"></i>
                 <h3>Usuarios Registrados</h3>
-                <p id="total-usuarios">1,245</p>
-                <div class="card-footer">
-                    <small>Actualizado hoy</small>
-                </div>
+                <p id="total-usuarios">0</p>
             </div>
             <div class="card">
                 <i class="fas fa-calendar-alt"></i>
                 <h3>Eventos Activos</h3>
-                <p id="total-eventos">28</p>
-                <div class="card-footer">
-                    <small>5 nuevos esta semana</small>
-                </div>
+                <p id="total-eventos">0</p>
             </div>
             <div class="card">
                 <i class="fas fa-file-alt"></i>
                 <h3>Inscripciones</h3>
-                <p id="total-inscripciones">3,742</p>
-                <div class="card-footer">
-                    <small>+124 esta semana</small>
-                </div>
-            </div>
-        </section>
-
-        <section class="recent-activity">
-            <h2><i class="fas fa-history"></i> Actividad Reciente</h2>
-            <div class="activity-list">
-                <div class="activity-item">
-                    <i class="fas fa-user-plus activity-icon"></i>
-                    <div class="activity-content">
-                        <p>Nuevo usuario registrado: <strong>María González</strong></p>
-                        <small>Hace 15 minutos</small>
-                    </div>
-                </div>
-                <div class="activity-item">
-                    <i class="fas fa-calendar-check activity-icon"></i>
-                    <div class="activity-content">
-                        <p>Nuevo evento creado: <strong>Taller de Programación</strong></p>
-                        <small>Hace 2 horas</small>
-                    </div>
-                </div>
-                <div class="activity-item">
-                    <i class="fas fa-file-signature activity-icon"></i>
-                    <div class="activity-content">
-                        <p>10 nuevas inscripciones para <strong>Congreso de Ciencias</strong></p>
-                        <small>Hace 5 horas</small>
-                    </div>
-                </div>
+                <p id="total-inscripciones">0</p>
             </div>
         </section>
     </main>
@@ -119,27 +55,20 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+                    <h3>Sobre el Sistema</h3>
                     <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
                 </div>
                 <div class="footer-section">
-                    <h3><i class="fas fa-envelope"></i> Contacto</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
+                    <h3>Contacto</h3>
                     <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
                     <p><i class="fas fa-phone"></i> +123 456 7890</p>
                 </div>
                 <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+                    <h3>Enlaces Rápidos</h3>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Ayuda</a></li>
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Eventos</a></li>
+                        <li><a href="#">Políticas</a></li>
                     </ul>
                 </div>
             </div>
@@ -150,29 +79,5 @@
     </footer>
 
     <script src="/styles/script.js"></script>
-    <script src="/styles/login.js"></script>
-    
-    <script>
-        // Animación de carga para las tarjetas
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animación de aparición para las tarjetas
-            const cards = document.querySelectorAll('.card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 200);
-            });
-            
-            // Animación para los items de actividad
-            const activities = document.querySelectorAll('.activity-item');
-            activities.forEach((item, index) => {
-                setTimeout(() => {
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateX(0)';
-                }, index * 150 + 600);
-            });
-        });
-    </script>
 </body>
 </html>
