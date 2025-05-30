@@ -1,6 +1,6 @@
 <?php
 require_once "../includes/conexion1.php";
-
+error_reporting(E_ALL);
 $error = '';
 $success = '';
 
@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = pg_escape_string($conn, $_POST['password']);
     $confirm_password = pg_escape_string($conn, $_POST['confirm_password']);
     
+
+
     // Validaciones básicas
     if ($password !== $confirm_password) {
         $error = "Las contraseñas no coinciden";
@@ -33,25 +35,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (pg_num_rows($check_result) > 0) {
             $error = "El usuario con esta cédula ya existe";
         } else {
+            $carreras_permitidas = ['Ing. Software', 'Ingeniería Civil', 'Medicina', 'Derecho']; 
+        if (!in_array($carrera, $carreras_permitidas)) {
+        $error = "La carrera seleccionada no es válida";
+        }
             // Hash de la contraseña
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
             // Insertar nuevo usuario
             $insert_sql = "INSERT INTO usuarios 
-                          (ced_usu, nom_pri_usu, nom_seg_usu, ape_pri_usu, ape_seg_usu, 
-                           car_usu, cor_usu, tel_usu, dir_usu, fec_nac_usu, con_usu)
-                          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
-            
-            $params = array(
-                $cedula, $nombre1, $nombre2, $apellido1, $apellido2,
-                $carrera, $correo, $telefono, $direccion, $fecha_nac, $hashed_password
-            );
-            
-            $result = pg_query_params($conn, $insert_sql, $params);
+              (ced_usu, nom_pri_usu, nom_seg_usu, ape_pri_usu, ape_seg_usu, 
+               car_usu, cor_usu, tel_usu, dir_usu, fec_nac_usu, pas_usu, id_rol_usu)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)";
+
+$params = array(
+    $cedula, $nombre1, $nombre2, $apellido1, $apellido2,
+    $carrera, $correo, $telefono, $direccion, $fecha_nac, $hashed_password,
+    2 // Rol de usuario común
+);
+
+$result = pg_query_params($conn, $insert_sql, $params);
             
             if ($result) {
                 $success = "Registro exitoso. Ahora puedes iniciar sesión.";
-                // Redirigir después de 3 segundos
                 header("refresh:3;url=login.php");
             } else {
                 $error = "Error al registrar el usuario: " . pg_last_error($conn);
@@ -127,10 +133,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="carrera"><i class="fas fa-graduation-cap"></i> Carrera</label>
                     <select id="carrera" name="carrera" required>
                         <option value="">Seleccione una carrera</option>
-                        <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
-                        <option value="Ingeniería Civil">Ingeniería Civil</option>
-                        <option value="Medicina">Medicina</option>
-                        <option value="Derecho">Derecho</option>
+                        <option value="Ing. Software">Ing. Software</option>
+                        <option value="Ing. Industrial">Ing. Industrial</option>
+                        <option value="Ing. Tecnologias de la Informacion">Ing. Tecnologias de la Informacion</option>
+                        <option value="Ing. Telecomunicaciones">Ing. Telecomunicaciones</option>
+                        <option value="Ing. en Automatizacion y Robotica">Ing. en Automatizacion y Robotica</option>
                     </select>
                 </div>
                 
