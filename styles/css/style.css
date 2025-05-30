@@ -97,7 +97,7 @@ main {
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
-    color: var(--white);
+    color: var(--secondary-btn-color);
 }
 
 .btn-primary {
@@ -217,6 +217,7 @@ main {
 
 .activity-content p {
     margin-bottom: 0.3rem;
+    color: var(--secondary-color);
 }
 
 .activity-content small {

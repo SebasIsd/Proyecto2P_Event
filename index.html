@@ -13,7 +13,7 @@
 <body>
 <style>
     :root {
-        --primary-color: #8B0000;
+        --primary-color: #6c1313;
         --card-bg: #ffffff;
         --text-color: #333;
         --card-radius: 8px;
@@ -150,7 +150,7 @@
                 <ul>
                     <li><a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
                     <li><a href="./usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+                    <li><a href="./usuarios/eventos.html"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
                 </ul>
             </nav>
         </div>
@@ -181,15 +181,15 @@
         <section class="dashboard">
             <div class="card">
                 <i class="fas fa-users"></i>
-                <h3>Usuarios Registrados</h3>
+                <h3>Usuarios</h3>
                 <p id="total-usuarios">0</p>
                 <div class="card-footer">Total en el sistema</div>
             </div>
             <div class="card">
                 <i class="fas fa-calendar-alt"></i>
-                <h3>Eventos Activos</h3>
+                <h3>Eventos</h3>
                 <p id="total-eventos">0</p>
-                <div class="card-footer">Disponibles actualmente</div>
+                <div class="card-footer">Total de Eventos</div>
             </div>
             <div class="card">
                 <i class="fas fa-file-alt"></i>
@@ -199,7 +199,7 @@
             </div>
         </section>
 
-        <section class="recent-activity">
+        <section class="recent-activity" id="eventos">
             <h2><i class="fas fa-calendar-week"></i> Próximos Eventos</h2>
             <div id="proximos-eventos-container">
                 <div class="card" style="text-align: left;">
@@ -207,38 +207,13 @@
                 </div>
             </div>
         </section>
-<br>
-        <section class="recent-activity">
-            <h2><i class="fas fa-info-circle"></i> ¿Cómo funciona?</h2>
-            <div class="activity-list">
-                <div class="activity-item">
-                    <div class="activity-icon"><i class="fas fa-search"></i></div>
-                    <div class="activity-content">
-                        <p>Explora nuestros eventos y cursos disponibles</p>
-                        <small>Encuentra el que mejor se adapte a tus intereses</small>
-                    </div>
-                </div>
-                <div class="activity-item">
-                    <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
-                    <div class="activity-content">
-                        <p>Regístrate en el sistema</p>
-                        <small>Crea una cuenta para poder inscribirte</small>
-                    </div>
-                </div>
-                <div class="activity-item">
-                    <div class="activity-icon"><i class="fas fa-file-signature"></i></div>
-                    <div class="activity-content">
-                        <p>Completa tu inscripción</p>
-                        <small>Sigue los pasos para confirmar tu participación</small>
-                    </div>
-                </div>
-                <div class="activity-item">
-                    <div class="activity-icon"><i class="fas fa-certificate"></i></div>
-                    <div class="activity-content">
-                        <p>Recibe tu certificado</p>
-                        <small>Al completar el evento o curso satisfactoriamente</small>
-                    </div>
-                </div>
+        <br>
+
+        <section>
+            <div class="evento-footer">
+                <br>
+                <center><a href="usuarios/eventos.html" class="btn-secondary">Ver más eventos</a></center>
+                <br>
             </div>
         </section>
     </main>
@@ -266,7 +241,7 @@
                     <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
                     <ul>
                         <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
-                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+                        <li><a href="#eventos"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
                         <li><a href="#"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a></li>
                         <li><a href="#"><i class="fas fa-file-alt"></i> Políticas de Privacidad</a></li>
                     </ul>

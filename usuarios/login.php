@@ -239,7 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </form>
                 
                 <div class="login-footer">
-                    <p>¿No tienes una cuenta? <a href="registro.php" class="btn-register" style="background: none; border: none; color: #6c1313; cursor: pointer; font-weight: 500; padding: 0;">Regístrate aquí</a></p>
+                    <p>¿No tienes una cuenta? <a href="../usuarios/registro.php" class="btn-register" style="background: none; border: none; color: #6c1313; cursor: pointer; font-weight: 500; padding: 0;">Regístrate aquí</a></p>
                 </div>
             </div>
         </div>

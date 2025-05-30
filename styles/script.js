@@ -38,17 +38,17 @@ document.addEventListener('DOMContentLoaded', function () {
             eventosContainer.innerHTML = ''; // Limpiar contenido previo
 
             if (data.proximosEventos && data.proximosEventos.length > 0) {
-                data.proximosEventos.forEach(evento => {
+                // Mostrar solo los primeros 2 eventos
+                const eventosVisibles = data.proximosEventos.slice(0, 2);
+                eventosVisibles.forEach(evento => {
                     const eventoCard = document.createElement('div');
                     eventoCard.classList.add('evento-moderno');
                     
-                    // Formatear fechas
                     const fechaInicio = formatearFecha(evento.fechainicio);
                     const fechaFin = evento.fechafin ? formatearFecha(evento.fechafin) : null;
                     const fechaTexto = fechaFin && fechaFin !== fechaInicio ? 
                         `${fechaInicio} - ${fechaFin}` : fechaInicio;
                     
-                    // Truncar descripción si es muy larga
                     const descripcionCorta = evento.descripcion && evento.descripcion.length > 80 ? 
                         evento.descripcion.substring(0, 80) + '...' : 
                         (evento.descripcion || 'Sin descripción');
@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
             }
+
 
             animateCards();
 
@@ -103,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             setTimeout(() => {
-                card.style.transition = 'all 0.5s ease';
+                card.style.transition = 'all 0.3s ease';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
             }, 100 * index);
