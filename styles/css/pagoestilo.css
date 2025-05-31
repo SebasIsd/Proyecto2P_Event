@@ -60,6 +60,22 @@ th, td {
 table {
   border: 1px solid black; /* Esto añade borde solo alrededor de la tabla */
 }
+.estado {
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.estado.pagado {
+  color: green;
+  font-weight: bold;
+}
+
+.estado.pendiente {
+  color: red;
+  font-weight: bold;
+}
+
 
 
 
