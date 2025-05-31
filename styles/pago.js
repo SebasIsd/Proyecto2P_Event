@@ -83,6 +83,7 @@ function mostrarInscripciones(inscripciones) {
   guardarBtn.textContent = 'Guardar Cambios';
   guardarBtn.onclick = guardarCambios;
   resultadosDiv.appendChild(guardarBtn);
+  
 }
 
 async function guardarCambios() {
