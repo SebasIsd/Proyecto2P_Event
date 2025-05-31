@@ -17,7 +17,7 @@
   padding: 20px;
 }
 
-.estado-pagado {
+.option {
   color: #4CAF50;
   font-weight: bold;
 }
@@ -61,6 +61,24 @@ table {
   border: 1px solid black; /* Esto añade borde solo alrededor de la tabla */
 }
 
+.vp-select-pago {
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  border: 2px solid transparent;
+}
+
+.vp-pagado {
+  background-color: #e8f5e9;
+  color: #388e3c;
+  border-color: #4CAF50;
+}
+
+.vp-pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+  border-color: #ffc107;
+}
 
 
 
