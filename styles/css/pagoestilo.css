@@ -87,8 +87,8 @@ tbody tr:hover {
 /* Botón Guardar */
 .guardar-btn,
 button {
-  background-color: #c4d3e3;
-  color: rgb(48, 4, 4);
+  background-color: #a71313;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 5px 10px;
   margin-top: 10px;
@@ -100,7 +100,7 @@ button {
 
 .guardar-btn:hover,
 button:hover {
-  background-color: #d32216;
+  background-color: #e86a6a;
 }
 
 /* Mensajes */
@@ -121,15 +121,15 @@ button:hover {
 }
 
 p {
-  color: #020e1a;
+  color: #000000;
   font-size: 16px;
   margin-bottom: 10px;
 }
 #button{
   background-color: #d6251c;
-  color: rgb(136, 126, 126);
+  color: rgb(21, 1, 1);
   border: none;
-  padding: 10px 20px;
+  padding: 10px 18px;
   margin-top: 20px;
   border-radius: 6px;
   font-size: 16px;
