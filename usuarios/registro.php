@@ -89,6 +89,7 @@ $result = pg_query_params($conn, $insert_sql, $params);
     <div class="register-container">
         <div class="register-card">
             <div class="register-header">
+             <img src="../imagenes/evento2.png" alt="Logo UTA" class="header-logo">
                 <h2><i class="fas fa-user-plus"></i> Crear Cuenta</h2>
                 <p>Regístrate para acceder al sistema</p>
             </div>
