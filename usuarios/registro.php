@@ -24,9 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
 
 
-    // Validaciones básicas
+  // Validaciones básicas
     if ($password !== $confirm_password) {
         $error = "Las contraseñas no coinciden";
+    } elseif (!preg_match('/@uta\.edu\.ec$/i', $correo)) {
+        $error = "Debe usar un correo institucional @uta.edu.ec";
     } else {
         // Verificar si el usuario ya existe
         $check_sql = "SELECT ced_usu FROM usuarios WHERE ced_usu = $1";
@@ -35,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (pg_num_rows($check_result) > 0) {
             $error = "El usuario con esta cédula ya existe";
         } else {
-            $carreras_permitidas = ['Ing. Software', 'Ingeniería Civil', 'Medicina', 'Derecho']; 
+        $carreras_permitidas = ['Ing. Software', 'Ing. Industrial', 'Ing. Tecnologias de la Informacion', 'Ing. Telecomunicaciones', 'Ing. en Automatizacion y Robotica'];
         if (!in_array($carrera, $carreras_permitidas)) {
         $error = "La carrera seleccionada no es válida";
         }
@@ -48,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                car_usu, cor_usu, tel_usu, dir_usu, fec_nac_usu, pas_usu, id_rol_usu)
               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)";
 
+// Rol de usuario común
 $params = array(
     $cedula, $nombre1, $nombre2, $apellido1, $apellido2,
     $carrera, $correo, $telefono, $direccion, $fecha_nac, $hashed_password,
-    2 // Rol de usuario común
-);
+    2 );
 
 $result = pg_query_params($conn, $insert_sql, $params);
             
@@ -82,9 +84,10 @@ $result = pg_query_params($conn, $insert_sql, $params);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="register-container">
+     <div class="register-container">
         <div class="register-card">
             <div class="register-header">
+             <img src="../imagenes/evento2.png" alt="Logo UTA" class="header-logo">
                 <h2><i class="fas fa-user-plus"></i> Crear Cuenta</h2>
                 <p>Regístrate para acceder al sistema</p>
             </div>

@@ -11,7 +11,6 @@ require_once "../includes/conexion1.php";
 $conexion = new Conexion();
 $conn = $conexion->getConexion();
 $cedula = $_SESSION['cedula']; 
-
 // Obtener eventos inscritos por el usuario
 $sql = "SELECT 
             ec.ID_EVE_CUR, 
@@ -28,7 +27,9 @@ $sql = "SELECT
         WHERE i.CED_USU = $1
         ORDER BY ec.FEC_INI_EVE_CUR ASC";
 
+
 $result = pg_query_params($conn, $sql, array($cedula));
+
 $eventosInscritos = pg_fetch_all($result) ?: [];
 ?>
 
@@ -48,6 +49,7 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
             <div class="logo">
                 <h1>Bienvenido, <span><?= htmlspecialchars($_SESSION['usuario'] ?? 'Usuario') ?></span></h1>
             </div>
+          
             <nav>
                 <ul>
                     <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>

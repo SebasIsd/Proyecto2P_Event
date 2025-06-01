@@ -30,12 +30,8 @@ $sql = "SELECT nom_pri_usu, nom_seg_usu, ape_pri_usu, ape_seg_usu, car_usu
         WHERE ced_usu = $1";
 $result = pg_query_params($conn, $sql, array($cedula));
 
-if ($usuario = pg_fetch_assoc($result)) {
-    $nombreCompleto = $usuario['nom_pri_usu'] . ' ' . $usuario['ape_pri_usu'];
-    $carrera = $usuario['car_usu'];
-} else {
-    $nombreCompleto = "Usuario desconocido";
-    $carrera = "Carrera no disponible";
+if ($datos = pg_fetch_assoc($result)) {
+    $nombre_usuario = $datos['nom_pri_usu'];
 }
 ?>
 <!DOCTYPE html>
@@ -54,17 +50,15 @@ if ($usuario = pg_fetch_assoc($result)) {
     <header>
         <div class="container">
             <div class="logo">
-                <h1>Bienvenido, <span><?php echo htmlspecialchars($nombreCompleto); ?></span></h1>
-                <p style="font-size: 14px; color: #ccc;">
-                    Carrera: <?php echo htmlspecialchars($carrera); ?>
-                </p>
+                <h1>Bienvenido, <span><?= htmlspecialchars($nombre_usuario) ?></span></h1>
+
             </div>
             <nav>
                 <ul>
                     <li><a href="../inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
                     <li><a href="../mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
                     <li><a href="./inscripciones.php" class="active"><i class="fas fa-edit"></i> Inscripciones</a></li>
-                    <li><a href="../SolicitudesCambios/solicitudCambios.php"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
+                    <li><a href="../SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
                     <li class="profile-link">
                         <a href="../perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
                     </li>

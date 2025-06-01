@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['usuario'])) {
+if (empty($_SESSION['usuario'])) {
     header("Location: login.php");
     exit();
 }
@@ -11,50 +11,33 @@ require_once "../includes/conexion1.php";
 $conexion = new Conexion();
 $conn = $conexion->getConexion();
 
-//se usa la cedula 
-$cedula = $_SESSION['cedula']; 
+$nombre_usuario = 'Usuario'; // Valor por defecto
 
-$sql = "SELECT nom_pri_usu, nom_seg_usu, ape_pri_usu, ape_seg_usu, car_usu 
-        FROM usuarios 
-        WHERE ced_usu = $1";
-$result = pg_query_params($conn, $sql, array($cedula));
+$sql = "SELECT nom_pri_usu FROM usuarios WHERE ced_usu = $1";
+$result = pg_query_params($conn, $sql, [$_SESSION['cedula']]);
 
-if ($usuario = pg_fetch_assoc($result)) {
-    $nombreCompleto = $usuario['nom_pri_usu'] . ' ' . $usuario['ape_pri_usu'];
-    $carrera = $usuario['car_usu'];
-} else {
-    $nombreCompleto = "Usuario desconocido";
-    $carrera = "Carrera no disponible";
+if ($datos = pg_fetch_assoc($result)) {
+    $nombre_usuario = $datos['nom_pri_usu'];
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistema de Inscripciones</title>
-    <link rel="stylesheet" href="../styles/css/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+    <link rel="stylesheet" href="../styles/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-        <header>
+    <header>
             <div class="container">
                 <div class="logo">
-                    <h1>Bienvenido, <span><?= htmlspecialchars($nombreCompleto) ?></span></h1>
-                    <p style="font-size: 14px; color: #ccc;">
-                        Carrera: <?= htmlspecialchars($carrera) ?>
-                    </p>
+                <h1>Bienvenido, <span><?= htmlspecialchars($nombre_usuario) ?></span></h1>
+
                 </div>
                 <nav>
         <ul>
