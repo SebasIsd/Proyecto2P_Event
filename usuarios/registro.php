@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "La carrera seleccionada no es válida";
         }
             // Hash de la contraseña
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $plain_password = $password;  // Almacena la contraseña 
             
             // Insertar nuevo usuario
             $insert_sql = "INSERT INTO usuarios 
@@ -53,9 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Rol de usuario común
 $params = array(
     $cedula, $nombre1, $nombre2, $apellido1, $apellido2,
-    $carrera, $correo, $telefono, $direccion, $fecha_nac, $hashed_password,
-    2 );
-
+    $carrera, $correo, $telefono, $direccion, $fecha_nac, $plain_password,
+    2 
+);
 $result = pg_query_params($conn, $insert_sql, $params);
             
             if ($result) {
