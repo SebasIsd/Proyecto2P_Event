@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function cargarUsuarios() {
-    fetch('../conexion/mostrar_usu.php') // ✅ Asegúrate de que la ruta es correcta
+    fetch('../conexion/mostrar_usuario.php') // ✅ Asegúrate de que la ruta es correcta
         .then(response => {
             if (!response.ok) throw new Error('Error en la respuesta del servidor');
             return response.json();
