@@ -102,6 +102,7 @@
                     <th>Apellidos</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
+                    <th>Carrera</th>
                     <th>Cargo</th>
                 </tr>
             </thead>
@@ -113,23 +114,36 @@
 </section>
 
     <!-- Agregar usuario -->
-    <section style="margin-top: 30px;">
-        <h3>Agregar Usuario</h3>
-        <form id="formAgregarUsuario">
-            <input type="text" name="ced_usu" placeholder="Cédula" required><br>
-            <input type="text" name="nom_pri_usu" placeholder="Primer Nombre" required><br>
-            <input type="text" name="nom_seg_usu" placeholder="Segundo Nombre"><br>
-            <input type="text" name="ape_pri_usu" placeholder="Apellido Paterno" required><br>
-            <input type="text" name="ape_seg_usu" placeholder="Apellido Materno"><br>
-            <input type="email" name="cor_usu" placeholder="Correo" required><br>
-            <input type="password" name="pas_usu" placeholder="Contraseña" required><br>
-            <input type="text" name="tel_usu" placeholder="Teléfono"><br>
-            <input type="text" name="dir_usu" placeholder="Dirección"><br>
-            <input type="date" name="fec_nac_usu" placeholder="Fecha de Nacimiento"><br>
-            <input type="text" name="car_usu" placeholder="Cargo"><br>
-            <button type="submit">Agregar Usuario</button>
-        </form>
-    </section>
+   <section style="margin-top: 30px;">
+    <h3>Agregar Usuario</h3>
+    <form id="formAgregarUsuario">
+    <input type="text" name="cedula" placeholder="Cédula" required><br>
+    <input type="text" name="nom_pri_usu" placeholder="Primer Nombre" required><br>
+    <input type="text" name="nom_seg_usu" placeholder="Segundo Nombre"><br>
+    <input type="text" name="ape_pri_usu" placeholder="Apellido Paterno" required><br>
+    <input type="text" name="ape_seg_usu" placeholder="Apellido Materno"><br>
+    <input type="email" name="correo" placeholder="Correo" required><br>
+    <input type="password" name="password" placeholder="Contraseña" required><br>
+    <input type="text" name="telefono" placeholder="Teléfono"><br>
+    <input type="text" name="direccion" placeholder="Dirección"><br>
+
+    <!-- Este campo aún no lo usa el PHP, lo puedes eliminar o guardar para después -->
+    <!-- <input type="date" name="fec_nac_usu" placeholder="Fecha de Nacimiento"><br> -->
+
+    <select name="id_rol_usu" required>
+        <option value="" disabled selected>Seleccione Cargo</option>
+        <option value="1">Administrador</option>
+        <option value="2">Usuario</option>
+        <option value="3">Invitado</option>
+    </select><br>
+
+    <input type="text" name="carrera" placeholder="Carrera"><br>
+
+    <button type="submit">Agregar Usuario</button>
+</form>
+
+</section>
+
 
     <!-- Eliminar usuario -->
     <section style="margin-top: 30px;">

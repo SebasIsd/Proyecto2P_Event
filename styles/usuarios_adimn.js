@@ -26,16 +26,18 @@ function cargarUsuarios() {
                 const nombres = `${usuario.nom_pri_usu} ${usuario.nom_seg_usu ?? ''}`.trim();
                 const apellidos = `${usuario.ape_pri_usu} ${usuario.ape_seg_usu ?? ''}`.trim();
                 const telefono = usuario.tel_usu ?? '';
-                const cargo = usuario.cargo ?? 'No asignado';
+               const carrera = usuario.car_usu ?? 'No definida';
+const cargo = usuario.cargo ?? 'No asignado';
 
-                fila.innerHTML = `
-                    <td>${usuario.ced_usu}</td>
-                    <td>${nombres}</td>
-                    <td>${apellidos}</td>
-                    <td>${usuario.cor_usu}</td>
-                    <td>${telefono}</td>
-                    <td>${cargo}</td>
-                `;
+fila.innerHTML = `
+    <td>${usuario.ced_usu}</td>
+    <td>${nombres}</td>
+    <td>${apellidos}</td>
+    <td>${usuario.cor_usu}</td>
+    <td>${telefono}</td>
+    <td>${carrera}</td>
+    <td>${cargo}</td>
+`;
                 cuerpoTabla.appendChild(fila);
             });
         })
@@ -48,7 +50,7 @@ function agregarUsuario() {
     const form = document.getElementById('formAgregarUsuario');
     const formData = new FormData(form);
 
-    fetch('php/agregar_usuario.php', {
+    fetch('../conexion/agregar_usuario.php', {
         method: 'POST',
         body: formData
     })
