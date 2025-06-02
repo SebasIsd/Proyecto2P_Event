@@ -67,7 +67,7 @@ function eliminarUsuario() {
     const form = document.getElementById('formEliminarUsuario');
     const formData = new FormData(form);
 
-    fetch('php/eliminar_usuario.php', {
+    fetch('../conexion/eliminar_usuario.php', {
         method: 'POST',
         body: formData
     })
