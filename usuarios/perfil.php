@@ -50,19 +50,18 @@ if ($usuario = pg_fetch_assoc($result)) {
     <header>
         <div class="container">
             <div class="logo">
-                <h1>Sistema de Inscripciones</h1>
+                <h1>Perfil</h1>
             </div>
             <nav>
                 <ul>
                     <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-                    <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
-                    <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes</a></li>
+                    <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+                    <li><a href="../usuarios/inscripciones/inscripciones.php"><i class="fas fa-edit"></i> Inscripciones</a></li>
+                    <li><a href="../usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes</a></li>
                     <li class="profile-link">
                         <a href="perfil.php" class="active"><i class="fas fa-user-circle"></i> Perfil</a>
                     </li>
-                    <li><a href="../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                    <li><a href="../../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
                 </ul>
             </nav>
         </div>
