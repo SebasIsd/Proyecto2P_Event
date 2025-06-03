@@ -14,9 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-  // Evento al cambiar selección
-  eventoSelect.addEventListener("change", () => {
-    const idEvento = eventoSelect.value;
+  // Función para cargar inscritos por evento
+  function cargarInscritos(idEvento) {
     if (!idEvento) return;
 
     fetch(`../admin/obtenerInscritosPorEvento.php?idEvento=${idEvento}`)
@@ -26,29 +25,29 @@ document.addEventListener("DOMContentLoaded", () => {
         data.forEach(p => {
           const fila = document.createElement("tr");
           fila.innerHTML = `
-  <td>${p.nombre_completo}</td>
-  <td>
-    <input type="number" step="0.01" min="0" max="100" value="${p.not_fin_not_asi || ""}" data-id="${p.id_ins}" class="nota-input" placeholder="Nota final">
-  </td>
-  <td>
-    <select data-id="${p.id_ins}" class="asistencia-select">
-      <option value="">--</option>
-      <option value="Presente" ${p.asi_not_asi === "Presente" ? "selected" : ""}>Presente</option>
-      <option value="Ausente" ${p.asi_not_asi === "Ausente" ? "selected" : ""}>Ausente</option>
-    </select>
-  </td>
-  <td>
-    <input type="number" step="1" min="0" max="100" value="${p.porc_asi_not_asi || ""}" data-id="${p.id_ins}" class="porcentaje-input" placeholder="% asistencia">
-  </td>
-  <td>
-    <button data-id="${p.id_ins}" class="guardar-btn">Guardar</button>
-  </td>
-`;
-
+            <td>${p.nombre_completo}</td>
+            <td>
+              <input type="number" step="0.01" min="0" max="100" value="${p.not_fin_not_asi || ""}" data-id="${p.id_ins}" class="nota-input" placeholder="Nota final">
+            </td>
+            <td>
+              <select data-id="${p.id_ins}" class="asistencia-select">
+                <option value="">--</option>
+                <option value="Presente" ${p.asi_not_asi === "Presente" ? "selected" : ""}>Presente</option>
+                <option value="Ausente" ${p.asi_not_asi === "Ausente" ? "selected" : ""}>Ausente</option>
+              </select>
+            </td>
+            <td>
+              <input type="number" step="1" min="0" max="100" value="${p.porc_asi_not_asi || ""}" data-id="${p.id_ins}" class="porcentaje-input" placeholder="% asistencia">
+            </td>
+            <td>
+              <button data-id="${p.id_ins}" class="guardar-btn">Guardar</button>
+            </td>
+          `;
 
           tablaCuerpo.appendChild(fila);
         });
 
+        // Agregar eventos a los botones de guardar
         document.querySelectorAll(".guardar-btn").forEach(btn => {
           btn.addEventListener("click", () => {
             const id = btn.dataset.id;
@@ -65,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .then(resp => {
                 if (resp.success) {
                   alert("Guardado correctamente.");
+                  // Volver a cargar los inscritos para mostrar los cambios
+                  cargarInscritos(eventoSelect.value);
                 } else {
                   alert("Error: " + resp.error);
                 }
@@ -76,5 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         });
       });
+  }
+
+  // Evento al cambiar selección
+  eventoSelect.addEventListener("change", () => {
+    cargarInscritos(eventoSelect.value);
   });
 });
