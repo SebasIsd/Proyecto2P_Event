@@ -22,9 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = pg_escape_string($conn, $_POST['password']);
     $confirm_password = pg_escape_string($conn, $_POST['confirm_password']);
     
-
-
-  // Validaciones básicas
+     // Validaciones básicas
     if ($password !== $confirm_password) {
         $error = "Las contraseñas no coinciden";
     } elseif (!preg_match('/@uta\.edu\.ec$/i', $correo)) {
@@ -42,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "La carrera seleccionada no es válida";
         }
             // Hash de la contraseña
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $plain_password = $password;  // Almacena la contraseña 
             
             // Insertar nuevo usuario
             $insert_sql = "INSERT INTO usuarios 
@@ -53,9 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Rol de usuario común
 $params = array(
     $cedula, $nombre1, $nombre2, $apellido1, $apellido2,
-    $carrera, $correo, $telefono, $direccion, $fecha_nac, $hashed_password,
-    2 );
-
+    $carrera, $correo, $telefono, $direccion, $fecha_nac, $plain_password,
+    2 
+);
 $result = pg_query_params($conn, $insert_sql, $params);
             
             if ($result) {
@@ -84,7 +82,7 @@ $result = pg_query_params($conn, $insert_sql, $params);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-     <div class="register-container">
+    <div class="register-container">
         <div class="register-card">
             <div class="register-header">
              <img src="../imagenes/evento2.png" alt="Logo UTA" class="header-logo">
