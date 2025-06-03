@@ -10,12 +10,12 @@ h2 {
 }
 
 form {
-    background-color: #6c1313;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 25px 30px;
+    background-color: #831919;
+    max-width: 500px;
+    margin: 100 auto;
+    padding: 20px 25px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(173, 129, 129, 0.1);
 }
 
 label {
@@ -58,12 +58,12 @@ button {
 }
 
 #buscarBtn {
-    background-color: #007bff;
+    background-color: #a71313;
     color: white;
 }
 
 #buscarBtn:hover {
-    background-color: #0056b3;
+    background-color: #e86a6a;
 }
 
 #editarBtn {
@@ -99,7 +99,7 @@ input:disabled {
   width: 300px;
   padding: 8px;
   font-size: 16px;
-  border: 2px solid #007bff;
+  border: 2px solid #c40606;
   border-radius: 5px;
   outline: none;
 }

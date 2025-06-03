@@ -84,8 +84,116 @@
             </form>
             <p id="error" style="color: red;"></p>
         </div>
+<!-- Añadir justo antes de cerrar </main> -->
+<aside style="margin-top: 40px; border-left: 2px solid #ccc; padding-left: 20px;">
+
+    <h2>Gestión de Usuarios</h2>
+
+    <!-- Tabla de usuarios -->
+  <!-- Tabla de usuarios -->
+<section>
+    <h3>Listado de Usuarios</h3>
+    <div style="overflow-x:auto;">
+        <table border="1" style="width:100%;" id="tablaUsuarios">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Carrera</th>
+                    <th>Cargo</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTablaUsuarios">
+                <!-- Aquí se insertarán los usuarios -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+    <!-- Agregar usuario -->
+   <section style="margin-top: 30px;">
+    <h3>Agregar Usuario</h3>
+    <form id="formAgregarUsuario">
+    <input type="text" name="cedula" placeholder="Cédula" required><br>
+    <input type="text" name="nom_pri_usu" placeholder="Primer Nombre" required><br>
+    <input type="text" name="nom_seg_usu" placeholder="Segundo Nombre"><br>
+    <input type="text" name="ape_pri_usu" placeholder="Apellido Paterno" required><br>
+    <input type="text" name="ape_seg_usu" placeholder="Apellido Materno"><br>
+    <input type="email" name="correo" placeholder="Correo" required><br>
+    <input type="password" name="password" placeholder="Contraseña" required><br>
+    <input type="text" name="telefono" placeholder="Teléfono"><br>
+    <input type="text" name="direccion" placeholder="Dirección"><br>
+
+    <!-- Este campo aún no lo usa el PHP, lo puedes eliminar o guardar para después -->
+    <!-- <input type="date" name="fec_nac_usu" placeholder="Fecha de Nacimiento"><br> -->
+
+    <select name="id_rol_usu" required>
+        <option value="" disabled selected>Seleccione Cargo</option>
+        <option value="1">Administrador</option>
+        <option value="2">Usuario</option>
+        <option value="3">Invitado</option>
+    </select><br>
+
+    <input type="text" name="carrera" placeholder="Carrera"><br>
+
+    <button type="submit">Agregar Usuario</button>
+</form>
+
+</section>
+
+
+    <!-- Eliminar usuario -->
+    <section style="margin-top: 30px;">
+        <h3>Eliminar Usuario</h3>
+        <form id="formEliminarUsuario">
+            <input type="text" name="ced_usu" placeholder="Cédula" required><br>
+            <button type="submit">Eliminar Usuario</button>
+        </form>
+    </section>
+
+</aside>
+
+
     </main>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos de la institución.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-envelope"></i> Contacto</h3>
+                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Dirección: Av. Principal 123, Ciudad</p>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li><a href="#eventos"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> Políticas de Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="../styles/buscarusuario.js"></script>
+    <script src="../styles/usuarios_adimn.js"></script>
 </body>
 </html>
