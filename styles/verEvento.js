@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p><strong>Fecha:</strong> Inicia el ${evento.fec_ini_eve_cur} y finaliza el ${evento.fec_fin_eve_cur}</p>
           <p><strong>Tipo:</strong> ${evento.tip_eve}</p>
           <p><strong>Modalidad:</strong> ${evento.mod_eve_cur} - $${evento.cos_eve_cur}</p>
+          <p><strong>Carrera:</strong> ${evento.car_eve_cur}</p>
           <button class="btn-editar" onclick="editarEvento(${evento.id_eve_cur})">Editar</button>
           <button class="btn-eliminar" onclick="eliminarEvento(${evento.id_eve_cur})">Eliminar</button>
         `;

@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    
-    form.addEventListener('submit', function(e) {
+
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         const fechaInicio = new Date(document.getElementById("fechaInicio").value);
         const fechaFin = new Date(document.getElementById("fechaFin").value);
         const hoy = new Date();
@@ -35,24 +35,30 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const carrera = document.getElementById("carrera").value;
+        if (!carrera) {
+            alert("Por favor selecciona una carrera.");
+            return;
+        }
+
         const datos = new FormData(form);
 
         fetch("../admin/crearEvento.php", {
             method: "POST",
             body: datos
         })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            form.reset();
-            costo.disabled = false;
-        })
-        .catch(error => {
-            alert("Error al guardar el evento.");
-            console.error(error);
-        
-        });
-    });  
-}); 
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                form.reset();
+                costo.disabled = false;
+            })
+            .catch(error => {
+                alert("Error al guardar el evento.");
+                console.error(error);
+
+            });
+    });
+});
 
 

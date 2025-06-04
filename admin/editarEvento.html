@@ -1,83 +1,106 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Editar Evento</title>
-    <link rel="stylesheet" href="../styles/css/style.css">
-    <link rel="stylesheet" href="../styles/css/estilosEventos.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../styles/css/style.css">
+  <link rel="stylesheet" href="../styles/css/estilosEventos.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 </head>
-<body>
-        <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Editar <span>Eventos</span></h1>
-            </div>  
-        </div>
-    </header>
 
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Editar <span>Eventos</span></h1>
+      </div>
+    </div>
+  </header>
+<main>
   <form id="form-editar">
     <input type="hidden" id="id_eve_cur">
-    <label>Título: <input type="text" id="tit_eve_cur"></label><br>
-    <label>Descripción: <textarea id="des_eve_cur"></textarea></label><br>
-    <label>Fecha Inicio: <input type="date" id="fec_ini_eve_cur"></label><br>
-    <label>Fecha Fin: <input type="date" id="fec_fin_eve_cur"></label><br>
-    <label>Tipo de Evento:
-  <select id="tip_eve" required>
-    <option value="">Selecciona una opción</option>
-    <option value="curso">Curso</option>
-    <option value="congreso">Congreso</option>
-    <option value="webinar">Webinar</option>
-    <option value="conferencia">Conferencia</option>
-    <option value="socializacion">Socialización</option>
-    </select>
-    </label>
-    <label>Modalidad:
-    <select id="mod_eve_cur" required>
-    <option value="">Selecciona una opción</option>
-    <option value="Gratis">Gratis</option>
-    <option value="Pagado">Pagado</option>
-    </select>
-    </label>
-    <label for="cos_eve_cur">Costo:
-  <input type="number" id="cos_eve_cur" min="0">
-</label><br>
+    <div class="columnas">
+      <div class="columna">
+        <label>Título: <input type="text" id="tit_eve_cur"></label><br>
+        <label>Descripción: <textarea id="des_eve_cur"></textarea></label><br>
+        <label>Tipo de Evento:
+          <select id="tip_eve" required>
+            <option value="">Selecciona una opción</option>
+            <option value="curso">Curso</option>
+            <option value="congreso">Congreso</option>
+            <option value="webinar">Webinar</option>
+            <option value="conferencia">Conferencia</option>
+            <option value="socializacion">Socialización</option>
+          </select>
+        </label>
 
-    <button type="submit">Guardar Cambios</button>
-  </form>
+        <label for="carrera">Carrera</label>
+        <select id="carrera" name="carrera" required>
+          <option value="">Selecciona una carrera</option>
+          <option value="Ing. Software">Ing. Software</option>
+          <option value="Ing. Industrial">Ing. Industrial</option>
+          <option value="Ing. Tecnologias de la Informacion">Ing. Tecnologias de la Informacion
+          </option>
+          <option value="Ing. Telecomunicaciones">Ing. Telecomunicaciones</option>
+          <option value="Ing. en Automatizacion y Robotica">Ing. en Automatizacion y Robotica</option>
+        </select>
+      </div>
+      <div class="columna">
+        <label>Fecha Inicio: <input type="date" id="fec_ini_eve_cur"></label><br>
+        <label>Fecha Fin: <input type="date" id="fec_fin_eve_cur"></label><br>
+        <label>Modalidad:
+          <select id="mod_eve_cur" required>
+            <option value="">Selecciona una opción</option>
+            <option value="Gratis">Gratis</option>
+            <option value="Pagado">Pagado</option>
+          </select>
+        </label>
+        <label for="cos_eve_cur">Costo:
+          <input type="number" id="cos_eve_cur" min="0">
+        </label><br>
+
+      </div>
+    </div>
+    <div class="boton-container">
+      <button type="submit">GUARDAR</button>
+      </form>
+    </div>
+  </main>
   <footer>
-              <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                    
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-envelope"></i> Contacto</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
-        </div>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
 
-    </footer>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-envelope"></i> Contacto</h3>
+          <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
+          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+
+  </footer>
   <script src="../styles/editarEvento.js"></script>
 </body>
+
 </html>

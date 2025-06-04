@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const costoInput = document.getElementById('cos_eve_cur');
   const modalidadSelect = document.getElementById('mod_eve_cur');
+  
 
   const manejarCosto = () => {
     if (modalidadSelect.value === 'Gratis') {
@@ -25,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('cos_eve_cur').value = evento.cos_eve_cur;
       document.getElementById('tip_eve').value = evento.tip_eve;
       document.getElementById('mod_eve_cur').value = evento.mod_eve_cur;
+      document.getElementById('carrera').value = evento.car_eve_cur;
+
     manejarCosto();
     });
 
@@ -41,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
       fecha_fin: document.getElementById('fec_fin_eve_cur').value,
       costo: document.getElementById('cos_eve_cur').value,
       tipo: document.getElementById('tip_eve').value,
-      modalidad: document.getElementById('mod_eve_cur').value
+      modalidad: document.getElementById('mod_eve_cur').value,
+      carrera: document.getElementById('carrera').value
     };
 
     fetch('../admin/actualizarEvento.php', {

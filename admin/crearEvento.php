@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $titulo = $_POST["titulo"] ?? '';
         $descripcion = $_POST["descripcion"] ?? '';
         $tipo = $_POST["tipo"] ?? '';
+         $carrera = $_POST["carrera"] ?? '';
         $fechaInicio = $_POST["fechaInicio"] ?? '';
         $fechaFin = $_POST["fechaFin"] ?? '';
         $modalidad = $_POST["modalidad"] ?? '';
@@ -22,7 +23,8 @@ try {
                 FEC_FIN_EVE_CUR, 
                 COS_EVE_CUR, 
                 TIP_EVE, 
-                MOD_EVE_CUR
+                MOD_EVE_CUR,
+                CAR_EVE_CUR
             ) VALUES (
                 :titulo, 
                 :descripcion, 
@@ -30,7 +32,8 @@ try {
                 :fechaFin, 
                 :costo, 
                 :tipo, 
-                :modalidad)";
+                :modalidad,
+                :carrera)";
         
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':titulo', $titulo);
@@ -40,6 +43,7 @@ try {
         $stmt->bindParam(':costo', $costo);
         $stmt->bindParam(':tipo', $tipo);
         $stmt->bindParam(':modalidad', $modalidad);
+        $stmt->bindParam(':carrera', $carrera);
         
         $stmt->execute();
      echo " Evento guardado correctamente.";   
