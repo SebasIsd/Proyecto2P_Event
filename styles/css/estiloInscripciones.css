@@ -72,3 +72,15 @@ input-group {
   .input-group button:hover {
     background-color: #0056b3;
   }
+
+.filtro-inscripciones {
+  margin-bottom: 15px;
+}
+
+#filtroNombre {
+  width: 30%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
