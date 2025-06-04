@@ -89,6 +89,7 @@ $result = pg_query_params($conn, $insert_sql, $params);
                 <h2><i class="fas fa-user-plus"></i> Crear Cuenta</h2>
                 <p>Regístrate para acceder al sistema</p>
             </div>
+            <br>
             
             <?php if ($error): ?>
                 <div class="alert alert-error">
