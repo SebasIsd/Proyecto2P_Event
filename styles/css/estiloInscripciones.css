@@ -45,3 +45,30 @@
 .inscripcion-card:hover {
   transform: scale(1.02);
 }
+input-group {
+    display: flex;
+    max-width: 500px;
+    margin-bottom: 1rem;
+  }
+
+  .input-group input {
+    flex: 1;
+    font-size: 18px;      /* Texto más grande */
+    padding: 12px 16px;   /* Más espacio interno */
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px; /* Bordes redondeados solo a la izquierda */
+  }
+
+  .input-group button {
+    font-size: 18px;      /* Texto más grande */
+    padding: 12px 20px;   /* Más espacio interno */
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+    border-radius: 0 4px 4px 0; /* Bordes redondeados solo a la derecha */
+    cursor: pointer;
+  }
+
+  .input-group button:hover {
+    background-color: #0056b3;
+  }
