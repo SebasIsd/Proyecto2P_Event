@@ -24,7 +24,6 @@ function cargarInscripciones() {
   <td>${inscripcion.fecha_cierre}</td>
   <td>${inscripcion.estado_pago}</td>
   <td>
-            <a href="#" onclick="editarInscripcion(${inscripcion.id_inscripcion})">Editar</a> |
             <a href="#" onclick="eliminarInscripcion(${inscripcion.id_inscripcion})">Eliminar</a>
           </td>
         `;
