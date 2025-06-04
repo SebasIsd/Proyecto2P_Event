@@ -1,5 +1,5 @@
 <?php
-include_once("../conexion/conexion.php");
+include_once("../conexion/conexion2.php");
 
 $id = $_GET['id'] ?? null;
 if (!$id) {

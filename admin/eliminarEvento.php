@@ -1,5 +1,5 @@
 <?php
-include_once("../conexion/conexion.php");
+include_once("../conexion/conexion2.php");
 
 if (!isset($_GET['id'])) {
     echo json_encode(['error' => 'ID no proporcionado']);

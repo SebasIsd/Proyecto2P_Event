@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 
 require '../vendor/autoload.php';
-include_once '../conexion/conexion.php';
+include_once '../conexion/conexion2.php';
 use Dompdf\Dompdf;
 
 header('Content-Type: application/json');

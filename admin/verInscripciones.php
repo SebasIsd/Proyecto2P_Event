@@ -1,5 +1,5 @@
 <?php
-include_once '../conexion/conexion.php'; // Asegúrate de tener tu conexión bien configurada
+include_once '../conexion/conexion2.php'; // Asegúrate de tener tu conexión bien configurada
 
 header('Content-Type: application/json');
 

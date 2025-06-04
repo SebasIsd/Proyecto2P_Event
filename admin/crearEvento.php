@@ -1,5 +1,5 @@
 <?php
-include_once("../conexion/conexion.php");
+include_once("../conexion/conexion2.php");
 //Verificar si es una solicitud POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     

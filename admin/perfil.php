@@ -8,7 +8,7 @@ if (!isset($_SESSION['cedula'])) {
 
 $cedula = $_SESSION['cedula'];
 
-include '../conexion/conexion.php'; 
+include '../conexion/conexion2.php'; 
 
 $sql = "SELECT u.*, r.NOM_ROL FROM USUARIOS u
         JOIN ROLES r ON u.ID_ROL_USU = r.ID_ROL
