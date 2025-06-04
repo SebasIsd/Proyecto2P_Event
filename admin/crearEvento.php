@@ -1,5 +1,5 @@
 <?php
-include_once("../conexion/conexion.php");
+ require_once ("../conexion/conexion.php");
 //Verificar si es una solicitud POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
@@ -42,12 +42,12 @@ try {
         $stmt->bindParam(':modalidad', $modalidad);
         
         $stmt->execute();
-     echo "✅ Evento guardado correctamente.";   
+     echo " Evento guardado correctamente.";   
      
     } catch (PDOException $e) {
-        echo "❌ Error al guardar el evento: " . $e->getMessage();
+        echo " Error al guardar el evento: " . $e->getMessage();
     }
 } else {
-    echo "❌ Solicitud inválida.";
+    echo " Solicitud inválida.";
 }
 ?>
