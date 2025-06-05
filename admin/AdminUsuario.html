@@ -87,6 +87,7 @@
                 <button type="button" id="btnGuardar" onclick="actualizarUsuario()" style="display:none;">Guardar</button>
                 <span id="loading" style="display:none;">Guardando...</span>
             </form>
+            
             <p id="error" style="color: red;"></p>
         </div>
 <!-- Añadir justo antes de cerrar </main> -->
@@ -130,7 +131,7 @@
         <input type="text" name="direccion" placeholder="Dirección"><br>
 
         <!-- ✅ Campo requerido por el backend -->
-        <label for="fec_nac_usu">Fecha de Nacimiento:</label><br>
+    
         <input type="date" name="fec_nac_usu" required><br>
 
         <select name="id_rol_usu" required>
@@ -139,6 +140,7 @@
             <option value="2">Usuario</option>
             <option value="3">Invitado</option>
         </select><br>
+
 
         <input type="text" name="carrera" placeholder="Carrera"><br>
 
@@ -149,7 +151,7 @@
 
 
     <!-- Eliminar usuario -->
-    <section style="margin-top: 30px;">
+    <section style="margin-top: px;">
         <h3>Eliminar Usuario</h3>
         <form id="formEliminarUsuario">
     <input type="text" name="cedula" placeholder="Cédula" required><br>
