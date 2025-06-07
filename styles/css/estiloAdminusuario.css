@@ -92,7 +92,7 @@ button {
 
 input:disabled {
     background-color: #f0f0f0;
-    color: #888;
+    color: #248339;
     cursor: not-allowed;
 }
 #ced_usu {
@@ -114,5 +114,6 @@ input:disabled {
  
     flex: 1;
 }
+
 
 
