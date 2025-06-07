@@ -49,7 +49,7 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
             <div class="logo">
                 <h1>Bienvenido, <span><?= htmlspecialchars($_SESSION['usuario'] ?? 'Usuario') ?></span></h1>
             </div>
-          
+            
             <nav>
                 <ul>
                     <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
@@ -89,7 +89,7 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
                                 </p>
                                 <p><i class="fas fa-dollar-sign"></i> $<?= htmlspecialchars($evento['costo']) ?></p>
                                 <p><i class="fas fa-laptop-house"></i> Evento tipo: <?= htmlspecialchars($evento['modalidad']) ?></p>
-                                <p><i class="fas fa-calendar-plus"></i> Inscrito el: <span class="fecha-inscripcion"></span></p>
+                                <p><i class="fas fa-calendar-plus"></i> Inscrito el: <span class="fecha-inscripcion"><?= htmlspecialchars($evento['fecha_inscripcion']) ?></span></p>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -98,6 +98,7 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
         </section>
     </main>
 
+    
     <style>
         .evento-moderno {
             background-color: #fff;
@@ -182,7 +183,6 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
             eventos.forEach(evento => {
                 const fechaInicio = evento.dataset.fechaInicio;
                 const fechaFin = evento.dataset.fechaFin;
-                const fechaInscripcion = evento.querySelector('p:nth-child(5) span')?.textContent || '';
                 
                 // Formatear fechas
                 if (evento.querySelector('.fecha-inicio')) {
@@ -193,8 +193,10 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
                     evento.querySelector('.fecha-fin').textContent = formatearFecha(fechaFin);
                 }
                 
-                if (evento.querySelector('.fecha-inscripcion')) {
-                    evento.querySelector('.fecha-inscripcion').textContent = `<?= date($evento['fecha_inscripcion']) ?>`;
+                // Formatear fecha de inscripción
+                const spanFechaInscripcion = evento.querySelector('.fecha-inscripcion');
+                if (spanFechaInscripcion) {
+                    spanFechaInscripcion.textContent = formatearFecha(spanFechaInscripcion.textContent);
                 }
             });
         });

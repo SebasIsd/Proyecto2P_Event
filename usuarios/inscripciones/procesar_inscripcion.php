@@ -55,7 +55,7 @@ try {
     
     if (pg_num_rows($result) > 0) {
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-            http_response_code(409);
+            http_response_code(409); // Conflict
             header('Content-Type: application/json');
             echo json_encode(['error' => 'Ya está inscrito en este evento']);
             exit();
@@ -69,8 +69,8 @@ try {
 
     // Insertar la inscripción
     $sql_inscripcion = "INSERT INTO INSCRIPCIONES 
-                        (CED_USU, ID_EVE_CUR, FEC_INI_INS, FEC_CIE_INS, EST_PAG_INS) 
-                        VALUES ($1, $2, $3, $4, $5) RETURNING ID_INS";
+                         (CED_USU, ID_EVE_CUR, FEC_INI_INS, FEC_CIE_INS, EST_PAG_INS) 
+                         VALUES ($1, $2, $3, $4, $5) RETURNING ID_INS";
     
     // Calcular fecha de cierre (30 días después de la inscripción)
     $fecha_cierre = date('Y-m-d', strtotime($fecha_inscripcion . ' +30 days'));
@@ -153,7 +153,7 @@ try {
     if (ob_get_length()) ob_clean();
     
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-        http_response_code(500);
+        http_response_code(500); // Internal Server Error
         header('Content-Type: application/json');
         echo json_encode(['error' => $e->getMessage()]);
         exit();
