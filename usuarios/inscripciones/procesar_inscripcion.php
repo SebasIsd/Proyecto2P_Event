@@ -6,6 +6,7 @@ require_once "../../includes/conexion1.php";
 if (!isset($_SESSION['usuario'])) {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         http_response_code(401);
+        header('Content-Type: application/json');
         echo json_encode(['error' => 'Sesión expirada']);
         exit();
     }
@@ -17,6 +18,7 @@ if (!isset($_SESSION['usuario'])) {
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['evento'])) {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         http_response_code(400);
+        header('Content-Type: application/json');
         echo json_encode(['error' => 'Datos incompletos']);
         exit();
     }
@@ -37,6 +39,7 @@ $tipo_evento = $_POST['tipo_evento']; // 'pagado' o 'gratis'
 if (!$id_evento || !$fecha_inscripcion || !$estado_pago) {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         http_response_code(400);
+        header('Content-Type: application/json');
         echo json_encode(['error' => 'Datos de validación incompletos']);
         exit();
     }
@@ -53,6 +56,7 @@ try {
     if (pg_num_rows($result) > 0) {
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             http_response_code(409);
+            header('Content-Type: application/json');
             echo json_encode(['error' => 'Ya está inscrito en este evento']);
             exit();
         }
@@ -126,7 +130,12 @@ try {
     // Verificar si es una petición AJAX
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'message' => 'Inscripción realizada exitosamente']);
+        http_response_code(200);
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Inscripción realizada exitosamente',
+            'id_inscripcion' => $id_inscripcion
+        ]);
         exit();
     } else {
         // Redirección tradicional
@@ -152,5 +161,9 @@ try {
         header("Location: inscripciones.php?error=" . urlencode($e->getMessage()));
         exit();
     }
+} finally {
+    // Cerrar conexión
+    if (isset($conn)) {
+        pg_close($conn);
+    }
 }
-?>

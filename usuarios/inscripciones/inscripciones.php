@@ -183,19 +183,6 @@ if ($datos = pg_fetch_assoc($result)) {
         </div>
     </main>
 
-    <!-- Modal de éxito -->
-    <div id="successModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-icon success">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h3>¡Inscripción Exitosa!</h3>
-            <p>Tu inscripción se ha procesado correctamente.</p>
-            <button id="modalCloseBtn" class="btn-modal">Aceptar</button>
-        </div>
-    </div>
-
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -239,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return fecha;
         }
     }
-
     // Cargar eventos disponibles
     fetch('./get_eventos_disponibles.php')
         .then(response => {
@@ -320,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Mostrar indicador de carga (opcional)
+        // Mostrar indicador de carga
         const submitBtn = this.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Procesando...';
@@ -328,6 +314,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Recolectar todos los datos del formulario
         const formData = new FormData(this);
+        
+        console.log('Enviando datos del formulario...');
         
         // Enviar datos al servidor con headers específicos para AJAX
         fetch('procesar_inscripcion.php', {
@@ -346,48 +334,50 @@ document.addEventListener('DOMContentLoaded', function() {
             if (contentType && contentType.includes('application/json')) {
                 return response.json().then(data => {
                     console.log('JSON response:', data);
-                    return data;
+                    return { isJson: true, data: data, status: response.status };
                 });
             } else {
                 // Si no es JSON, obtener el texto
                 return response.text().then(text => {
                     console.log('Text response:', text);
                     console.log('Response OK:', response.ok);
-                    
-                    // Verificar si fue exitoso
-                    if (response.ok) {
-                        // Si es una redirección exitosa o contiene success
-                        if (text.includes('success') || response.status === 200 || text.trim() === '') {
-                            return { success: true, message: 'Inscripción realizada exitosamente' };
-                            showSuccessModal();
-                        }
-                    }
-                    
-                    // Si llegamos aquí, hubo un error
-                    throw new Error(text || 'Error en el servidor');
+                    return { isJson: false, data: text, status: response.status };
                 });
             }
         })
-        .then(data => {
-            console.log('Final data:', data);
+        .then(result => {
+            console.log('Resultado procesado:', result);
             
             // Restaurar botón
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
             
-            if (data && data.success) {
-                console.log('Showing success modal');
-                showSuccessModal();
-            } else if (data && data.error) {
-                console.log('Error in response:', data.error);
-                alert('Error: ' + data.error);
+            if (result.isJson) {
+                // Respuesta JSON
+                if (result.data.success) {
+                    console.log('Éxito detectado en JSON, mostrando modal');
+                    showSuccessModal();
+                } else if (result.data.error) {
+                    console.log('Error en JSON:', result.data.error);
+                    alert('Error: ' + result.data.error);
+                } else {
+                    console.log('Respuesta JSON desconocida:', result.data);
+                    alert('Respuesta inesperada del servidor');
+                }
             } else {
-                console.log('Unknown response format:', data);
-                alert('Respuesta inesperada del servidor');
+                // Respuesta de texto
+                if (result.status === 200 || result.status < 400) {
+                    // Si el status es exitoso, consideramos que fue exitoso
+                    console.log('Respuesta exitosa (texto), mostrando modal');
+                    showSuccessModal();
+                } else {
+                    console.log('Error en respuesta de texto:', result.data);
+                    alert('Error: ' + (result.data || 'Error desconocido'));
+                }
             }
         })
         .catch(error => {
-            console.error('Fetch error:', error);
+            console.error('Error en fetch:', error);
             
             // Restaurar botón
             submitBtn.textContent = originalText;
@@ -396,32 +386,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Ocurrió un error al procesar la inscripción: ' + error.message);
         });
     });
-
-    // Función para mostrar el modal de éxito
-    function showSuccessModal() {
-        const modal = document.getElementById('successModal');
-        modal.style.display = 'flex';
-        
-        // Cerrar modal al hacer clic en la X
-        document.querySelector('.close-modal').onclick = function() {
-            modal.style.display = 'none';
-            window.location.reload();
-        };
-        
-        // Cerrar modal al hacer clic en el botón Aceptar
-        document.getElementById('modalCloseBtn').onclick = function() {
-            modal.style.display = 'none';
-            window.location.reload();
-        };
-        
-        // Cerrar modal al hacer clic fuera del contenido
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-                window.location.reload();
-            }
-        };
-    }
 
     // Botón regresar
     document.getElementById('btnRegresar').addEventListener('click', function() {
@@ -448,6 +412,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function showSuccessModal() {
+    // Crear y mostrar el modal de éxito
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</span>
+            <div class="modal-icon success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>¡Inscripción exitosa!</h3>
+            <p>La inscripción se ha registrado correctamente.</p>
+            <button class="btn-modal" onclick="window.location.href='../mis_eventos.php'">Ver mis eventos</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.style.display = 'flex';
+
+    // Opcional: Redireccionar automáticamente después de 3 segundos
+    setTimeout(() => {
+        window.location.href = '../mis_eventos.php';
+    }, 3000);
+}
     </script>
 </body>
 </html>
