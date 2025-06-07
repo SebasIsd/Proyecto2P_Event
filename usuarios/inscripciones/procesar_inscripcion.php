@@ -100,7 +100,7 @@ try {
         
         // Generar nombre único para el archivo
         $extension = pathinfo($_FILES['comprobante']['name'], PATHINFO_EXTENSION);
-        $nombre_archivo = "comprobante_" . $id_inscripcion . "_" . time() . "." . $extension;
+        $nombre_archivo = "comprobante_" . $id_inscripcion . "_" . $cedula . "." . $extension;
         $ruta_archivo = $directorio . $nombre_archivo;
         
         // Mover el archivo subido

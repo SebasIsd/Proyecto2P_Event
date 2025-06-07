@@ -338,40 +338,61 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers.get('content-type'));
+            
             // Verificar si la respuesta es JSON
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
-                return response.json();
+                return response.json().then(data => {
+                    console.log('JSON response:', data);
+                    return data;
+                });
             } else {
-                // Si no es JSON, puede ser una redirección o HTML
+                // Si no es JSON, obtener el texto
                 return response.text().then(text => {
-                    // Si contiene éxito en el texto, asumimos que fue exitoso
-                    if (response.ok && (text.includes('success') || response.status === 200)) {
-                        return { success: true, message: 'Inscripción realizada exitosamente' };
-                        showSuccessModal();
-                    } else {
-                        throw new Error(text || 'Error en el servidor');
+                    console.log('Text response:', text);
+                    console.log('Response OK:', response.ok);
+                    
+                    // Verificar si fue exitoso
+                    if (response.ok) {
+                        // Si es una redirección exitosa o contiene success
+                        if (text.includes('success') || response.status === 200 || text.trim() === '') {
+                            return { success: true, message: 'Inscripción realizada exitosamente' };
+                            showSuccessModal();
+                        }
                     }
+                    
+                    // Si llegamos aquí, hubo un error
+                    throw new Error(text || 'Error en el servidor');
                 });
             }
         })
         .then(data => {
+            console.log('Final data:', data);
+            
             // Restaurar botón
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
             
-            if (data.success) {
+            if (data && data.success) {
+                console.log('Showing success modal');
                 showSuccessModal();
+            } else if (data && data.error) {
+                console.log('Error in response:', data.error);
+                alert('Error: ' + data.error);
             } else {
-                throw new Error(data.error || 'Error desconocido');
+                console.log('Unknown response format:', data);
+                alert('Respuesta inesperada del servidor');
             }
         })
         .catch(error => {
+            console.error('Fetch error:', error);
+            
             // Restaurar botón
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
             
-            console.error('Error:', error);
             alert('Ocurrió un error al procesar la inscripción: ' + error.message);
         });
     });
