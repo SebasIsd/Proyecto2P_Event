@@ -83,45 +83,39 @@ if ($datos = pg_fetch_assoc($result)) {
         <label for="evento">Evento/Curso</label>
         <select id="evento" name="evento" class="form-control" required>
             <option value="">Seleccione un evento...</option>
-            <!-- Opciones se llenarán con JavaScript -->
         </select>
     </div>
-    
+
     <div class="form-row">
         <div class="form-group">
             <label for="fecha_inscripcion">Fecha de Inscripción</label>
             <input type="date" id="fecha_inscripcion" name="fecha_inscripcion" class="form-control" required>
         </div>
     </div>
-    
-    <div class="form-group">
-        <label for="estado_pago">Estado de Pago</label>
-        <select id="estado_pago" name="estado_pago" class="form-control" required>
-            <option value="">Seleccione...</option>
-            <option value="Pendiente">Pendiente</option>
-            <option value="Pagado">Pagado</option>
-        </select>
-    </div>
-    
-    <div id="seccion_pago" style="display: none;">
-        <h3>Información de Pago</h3>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="fecha_pago">Fecha de Pago</label>
-                <input type="date" id="fecha_pago" name="fecha_pago" class="form-control">
-            </div>
-            
-            <div class="form-group">
-                <label for="monto_pago">Monto</label>
-                <input type="number" step="0.01" id="monto_pago" name="monto_pago" class="form-control">
-            </div>
-        </div>
-        
+
+    <input type="hidden" id="estado_pago" name="estado_pago" value="PENDIENTE">
+
+    <div id="info_pago" style="display: none;">
         <div class="form-group">
-            <label for="metodo_pago">Método de Pago</label>
-            <input type="text" id="metodo_pago" name="metodo_pago" class="form-control">
+            <label for="tipo_evento">Tipo de Evento</label>
+            <input type="text" id="tipo_evento" name="tipo_evento" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="costo">Costo</label>
+            <input type="text" id="costo" name="costo" class="form-control" readonly>
+        </div>
+
+        <div class="form-group" id="comprobante_group" style="display: none;">
+            <label for="comprobante">Subir Comprobante de Pago</label>
+            <input type="file" id="comprobante" name="comprobante" accept="image/*" class="form-control">
+        </div>
+
+        <div class="form-group" id="info_gratis" style="display: none;">
+            <p><strong>Este evento es gratuito y no requiere comprobante.</strong></p>
         </div>
     </div>
+
     
     <button type="submit" class="btn-submit">Registrar Inscripción</button><br>
     <button type="button" id="btnRegresar" class="btn-submit">Regresar</button>
@@ -185,31 +179,50 @@ if ($datos = pg_fetch_assoc($result)) {
                 return response.json();
             })
             .then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                
                 const selectEvento = document.getElementById('evento');
                 selectEvento.innerHTML = '<option value="">Seleccione un evento...</option>';
-                
-                if (data.length === 0) {
+
+                data.forEach(evento => {
                     const option = document.createElement('option');
-                    option.textContent = 'No hay eventos disponibles actualmente';
-                    option.disabled = true;
+                    option.value = evento.codigo;
+                    option.textContent = `${evento.titulo} (${formatearFecha(evento.fechainicio)})`;
+                    option.setAttribute('data-tipo', evento.tipo_evento.toLowerCase());
+                    option.setAttribute('data-costo', evento.costo);
                     selectEvento.appendChild(option);
-                } else {
-                    data.forEach(evento => {
-                        const fechaInicio = formatearFecha(evento.fechainicio);
-                        const fechaFin = evento.fechafin ? formatearFecha(evento.fechafin) : null;
-                        const fechaTexto = (fechaFin && fechaFin !== fechaInicio) ? `${fechaInicio} - ${fechaFin}` : fechaInicio;
-                        const option = document.createElement('option');
-                        option.value = evento.codigo;
-                        // Usar la función formatearFecha para mostrar las fechas
-                        option.textContent = `${evento.titulo} (${fechaTexto})`;
-                        selectEvento.appendChild(option);
-                    });
-                }
+                });
+
+                selectEvento.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const tipo = selected.getAttribute('data-tipo');
+                    const costo = selected.getAttribute('data-costo');
+                    const infoPago = document.getElementById('info_pago');
+                    const inputTipo = document.getElementById('tipo_evento');
+                    const inputCosto = document.getElementById('costo');
+                    const estadoPago = document.getElementById('estado_pago');
+                    const comprobante = document.getElementById('comprobante_group');
+                    const infoGratis = document.getElementById('info_gratis');
+
+                    if (!tipo) {
+                        infoPago.style.display = 'none';
+                        return;
+                    }
+
+                    infoPago.style.display = 'block';
+                    inputTipo.value = tipo;
+                    inputCosto.value = costo;
+
+                    if (tipo === 'pagado') {
+                        comprobante.style.display = 'block';
+                        infoGratis.style.display = 'none';
+                    } else {
+                        comprobante.style.display = 'none';
+                        infoGratis.style.display = 'block';
+                    }
+
+                    estadoPago.value = 'PENDIENTE';
+                });
             })
+
             .catch(error => {
                 console.error('Error al cargar eventos:', error);
                 const selectEvento = document.getElementById('evento');
@@ -222,14 +235,14 @@ if ($datos = pg_fetch_assoc($result)) {
             });
 
         // Resto del código permanece igual...
-        document.getElementById('estado_pago').addEventListener('change', function() {
+        /*document.getElementById('estado_pago').addEventListener('change', function() {
             const seccionPago = document.getElementById('seccion_pago');
             seccionPago.style.display = this.value === 'Pagado' ? 'block' : 'none';
             
             if (this.value === 'Pagado') {
                 document.getElementById('fecha_pago').valueAsDate = new Date();
             }
-        });
+        });*/
 
         document.getElementById('fecha_inscripcion').valueAsDate = new Date();
 
