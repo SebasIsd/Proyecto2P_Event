@@ -18,27 +18,34 @@ try {
     }
     
     $cedula = isset($_SESSION['cedula']) ? $_SESSION['cedula'] : null;
+
+    $queryCarrera = "SELECT CAR_USU FROM USUARIOS WHERE CED_USU = $1";
+    $resultCarrera = pg_query_params($conn, $queryCarrera, [$cedula]);
     
+    if (!$resultCarrera || pg_num_rows($resultCarrera) === 0) {
+        throw new Exception("No se encontró la carrera del usuario.");
+    }
+
+    $carrera = pg_fetch_result($resultCarrera, 0, 0); // tipo_carrera enum
+
     $query = "SELECT 
                 ec.ID_EVE_CUR as codigo,
                 ec.TIT_EVE_CUR as titulo,
                 ec.FEC_INI_EVE_CUR as fechaInicio,
                 ec.FEC_FIN_EVE_CUR as fechaFin
               FROM EVENTOS_CURSOS ec
-              WHERE ec.FEC_FIN_EVE_CUR >= CURRENT_DATE";
-    
-    // Excluir eventos en los que el usuario ya está inscrito
-    if ($cedula) {
-        $query .= " AND ec.ID_EVE_CUR NOT IN (
+              WHERE ec.FEC_FIN_EVE_CUR >= CURRENT_DATE
+              AND (ec.CAR_EVE_CUR = $1 OR ec.CAR_EVE_CUR = 'Todos')
+              AND ec.ID_EVE_CUR NOT IN (
                     SELECT i.ID_EVE_CUR 
                     FROM INSCRIPCIONES i 
-                    WHERE i.CED_USU = '$cedula'
-                   )";
-    }
+                    WHERE i.CED_USU = $2)
+                ORDER BY ec.FEC_INI_EVE_CUR ASC, ec.TIT_EVE_CUR ASC    
+              ";
     
-    $query .= " ORDER BY ec.FEC_INI_EVE_CUR ASC, ec.TIT_EVE_CUR ASC";
-    
-    $result = pg_query($conn, $query);
+    // Excluir eventos en los que el usuario ya está inscrito
+    $params = [$carrera, $cedula];
+    $result = pg_query_params($conn, $query, $params);
     
     if (!$result) {
         throw new Exception("Error en la consulta SQL: " . pg_last_error($conn));
