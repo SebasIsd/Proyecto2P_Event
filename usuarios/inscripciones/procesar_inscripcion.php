@@ -4,12 +4,22 @@ require_once "../../includes/conexion1.php";
 
 // Verificar sesión
 if (!isset($_SESSION['usuario'])) {
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        http_response_code(401);
+        echo json_encode(['error' => 'Sesión expirada']);
+        exit();
+    }
     header("Location: ../../login.php");
     exit();
 }
 
 // Verificar que se enviaron los datos necesarios
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['evento'])) {
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        http_response_code(400);
+        echo json_encode(['error' => 'Datos incompletos']);
+        exit();
+    }
     header("Location: inscripciones.php?error=Datos incompletos");
     exit();
 }
@@ -25,7 +35,12 @@ $estado_pago = $_POST['estado_pago']; // Este ahora viene definido por el tipo d
 $tipo_evento = $_POST['tipo_evento']; // 'pagado' o 'gratis'
 
 if (!$id_evento || !$fecha_inscripcion || !$estado_pago) {
-    header("Location: inscripciones.php?error=Datos inválidos");
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        http_response_code(400);
+        echo json_encode(['error' => 'Datos de validación incompletos']);
+        exit();
+    }
+    header("Location: inscripciones.php");
     exit();
 }
 
@@ -36,7 +51,12 @@ try {
     $result = pg_query_params($conn, $sql_verificar, array($cedula, $id_evento));
     
     if (pg_num_rows($result) > 0) {
-        header("Location: inscripciones.php?error=Ya estás inscrito en este evento");
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            http_response_code(409);
+            echo json_encode(['error' => 'Ya está inscrito en este evento']);
+            exit();
+        }
+        header("Location: inscripciones.php?error=Ya está inscrito en este evento");
         exit();
     }
 
@@ -62,7 +82,7 @@ try {
     $id_inscripcion = pg_fetch_result($result, 0, 0);
 
     // Solo manejar comprobante si es evento pagado
-    if ($tipo_evento === 'pagado' && isset($_FILES['comprobante'])) {
+    if ($tipo_evento === 'pagado' && isset($_FILES['comprobante']) && $_FILES['comprobante']['error'] === UPLOAD_ERR_OK) {
         $directorio = "../../comprobantes/";
         
         // Crear directorio si no existe
@@ -100,19 +120,37 @@ try {
     // Confirmar transacción
     pg_query($conn, "COMMIT");
 
-    // Limpiar buffer de salida antes de redireccionar
+    // Limpiar buffer de salida antes de responder
     if (ob_get_length()) ob_clean();
     
-    header("Location: inscripciones.php?success");
-    exit();
+    // Verificar si es una petición AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Inscripción realizada exitosamente']);
+        exit();
+    } else {
+        // Redirección tradicional
+        header("Location: ../mis_eventos.php?success=InscripcionRealizada");
+        exit();
+    }
 
 } catch (Exception $e) {
     // Revertir transacción en caso de error
     if (isset($conn)) {
         pg_query($conn, "ROLLBACK");
     }
-    // Limpiar buffer de salida antes de redireccionar
+    
+    // Limpiar buffer de salida antes de responder
     if (ob_get_length()) ob_clean();
-    header("Location: inscripciones.php?error=" . urlencode($e->getMessage()));
-    exit();
+    
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => $e->getMessage()]);
+        exit();
+    } else {
+        header("Location: inscripciones.php?error=" . urlencode($e->getMessage()));
+        exit();
+    }
 }
+?>

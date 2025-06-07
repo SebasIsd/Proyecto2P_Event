@@ -47,6 +47,66 @@ if ($datos = pg_fetch_assoc($result)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
+    <style>
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .modal-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-icon.success {
+            color: #28a745;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        
+        .btn-modal {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        
+        .btn-modal:hover {
+            background-color: #218838;
+        }
+    </style>
+
     <header>
         <div class="container">
             <div class="logo">
@@ -123,6 +183,19 @@ if ($datos = pg_fetch_assoc($result)) {
         </div>
     </main>
 
+    <!-- Modal de éxito -->
+    <div id="successModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-icon success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>¡Inscripción Exitosa!</h3>
+            <p>Tu inscripción se ha procesado correctamente.</p>
+            <button id="modalCloseBtn" class="btn-modal">Aceptar</button>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -151,47 +224,47 @@ if ($datos = pg_fetch_assoc($result)) {
     </footer>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Función para formatear fechas
-        function formatearFecha(fecha) {
-            if (!fecha) return 'Sin fecha';
-            try {
-                const fechaObj = new Date(fecha);
-                return fechaObj.toLocaleDateString('es-ES', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-            } catch {
-                return fecha;
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para formatear fechas
+    function formatearFecha(fecha) {
+        if (!fecha) return 'Sin fecha';
+        try {
+            const fechaObj = new Date(fecha);
+            return fechaObj.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        } catch {
+            return fecha;
         }
+    }
 
-        // Cargar eventos disponibles
-        fetch('./get_eventos_disponibles.php')
-            .then(response => {
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    return response.text().then(text => {
-                        throw new Error(`Respuesta no es JSON: ${text}`);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                const selectEvento = document.getElementById('evento');
-                selectEvento.innerHTML = '<option value="">Seleccione un evento...</option>';
-
-                data.forEach(evento => {
-                    const option = document.createElement('option');
-                    option.value = evento.codigo;
-                    option.textContent = `${evento.titulo} (${formatearFecha(evento.fechainicio)})`;
-                    option.setAttribute('data-tipo', evento.tipo_evento.toLowerCase());
-                    option.setAttribute('data-costo', evento.costo);
-                    selectEvento.appendChild(option);
+    // Cargar eventos disponibles
+    fetch('./get_eventos_disponibles.php')
+        .then(response => {
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    throw new Error(`Respuesta no es JSON: ${text}`);
                 });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const selectEvento = document.getElementById('evento');
+            selectEvento.innerHTML = '<option value="">Seleccione un evento...</option>';
 
-                // Dentro del event listener del cambio de selectEvento
+            data.forEach(evento => {
+                const option = document.createElement('option');
+                option.value = evento.codigo;
+                option.textContent = `${evento.titulo} (${formatearFecha(evento.fechainicio)})`;
+                option.setAttribute('data-tipo', evento.tipo_evento.toLowerCase());
+                option.setAttribute('data-costo', evento.costo);
+                selectEvento.appendChild(option);
+            });
+
+            // Event listener para el cambio de evento
             selectEvento.addEventListener('change', function() {
                 const selected = this.options[this.selectedIndex];
                 const tipo = selected.getAttribute('data-tipo');
@@ -215,98 +288,145 @@ if ($datos = pg_fetch_assoc($result)) {
                 if (tipo === 'pagado') {
                     comprobante.style.display = 'block';
                     infoGratis.style.display = 'none';
-                    estadoPago.value = 'Pendiente'; // Estado PENDIENTE para eventos pagados
+                    estadoPago.value = 'Pendiente';
                 } else {
                     comprobante.style.display = 'none';
                     infoGratis.style.display = 'block';
-                    estadoPago.value = 'Pagado'; // Estado PAGADO automático para eventos gratis
+                    estadoPago.value = 'Pagado';
                 }
             });
-            })
-
-            .catch(error => {
-                console.error('Error al cargar eventos:', error);
-                const selectEvento = document.getElementById('evento');
-                selectEvento.innerHTML = '<option value="">Error al cargar eventos</option>';
-                
-                const option = document.createElement('option');
-                option.textContent = 'Error: ' + error.message;
-                option.disabled = true;
-                selectEvento.appendChild(option);
-            });
-
-        document.getElementById('fecha_inscripcion').valueAsDate = new Date();
-
-        document.getElementById('formInscripcion').addEventListener('submit', function(e) {
-            e.preventDefault();
+        })
+        .catch(error => {
+            console.error('Error al cargar eventos:', error);
+            const selectEvento = document.getElementById('evento');
+            selectEvento.innerHTML = '<option value="">Error al cargar eventos</option>';
             
-            const evento = document.getElementById('evento').value;
-            if (!evento) {
-                alert('Por favor seleccione un evento');
-                return;
-            }
-            
-            // Recolectar todos los datos del formulario
-            const formData = new FormData(this);
-            
-            // Enviar datos al servidor
-            fetch('procesar_inscripcion.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    return response.text();
-                }
-            })
-            .then(data => {
-                if (data) {
-                    // Manejar respuesta si no hubo redirección
-                    console.log(data);
-                }
-            })
-            .then(text => {
-                try {
-                    // Intentar parsear como JSON por si acaso
-                    const data = JSON.parse(text);
-                    console.log(data);
-                } catch {
-                    // Si no es JSON, mostrar el texto plano
-                    console.log(text);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Ocurrió un error al procesar la inscripción');
-            });
+            const option = document.createElement('option');
+            option.textContent = 'Error: ' + error.message;
+            option.disabled = true;
+            selectEvento.appendChild(option);
         });
 
-        document.getElementById('btnRegresar').addEventListener('click', function() {
-            const form = document.getElementById('formInscripcion');
-            let isModified = false;
+    // Establecer fecha actual
+    document.getElementById('fecha_inscripcion').valueAsDate = new Date();
 
-            Array.from(form.elements).forEach(el => {
-                if ((el.tagName === 'INPUT' || el.tagName === 'SELECT') && 
-                    el.type !== 'submit' && 
-                    el.type !== 'button' && 
-                    el.id !== 'cedula') {
-                    if (el.value.trim() !== '') {
-                        isModified = true;
-                    }
-                }
-            });
-
-            if (isModified) {
-                if (confirm("¿Estás seguro? Tus cambios se perderán.")) {
-                    window.location.href = '../inicio.php';
-                }
-            } else {
-                window.location.href = '../inicio.php';
+    // Manejar envío del formulario
+    document.getElementById('formInscripcion').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const evento = document.getElementById('evento').value;
+        if (!evento) {
+            alert('Por favor seleccione un evento');
+            return;
+        }
+        
+        // Mostrar indicador de carga (opcional)
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Procesando...';
+        submitBtn.disabled = true;
+        
+        // Recolectar todos los datos del formulario
+        const formData = new FormData(this);
+        
+        // Enviar datos al servidor con headers específicos para AJAX
+        fetch('procesar_inscripcion.php', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
+        })
+        .then(response => {
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                // Si no es JSON, puede ser una redirección o HTML
+                return response.text().then(text => {
+                    // Si contiene éxito en el texto, asumimos que fue exitoso
+                    if (response.ok && (text.includes('success') || response.status === 200)) {
+                        return { success: true, message: 'Inscripción realizada exitosamente' };
+                        showSuccessModal();
+                    } else {
+                        throw new Error(text || 'Error en el servidor');
+                    }
+                });
+            }
+        })
+        .then(data => {
+            // Restaurar botón
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            
+            if (data.success) {
+                showSuccessModal();
+            } else {
+                throw new Error(data.error || 'Error desconocido');
+            }
+        })
+        .catch(error => {
+            // Restaurar botón
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            
+            console.error('Error:', error);
+            alert('Ocurrió un error al procesar la inscripción: ' + error.message);
         });
     });
+
+    // Función para mostrar el modal de éxito
+    function showSuccessModal() {
+        const modal = document.getElementById('successModal');
+        modal.style.display = 'flex';
+        
+        // Cerrar modal al hacer clic en la X
+        document.querySelector('.close-modal').onclick = function() {
+            modal.style.display = 'none';
+            window.location.reload();
+        };
+        
+        // Cerrar modal al hacer clic en el botón Aceptar
+        document.getElementById('modalCloseBtn').onclick = function() {
+            modal.style.display = 'none';
+            window.location.reload();
+        };
+        
+        // Cerrar modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+                window.location.reload();
+            }
+        };
+    }
+
+    // Botón regresar
+    document.getElementById('btnRegresar').addEventListener('click', function() {
+        const form = document.getElementById('formInscripcion');
+        let isModified = false;
+
+        Array.from(form.elements).forEach(el => {
+            if ((el.tagName === 'INPUT' || el.tagName === 'SELECT') && 
+                el.type !== 'submit' && 
+                el.type !== 'button' && 
+                el.id !== 'cedula') {
+                if (el.value.trim() !== '') {
+                    isModified = true;
+                }
+            }
+        });
+
+        if (isModified) {
+            if (confirm("¿Estás seguro? Tus cambios se perderán.")) {
+                window.location.href = '../inicio.php';
+            }
+        } else {
+            window.location.href = '../inicio.php';
+        }
+    });
+});
     </script>
 </body>
 </html>
