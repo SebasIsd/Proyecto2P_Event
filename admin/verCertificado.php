@@ -1,5 +1,5 @@
 <?php
-include_once '../conexion/conexion.php';
+require_once '../conexion/conexion.php';
 header('Content-Type: text/html; charset=utf-8');
 
 $idIns = $_GET['id_ins'] ?? null;

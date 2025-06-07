@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
 
     <header>
@@ -21,7 +23,8 @@
             <nav>
                 <ul>
                     <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+                    <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i>
+                            Eventos</a></li>
                     <li><a href="../admin/verEventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
                 </ul>
             </nav>
@@ -34,10 +37,12 @@
                 <div class="columnas">
                     <div class="columna">
                         <label for="titulo">Título del Evento</label>
-                        <input type="text" id="titulo" name="titulo" placeholder="Ej. Curso de Redes Avanzadas" required>
+                        <input type="text" id="titulo" name="titulo" placeholder="Ej. Curso de Redes Avanzadas"
+                            required>
 
                         <label for="descripcion">Descripción</label>
-                        <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe brevemente el evento" required></textarea>
+                        <textarea id="descripcion" name="descripcion" rows="4"
+                            placeholder="Describe brevemente el evento" required></textarea>
 
                         <label for="tipo">Tipo de Evento</label>
                         <select id="tipo" name="tipo" required>
@@ -48,6 +53,19 @@
                             <option value="conferencia">Conferencia</option>
                             <option value="socializacion">Socialización</option>
                         </select>
+
+                        <label for="carrera">Carrera</label>
+                        <select id="carrera" name="carrera" required>
+                            <option value="">Selecciona una carrera</option>
+                            <option value="Ing. Software">Ing. Software</option>
+                            <option value="Ing. Industrial">Ing. Industrial</option>
+                            <option value="Ing. Tecnologias de la Informacion">Ing. Tecnologias de la Informacion
+                            </option>
+                            <option value="Ing. Telecomunicaciones">Ing. Telecomunicaciones</option>
+                            <option value="Ing. en Automatizacion y Robotica">Ing. en Automatizacion y Robotica</option>
+                            <option value="Todos">Todos</option>
+                        </select>
+
                     </div>
                     <div class="columna">
                         <label for="fechaInicio">Fecha de Inicio</label>
@@ -55,7 +73,7 @@
 
                         <label for="fechaFin">Fecha de Fin</label>
                         <input type="date" id="fechaFin" name="fechaFin" required>
-                        
+
                         <label for="modalidad">Modalidad</label>
                         <select id="modalidad" name="modalidad" required>
                             <option value="">Selecciona una opción</option>
@@ -76,12 +94,12 @@
     </main>
 
     <footer>
-              <div class="container">
+        <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
                     <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                    
+
                 </div>
                 <div class="footer-section">
                     <h3><i class="fas fa-envelope"></i> Contacto</h3>
@@ -95,7 +113,7 @@
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-                        
+
                     </ul>
                 </div>
             </div>
@@ -108,4 +126,5 @@
 
     <script src="../styles/scriptEventos.js"></script>
 </body>
+
 </html>

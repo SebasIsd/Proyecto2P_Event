@@ -1,5 +1,9 @@
 <?php
-include_once("../conexion/conexion.php");
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+include_once '../conexion/conexion.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -12,7 +16,8 @@ try {
                 fec_fin_eve_cur = :fecha_fin,
                 cos_eve_cur = :costo,
                 tip_eve = :tipo,
-                mod_eve_cur = :modalidad
+                mod_eve_cur = :modalidad,
+                car_eve_cur = :carrera
             WHERE id_eve_cur = :id";
 
     $stmt = $conn->prepare($sql);
@@ -24,6 +29,7 @@ try {
         ':costo' => $data['costo'],
         ':tipo' => $data['tipo'],
         ':modalidad' => $data['modalidad'],
+        ':carrera' => $data['carrera'],
         ':id' => $data['id']
     ]);
 
