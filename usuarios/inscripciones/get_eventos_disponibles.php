@@ -34,7 +34,7 @@ try {
                 ec.FEC_INI_EVE_CUR as fechaInicio,
                 ec.FEC_FIN_EVE_CUR as fechaFin,
                 ec.COS_EVE_CUR as costo,
-                ec.TIP_EVE as tipo_evento
+                ec.MOD_EVE_CUR as tipo_evento
               FROM EVENTOS_CURSOS ec
               WHERE ec.FEC_FIN_EVE_CUR >= CURRENT_DATE
               AND (ec.CAR_EVE_CUR = $1 OR ec.CAR_EVE_CUR = 'Todos')
