@@ -61,6 +61,26 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
             </nav>
         </div>
     </header>
+    <form method="GET" class="filtro-eventos" style="margin-bottom: 20px;">
+    <label for="modalidad">Modalidad:</label>
+    <select name="modalidad" id="modalidad">
+        <option value="">-- Todas --</option>
+        <option value="curso" <?= ($_GET['modalidad'] ?? '') == 'curso' ? 'selected' : '' ?>>Curso</option>
+        <option value="conferencia" <?= ($_GET['modalidad'] ?? '') == 'conferencia' ? 'selected' : '' ?>>Conferencia</option>
+        <option value="webinar" <?= ($_GET['modalidad'] ?? '') == 'webinar' ? 'selected' : '' ?>>Webinar</option>
+    </select>
+
+    <label for="estado_pago">Estado de Pago:</label>
+    <select name="estado_pago" id="estado_pago">
+        <option value="">-- Todos --</option>
+        <option value="Pagado" <?= ($_GET['estado_pago'] ?? '') == 'Pagado' ? 'selected' : '' ?>>Pagado</option>
+        <option value="Gratis" <?= ($_GET['estado_pago'] ?? '') == 'Gratis' ? 'selected' : '' ?>>Gratis</option>
+        <option value="Pendiente" <?= ($_GET['estado_pago'] ?? '') == 'Pendiente' ? 'selected' : '' ?>>Pendiente</option>
+    </select>
+
+    <button type="submit">Filtrar</button>
+</form>
+
 
     <main class="container">
         <section class="recent-activity">
@@ -153,6 +173,24 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
             margin-top: 2px;
             flex-shrink: 0;
         }
+        .filtro-eventos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        }
+
+        .filtro-eventos label {
+        font-weight: 600;
+        }
+
+        .filtro-eventos select,
+        .filtro-eventos button {
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        }
+
     </style>
 
     <script>
