@@ -191,36 +191,37 @@ if ($datos = pg_fetch_assoc($result)) {
                     selectEvento.appendChild(option);
                 });
 
-                selectEvento.addEventListener('change', function() {
-                    const selected = this.options[this.selectedIndex];
-                    const tipo = selected.getAttribute('data-tipo');
-                    const costo = selected.getAttribute('data-costo');
-                    const infoPago = document.getElementById('info_pago');
-                    const inputTipo = document.getElementById('tipo_evento');
-                    const inputCosto = document.getElementById('costo');
-                    const estadoPago = document.getElementById('estado_pago');
-                    const comprobante = document.getElementById('comprobante_group');
-                    const infoGratis = document.getElementById('info_gratis');
+                // Dentro del event listener del cambio de selectEvento
+            selectEvento.addEventListener('change', function() {
+                const selected = this.options[this.selectedIndex];
+                const tipo = selected.getAttribute('data-tipo');
+                const costo = selected.getAttribute('data-costo');
+                const infoPago = document.getElementById('info_pago');
+                const inputTipo = document.getElementById('tipo_evento');
+                const inputCosto = document.getElementById('costo');
+                const estadoPago = document.getElementById('estado_pago');
+                const comprobante = document.getElementById('comprobante_group');
+                const infoGratis = document.getElementById('info_gratis');
 
-                    if (!tipo) {
-                        infoPago.style.display = 'none';
-                        return;
-                    }
+                if (!tipo) {
+                    infoPago.style.display = 'none';
+                    return;
+                }
 
-                    infoPago.style.display = 'block';
-                    inputTipo.value = tipo;
-                    inputCosto.value = costo;
+                infoPago.style.display = 'block';
+                inputTipo.value = tipo;
+                inputCosto.value = costo;
 
-                    if (tipo === 'pagado') {
-                        comprobante.style.display = 'block';
-                        infoGratis.style.display = 'none';
-                    } else {
-                        comprobante.style.display = 'none';
-                        infoGratis.style.display = 'block';
-                    }
-
-                    estadoPago.value = 'PENDIENTE';
-                });
+                if (tipo === 'pagado') {
+                    comprobante.style.display = 'block';
+                    infoGratis.style.display = 'none';
+                    estadoPago.value = 'Pendiente'; // Estado PENDIENTE para eventos pagados
+                } else {
+                    comprobante.style.display = 'none';
+                    infoGratis.style.display = 'block';
+                    estadoPago.value = 'Pagado'; // Estado PAGADO automático para eventos gratis
+                }
+            });
             })
 
             .catch(error => {
@@ -233,16 +234,6 @@ if ($datos = pg_fetch_assoc($result)) {
                 option.disabled = true;
                 selectEvento.appendChild(option);
             });
-
-        // Resto del código permanece igual...
-        /*document.getElementById('estado_pago').addEventListener('change', function() {
-            const seccionPago = document.getElementById('seccion_pago');
-            seccionPago.style.display = this.value === 'Pagado' ? 'block' : 'none';
-            
-            if (this.value === 'Pagado') {
-                document.getElementById('fecha_pago').valueAsDate = new Date();
-            }
-        });*/
 
         document.getElementById('fecha_inscripcion').valueAsDate = new Date();
 

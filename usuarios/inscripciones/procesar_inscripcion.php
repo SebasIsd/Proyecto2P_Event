@@ -21,7 +21,8 @@ $conn = $conexion->getConexion();
 $cedula = $_SESSION['cedula'];
 $id_evento = filter_var($_POST['evento'], FILTER_VALIDATE_INT);
 $fecha_inscripcion = $_POST['fecha_inscripcion'];
-$estado_pago = $_POST['estado_pago'];
+$estado_pago = $_POST['estado_pago']; // Este ahora viene definido por el tipo de evento
+$tipo_evento = $_POST['tipo_evento']; // 'pagado' o 'gratis'
 
 if (!$id_evento || !$fecha_inscripcion || !$estado_pago) {
     header("Location: inscripciones.php?error=Datos inválidos");
@@ -55,31 +56,41 @@ try {
         $id_evento,
         $fecha_inscripcion,
         $fecha_cierre,
-        $estado_pago
+        $estado_pago // Usamos el estado definido por el tipo de evento
     ));
     
     $id_inscripcion = pg_fetch_result($result, 0, 0);
 
-    // Si el pago es "Pagado", registrar también el pago
-    if ($estado_pago === 'Pagado' && isset($_POST['fecha_pago'])) {
-        $fecha_pago = $_POST['fecha_pago'];
-        $monto_pago = filter_var($_POST['monto_pago'], FILTER_VALIDATE_FLOAT);
-        $metodo_pago = htmlspecialchars($_POST['metodo_pago']);
+    // Solo manejar comprobante si es evento pagado
+    if ($tipo_evento === 'pagado' && isset($_FILES['comprobante'])) {
+        $directorio = "../../comprobantes/";
         
-        if ($monto_pago === false || $monto_pago <= 0) {
-            throw new Exception("Monto de pago inválido");
+        // Crear directorio si no existe
+        if (!file_exists($directorio)) {
+            mkdir($directorio, 0777, true);
         }
         
-        $sql_pago = "INSERT INTO PAGOS 
-                     (ID_INS, FEC_PAG, MON_PAG, MET_PAG) 
-                     VALUES ($1, $2, $3, $4)";
+        // Validar que sea una imagen
+        $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
+        $tipo_archivo = $_FILES['comprobante']['type'];
         
-        pg_query_params($conn, $sql_pago, array(
-            $id_inscripcion,
-            $fecha_pago,
-            $monto_pago,
-            $metodo_pago
-        ));
+        if (!in_array($tipo_archivo, $permitidos)) {
+            throw new Exception("Solo se permiten archivos de imagen (JPEG, PNG, GIF)");
+        }
+        
+        // Generar nombre único para el archivo
+        $extension = pathinfo($_FILES['comprobante']['name'], PATHINFO_EXTENSION);
+        $nombre_archivo = "comprobante_" . $id_inscripcion . "_" . time() . "." . $extension;
+        $ruta_archivo = $directorio . $nombre_archivo;
+        
+        // Mover el archivo subido
+        if (!move_uploaded_file($_FILES['comprobante']['tmp_name'], $ruta_archivo)) {
+            throw new Exception("Error al subir el comprobante de pago");
+        }
+        
+        // Guardar en la tabla IMAGENES
+        $sql_imagen = "INSERT INTO IMAGENES (ID_INS, COMPROBANTE_PAG) VALUES ($1, $2)";
+        pg_query_params($conn, $sql_imagen, array($id_inscripcion, $ruta_archivo));
     }
 
     // Crear registro en NOTAS_ASISTENCIAS
@@ -92,8 +103,8 @@ try {
     // Limpiar buffer de salida antes de redireccionar
     if (ob_get_length()) ob_clean();
     
-    header("Location: inscripciones.php?");
-    exit(); // Asegurarse de terminar la ejecución aquí
+    header("Location: inscripciones.php?success");
+    exit();
 
 } catch (Exception $e) {
     // Revertir transacción en caso de error
