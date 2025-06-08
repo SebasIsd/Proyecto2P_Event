@@ -441,16 +441,11 @@ if ($datos = pg_fetch_assoc($result)) {
                     </div>
                     <h3>¡Inscripción exitosa!</h3>
                     <p>La inscripción se ha registrado correctamente.</p>
-                    <button class="btn-modal" onclick="window.location.href='../mis_eventos.php'">Ver mis eventos</button>
+                    <button class="btn-modal" onclick="window.location.href='../inscripciones/inscripciones.php'">Aceptar</button>
                 </div>
             `;
             document.body.appendChild(modal);
             modal.style.display = 'flex';
-
-            // Redireccionar automáticamente después de 3 segundos
-            setTimeout(() => {
-                window.location.href = '../mis_eventos.php';
-            }, 3000);
         }
 
         function showErrorModal(message) {
