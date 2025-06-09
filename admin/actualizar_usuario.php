@@ -1,11 +1,12 @@
 <?php
-require_once("conexionusu.php");
+require_once("../conexion/conexionusu.php");
 
 $conexion = ConexionUsu::obtenerConexion();
 
 header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recoger todos los datos del formulario
     $cedula       = $_POST["ced_usu"] ?? '';
     $nom_pri_usu  = $_POST["nom_pri_usu"] ?? '';
     $nom_seg_usu  = $_POST["nom_seg_usu"] ?? '';
@@ -19,17 +20,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $carrera      = $_POST["carrera"] ?? '';
     $fec_nac_usu  = $_POST["fec_nac_usu"] ?? '';
 
-    // Validación básica
-    if (empty($cedula) {
-        echo json_encode(['error' => 'Cédula no recibida']);
+    // Validación básica de campos obligatorios según tu esquema
+    if (empty($cedula) || empty($nom_pri_usu) || empty($ape_pri_usu) || empty($cor_usu) || 
+        empty($tel_usu) || empty($dir_usu) || empty($fec_nac_usu) || empty($id_rol_usu)) {
+        echo json_encode(['error' => 'Faltan campos obligatorios']);
         exit;
     }
 
-    // Hashear la contraseña si se proporcionó una nueva
-    $password_hash = !empty($pas_usu) ? password_hash($pas_usu, PASSWORD_DEFAULT) : null;
-
     try {
-        // Construir la consulta dinámicamente
+        // Construir la consulta SQL dinámicamente
         $sql = "UPDATE usuarios SET 
                 nom_pri_usu = $1,
                 nom_seg_usu = $2,
@@ -55,15 +54,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $fec_nac_usu
         ];
 
-        // Si hay nueva contraseña, añadirla a la consulta
-        if ($password_hash) {
+        // Si se proporcionó una nueva contraseña, actualizarla (sin hashear)
+        if (!empty($pas_usu)) {
             $sql .= ", pas_usu = $11";
-            $params[] = $password_hash;
+            $params[] = $pas_usu;
         }
 
+        // Finalizar la consulta con la condición WHERE
         $sql .= " WHERE ced_usu = $".(count($params) + 1);
         $params[] = $cedula;
 
+        // Ejecutar la consulta
         $resultado = pg_query_params($conexion, $sql, $params);
 
         if ($resultado) {
