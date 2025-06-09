@@ -45,22 +45,25 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
 </head>
 <body>
     <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Bienvenido, <span><?= htmlspecialchars($_SESSION['usuario'] ?? 'Usuario') ?></span></h1>
+            <div class="container">
+                <div class="logo">
+                <h1>Bienvenido! 👋</h1>
+
+                </div>
+                <nav>
+        <ul>
+            <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+            <li><a href="./inscripciones/inscripciones.php"><i class="fas fa-edit"></i> Inscripciones</a></li>
+            <li><a href="../usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
+            <li class="profile-link">
+                <a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
+            </li>
+            <li><a href="./logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        </ul>
+    </nav>
             </div>
-            
-            <nav>
-                <ul>
-                    <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="inscripciones/inscripciones.php"><i class="fas fa-calendar-alt"></i> Inscripciones</a></li>
-                    <li><a href="mis_eventos.php" class="active"><i class="fas fa-calendar-check"></i> Mis Eventos</a></li>
-                    <li><a href="perfil.php"><i class="fas fa-user"></i> Perfil</a></li>
-                    <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+        </header>
 
     <main class="container">
         <section class="recent-activity">
