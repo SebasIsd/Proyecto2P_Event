@@ -245,35 +245,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-    
-    <footer style="background: #222; color: white; text-align: center; padding: 1.5rem;">
-        <div class="container">
-            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 2rem;">
-                <div style="flex: 1; min-width: 200px;">
-                    <h3 style="color: #6c1313; margin-bottom: 1rem;"><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                </div>
-                <div style="flex: 1; min-width: 200px;">
-                    <h3 style="color: #6c1313; margin-bottom: 1rem;"><i class="fas fa-envelope"></i> Contacto</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div style="flex: 1; min-width: 200px;">
-                    <h3 style="color: #6c1313; margin-bottom: 1rem;"><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li><a href="../index.html" style="color: #ccc; text-decoration: none;"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-                        <li><a href="#" style="color: #ccc; text-decoration: none;"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-                        <li><a href="#" style="color: #ccc; text-decoration: none;"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #444;">
-                <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const correo = document.getElementById('correo').value;
