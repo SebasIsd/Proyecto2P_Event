@@ -39,6 +39,7 @@
 ## 🚀 Instalación y Configuración
 
 ### Requisitos del Sistema
+- Servidor Web (Apache) o cualquiera de su preferencia
 - PHP 7.4 o superior
 - PostgreSQL 17
 - Composer (para dependencias PHP)
