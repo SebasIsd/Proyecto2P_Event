@@ -6,103 +6,151 @@
   <title>Administrar Usuarios</title>
   <link rel="stylesheet" href="../styles/css/style.css"/>
   <link rel="stylesheet" href="../styles/css/estiloAdminusuario.css"/>
-  
-   <link rel="stylesheet" href="../styles/css/pagoestilo.css">
+  <link rel="stylesheet" href="../styles/css/pagoestilo.css">
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-
   <style>
-    .loading { display: none; color: #ff0000; font-weight: bold; }
-    .error { color: #dc3545; }
-    .form-container { display: none; margin-top: 15px; padding: 15px; border: 1px solid #ccc; background: #f9f9f9; }
-    .btn-toggle { margin-top: 20px; cursor: pointer; background-color: #6c1313; color: #fff; border: none; padding: 10px; border-radius: 5px; }
-    .btn-toggle:hover { background-color: #0056b3; }
-    #modificar {
-    display: none;
-  }
-
+    /* Estilos para modales */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+      background-color: #f9f9f9;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: black;
+    }
+    
+    .modal-header {
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+    
+    .modal-footer {
+      padding: 15px 0;
+      border-top: 1px solid #ddd;
+      margin-top: 15px;
+      text-align: right;
+    }
+    
+    .btn {
+      padding: 8px 15px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .btn-primary {
+      background-color: #6c1313;
+      color: white;
+    }
+    
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    
+    .loading { 
+      display: none; 
+      color: #6c1313; 
+      font-weight: bold; 
+    }
+    
+    .error { 
+      color: #dc3545; 
+      margin-bottom: 10px;
+    }
+    
+    /* Estilos para formularios dentro de modales */
+    .modal-form input, .modal-form select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .modal-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    /* Estilos para la tabla */
+    #tablaUsuarios {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    #tablaUsuarios th, #tablaUsuarios td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    #tablaUsuarios th {
+      background-color: #6c1313;
+      color: white;
+    }
+    
+    #tablaUsuarios tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    /* Estilos para botones de acción */
+    .action-btn {
+      padding: 5px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .edit-btn {
+      background-color: transparent;
+      color: #212529;
+    }
+    
+    .delete-btn {
+      background-color: transparent;
+      color: #212529;
+    }
   </style>
-  <style>
-  .loading { 
-    display: none; 
-    color: #6c1313; 
-    font-weight: bold; 
-  }
-
-  .error { 
-    color: #dc3545; 
-  }
-
-  .form-container {
-    display: none;
-    margin-top: 15px;
-    padding: 15px;
-    border: 2px solid #333; /* Borde más visible */
-    background: #6c1313;
-    border-radius: 8px;       /* Bordes redondeados */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Sombra suave */
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  #userData form {
-    padding: 15px;
-    border: 2px solid #333;
-    border-radius: 8px;
-    background-color: #6c1313;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-
-  }
-  
-
-
-  .btn-toggle {
-    margin-top: 20px;
-    cursor: pointer;
-    background-color: #6c1313;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-  }
-
-  .btn-toggle:hover {
-    background-color: #0056b3;
-  }
-
-  #modificar {
-    display: none;
-  }
-  
-  #formAgregarUsuario input {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
-    font-size: 14px;
-  }
-</style>
-<style>
-  #formUsuario input {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
-    font-size: 14px;
-  }
-  #formEliminarUsuario input {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
-    font-size: 14px;
-  }
-  #ced_usu {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
-    font-size: 14px;
-  }
-</style>
-
-
-  
 </head>
 <body>
 
@@ -124,117 +172,244 @@
 </header>
 
 <main class="container">
+  <h2>Gestión de Usuarios</h2>
   
-    <h2>Gestión de Usuarios</h2>
-    <button class="btn-toggle" onclick="toggleForm('formAgregar')"><i class="fas fa-user-plus"></i> Añadir Usuario</button>
-    <button class="btn-toggle" onclick="toggleForm('modificar')"><i class="fas fa-user-plus"></i> Modificar Usuario</button>
-    <button class="btn-toggle" onclick="toggleForm('formEliminar')"><i class="fas fa-user-times"></i> Eliminar Usuario</button>
-<div style="height: 25px;"></div>
-    <div class="form-container" id="formAgregar" style="display: none;  max-width: 350px; margin: auto;">
-     
-
-      <h3 style="color: white;">Agregar Usuario</h3>
-      <form id="formAgregarUsuario"  >
-        <input type="text" name="cedula" placeholder="Cédula" required style="width: 100%;"><br>
-        <div style="display: flex; gap: 5px;">
-        <input type="text" name="nom_pri_usu" placeholder="Primer Nombre" required  style="width: 100%;"><br>
-        <input type="text" name="nom_seg_usu" placeholder="Segundo Nombre" style="width: 100%;"><br>
-        </div>
-         <div style="display: flex; gap: 5px;">
-        <input type="text" name="ape_pri_usu" placeholder="Apellido Paterno" required style="width: 100%;"><br>
-        <input type="text" name="ape_seg_usu" placeholder="Apellido Materno" style="width: 100%;"><br>
-        </div>
-        <input type="email" name="correo" placeholder="Correo" required><br>
-        <input type="password" name="password" placeholder="Contraseña" required><br>
-        <input type="text" name="telefono" placeholder="Teléfono"><br>
-        <input type="text" name="direccion" placeholder="Dirección"><br>
-        <input type="date" name="fec_nac_usu" required><br>
-        <select name="id_rol_usu" required>
-          <option value="" disabled selected>Seleccione Cargo</option>
-          <option value="1">Administrador</option>
-          <option value="2">Usuario</option>
-          <option value="3">Invitado</option>
-        </select><br>
-        <input type="text" name="carrera" placeholder="Carrera"><br>
-        <button type="submit">Agregar Usuario</button>
-      </form>
-    </div>
-    <div id="modificar" class="search-box" >
-     
-    <input type="text" id="ced_usu" placeholder="Ingrese la cédula" maxlength="20"/>
-    <button id="buscarBtn"><i class="fas fa-search"></i> Buscar</button>
-    <span id="loading" class="loading">Buscando...</span>
-    <span id="errorMsg" class="error"></span>
-  </div>
-  <div id="userData" style="display: none;">
-    <h3>Datos del Usuario</h3>
-    <form id="formUsuario"   style="max-width: 300px; margin: auto; padding-top: 5px; padding-bottom: 5px;">
-      <input type="hidden" id="ced_usu_hidden" name="ced_usu"/>
-      <label style="color: white;" for="ape_pri_usu">Nombres:</label>
-       <div style="display: flex; gap: 2px;">
-      <input type="text" id="nom_pri_usu" name="nom_pri_usu" disabled required><br>
-      <input type="text" id="nom_seg_usu" name="nom_seg_usu" disabled><br>
-        </div>
-        <label style="color: white;" for="ape_pri_usu">Apellidos:</label>
-         <div style="display: flex; gap: 2px;">  
-      <input type="text" id="ape_pri_usu" name="ape_pri_usu" disabled required><br>
-      <input type="text" id="ape_seg_usu" name="ape_seg_usu" disabled><br>
-      </div>
-      <label style="color: white;"  for="cor_usu">Correo:</label>
-      <input type="email" id="cor_usu" name="cor_usu" disabled required><br>
-      <label style="color: white;"  for="pas_usu">Contraseña:</label>
-      <input type="password" id="pas_usu" name="pas_usu" disabled required><br>
-      <label style="color: white;" for="tel_usu">Teléfono:</label>
-      <input type="text" id="tel_usu" name="tel_usu" disabled><br>
-      <label style="color: white;" for="dir_usu">Dirección:</label>
-      <input  type="text" id="dir_usu" name="dir_usu" disabled><br>
-      <label style="color: white;" for="fec_nac_usu">Fecha de Nacimiento:</label>
-      <input type="date" id="fec_nac_usu" name="fec_nac_usu" disabled><br>
-
-      <button type="button" id="btnEditar" onclick="habilitarEdicion()">Editar</button>
-      <button type="button" id="btnGuardar" onclick="actualizarUsuario()" style="display:none;">Guardar</button>
-      <span id="loading" style="display:none;">Guardando...</span>
-    </form>
-    <p id="error" class="error"></p>
+  <!-- Botones para abrir modales -->
+  <div class="action-buttons">
+    <button class="btn btn-primary" onclick="abrirModal('modalAgregar')"><i class="fas fa-user-plus"></i> Añadir Usuario</button>
   </div>
 
-    <div class="form-container" id="formEliminar" style="display: none;">
-      <h3 style="color: white;">Eliminar Usuario</h3>
-      <form id="formEliminarUsuario">
-        <input type="text" name="cedula" placeholder="Cédula" required><br>
-        <button type="submit">Eliminar Usuario</button>
-      </form>
+  <!-- Tabla de usuarios -->
+  <section style="margin-top: 30px;">
+    <h3>Listado de Usuarios</h3>
+    <div style="overflow-x:auto;">
+      <table id="tablaUsuarios">
+        <thead>
+          <tr>
+            <th>Cédula</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Carrera</th>
+            <th>Cargo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpoTablaUsuarios"></tbody>
+      </table>
     </div>
-  <!-- Botones de gestión -->
-  <aside style="margin-top: 40px;">
-    <!-- Listado -->
-    <section>
-      <h3>Listado de Usuarios</h3>
-      <div style="overflow-x:auto;">
-        <table border="1" style="width:100%;" id="tablaUsuarios">
-          <thead>
-            <tr>
-              <th>Cédula</th>
-              <th>Nombres</th>
-              <th>Apellidos</th>
-              <th>Correo</th>
-              <th>Teléfono</th>
-              <th>Carrera</th>
-              <th>Cargo</th>
-            </tr>
-          </thead>
-          <tbody id="cuerpoTablaUsuarios"></tbody>
-        </table>
+  </section>
+
+  <!-- Modal para agregar usuario -->
+  <div id="modalAgregar" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close" onclick="cerrarModal('modalAgregar')">&times;</span>
+        <h3>Agregar Usuario</h3>
       </div>
-    </section>
+      <div class="modal-body">
+        <form id="formAgregarUsuario" class="modal-form">
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="cedula">Cédula</label>
+              <input type="text" id="cedula" name="cedula" required>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="nom_pri_usu">Primer Nombre</label>
+              <input type="text" id="nom_pri_usu" name="nom_pri_usu" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="nom_seg_usu">Segundo Nombre</label>
+              <input type="text" id="nom_seg_usu" name="nom_seg_usu">
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="ape_pri_usu">Apellido Paterno</label>
+              <input type="text" id="ape_pri_usu" name="ape_pri_usu" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="ape_seg_usu">Apellido Materno</label>
+              <input type="text" id="ape_seg_usu" name="ape_seg_usu">
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="correo">Correo</label>
+              <input type="email" id="correo" name="correo" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="password">Contraseña</label>
+              <input type="password" id="password" name="password" required>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="telefono">Teléfono</label>
+              <input type="text" id="telefono" name="telefono">
+            </div>
+            <div style="flex: 1;">
+              <label for="direccion">Dirección</label>
+              <input type="text" id="direccion" name="direccion">
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="fec_nac_usu">Fecha de Nacimiento</label>
+              <input type="date" id="fec_nac_usu" name="fec_nac_usu" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="id_rol_usu">Cargo</label>
+              <select id="id_rol_usu" name="id_rol_usu" required>
+                <option value="" disabled selected>Seleccione Cargo</option>
+                <option value="1">Administrador</option>
+                <option value="2">Usuario</option>
+                <option value="3">Invitado</option>
+              </select>
+            </div>
+          </div>
+          
+<div>
+  <label for="carrera">Carrera</label>
+  <select id="carrera" name="carrera" required>
+    <option value="">Seleccione una carrera</option>
+    <option value="Ing. Software">Ing. Software</option>
+    <option value="Ing. Industrial">Ing. Industrial</option>
+    <option value="Ing. Tecnologias de la Informacion">Ing. Tecnologías de la Información</option>
+    <option value="Ing. Telecomunicaciones">Ing. Telecomunicaciones</option>
+    <option value="Ing. en Automatizacion y Robotica">Ing. en Automatización y Robótica</option>
+  </select>
+</div>
+          
+          <div id="errorAgregar" class="error"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="cerrarModal('modalAgregar')">Cancelar</button>
+        <button class="btn btn-primary" onclick="agregarUsuario()">Guardar</button>
+      </div>
+    </div>
+  </div>
 
-    <!-- Botones para mostrar/ocultar formularios -->
-    
+  <!-- Modal para editar usuario -->
+  <div id="modalEditar" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close" onclick="cerrarModal('modalEditar')">&times;</span>
+        <h3>Editar Usuario</h3>
+      </div>
+      <div class="modal-body">
+        <form id="formEditarUsuario" class="modal-form">
+          <input type="hidden" id="edit_ced_usu" name="ced_usu">
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="edit_nom_pri_usu">Primer Nombre</label>
+              <input type="text" id="edit_nom_pri_usu" name="nom_pri_usu" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="edit_nom_seg_usu">Segundo Nombre</label>
+              <input type="text" id="edit_nom_seg_usu" name="nom_seg_usu">
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="edit_ape_pri_usu">Apellido Paterno</label>
+              <input type="text" id="edit_ape_pri_usu" name="ape_pri_usu" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="edit_ape_seg_usu">Apellido Materno</label>
+              <input type="text" id="edit_ape_seg_usu" name="ape_seg_usu">
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="edit_cor_usu">Correo</label>
+              <input type="email" id="edit_cor_usu" name="cor_usu" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="edit_pas_usu">Contraseña</label>
+              <input type="password" id="edit_pas_usu" name="pas_usu" required>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="edit_tel_usu">Teléfono</label>
+              <input type="text" id="edit_tel_usu" name="tel_usu">
+            </div>
+            <div style="flex: 1;">
+              <label for="edit_dir_usu">Dirección</label>
+              <input type="text" id="edit_dir_usu" name="dir_usu">
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="edit_fec_nac_usu">Fecha de Nacimiento</label>
+              <input type="date" id="edit_fec_nac_usu" name="fec_nac_usu" required>
+            </div>
+            <div style="flex: 1;">
+              <label for="edit_id_rol_usu">Cargo</label>
+              <select id="edit_id_rol_usu" name="id_rol_usu" required>
+                <option value="1">Administrador</option>
+                <option value="2">Usuario</option>
+                <option value="3">Invitado</option>
+              </select>
+            </div>
+          </div>
+          
+<div>
+  <label for="edit_carrera">Carrera</label>
+  <select id="edit_carrera" name="carrera" required>
+    <option value="Ing. Software">Ing. Software</option>
+    <option value="Ing. Industrial">Ing. Industrial</option>
+    <option value="Ing. Tecnologias de la Informacion">Ing. Tecnologías de la Información</option>
+    <option value="Ing. Telecomunicaciones">Ing. Telecomunicaciones</option>
+    <option value="Ing. en Automatizacion y Robotica">Ing. en Automatización y Robótica</option>
+  </select>
+</div>
+          
+          <div id="errorEditar" class="error"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="cerrarModal('modalEditar')">Cancelar</button>
+        <button class="btn btn-primary" onclick="actualizarUsuario()">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
 
-
-  </aside>
+  <!-- Modal para eliminar usuario -->
+  <div id="modalEliminar" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <span class="close" onclick="cerrarModal('modalEliminar')">&times;</span>
+        <h3>Eliminar Usuario</h3>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro que desea eliminar al usuario con cédula: <strong id="cedulaEliminar"></strong>?</p>
+        <input type="hidden" id="delete_ced_usu">
+        <div id="errorEliminar" class="error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="cerrarModal('modalEliminar')">Cancelar</button>
+        <button class="btn btn-danger" onclick="eliminarUsuarioConfirmado()">Eliminar</button>
+      </div>
+    </div>
+  </div>
 </main>
-<div style="height: 100px;"></div>
+
 <footer>
   <div class="container">
     <div class="footer-content">
@@ -271,26 +446,41 @@
 </footer>
 
 <!-- Scripts -->
-<script src="../styles/buscarusuario.js"></script>
 <script src="../styles/usuarios_adimn.js"></script>
 <script>
-  function toggleForm(id) {
-    const form = document.getElementById(id);
-    form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+  // Funciones para abrir y cerrar modales
+  function abrirModal(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+  
+  function cerrarModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  
+  // Función para abrir modal de edición con datos del usuario
+  function abrirEditarUsuario(usuario) {
+    document.getElementById('edit_ced_usu').value = usuario.ced_usu || '';
+    document.getElementById('edit_nom_pri_usu').value = usuario.nom_pri_usu || '';
+    document.getElementById('edit_nom_seg_usu').value = usuario.nom_seg_usu || '';
+    document.getElementById('edit_ape_pri_usu').value = usuario.ape_pri_usu || '';
+    document.getElementById('edit_ape_seg_usu').value = usuario.ape_seg_usu || '';
+    document.getElementById('edit_cor_usu').value = usuario.cor_usu || '';
+    document.getElementById('edit_pas_usu').value = usuario.pas_usu || '';
+    document.getElementById('edit_tel_usu').value = usuario.tel_usu || '';
+    document.getElementById('edit_dir_usu').value = usuario.dir_usu || '';
+    document.getElementById('edit_fec_nac_usu').value = usuario.fec_nac_usu || '';
+    document.getElementById('edit_id_rol_usu').value = usuario.id_rol_usu || '2';
+    document.getElementById('edit_carrera').value = usuario.car_usu || '';
+    
+    abrirModal('modalEditar');
+  }
+  
+  // Función para abrir modal de eliminación
+  function abrirEliminarUsuario(cedula) {
+    document.getElementById('cedulaEliminar').textContent = cedula;
+    document.getElementById('delete_ced_usu').value = cedula;
+    abrirModal('modalEliminar');
   }
 </script>
-<script>
-  function toggleForm(formId) {
-    const formularios = ['formAgregar', 'modificar', 'formEliminar'];
-
-    formularios.forEach(id => {
-      const form = document.getElementById(id);
-      if (form) {
-        form.style.display = (id === formId) ? 'block' : 'none';
-      }
-    });
-  }
-</script>
-
 </body>
 </html>
