@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solicitud de Cambios</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { background-color: #f5f5f5; color: #333; }
+    header { background-color: #6c1313; color: white; padding: 53px 0; }
+    header .container { width: 90%; max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 24px; }
+    nav ul { display: flex; list-style: none; gap: 15px; }
+    nav a { color: white; text-decoration: none; padding: 8px 12px; border-radius: 5px; transition: background 0.3s; }
+    nav a:hover { background: rgba(255, 255, 255, 0.2); }
+
+    main { width: 90%; max-width: 900px; margin: 30px auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+
+    .jira-ticket {
+      background-color: #f0f4ff;
+      border: 1px solid #b3c8ff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 30px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .jira-ticket h3 {
+      color: #174ea6;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .jira-ticket p {
+      margin-bottom: 10px;
+    }
+    .jira-ticket a {
+      color: #0052cc;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .jira-ticket a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      header .container, nav ul { flex-direction: column; text-align: center; gap: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+
+    <header>
+            <div class="container">
+                <div class="logo">
+                <h1>Bienvenido</h1>
+
+                </div>
+                <nav>
+        <ul>
+            <li><a onclick="window.history.back()" class="active"><i class="fas fa-arrow-left"></i> Regresar</a></li>
+            <li><a href="../inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="../mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+        </ul>
+    </nav>
+            </div>
+        </header>
+
+  <main>
+    <section class="jira-ticket">
+      <h3>Solicitud de Cambio desde JIRA</h3>
+      <p id="jira-info">Accede a este Link, Haz tu Solicitud!</p>
+      <a id="jira-link" href="https://sdsnt2003.atlassian.net/servicedesk/customer/portal/36" target="_blank">
+        Ir al ticket en JIRA (GES)
+      </a>
+    </section>
+  </main>
+</body>
+</html>
+
