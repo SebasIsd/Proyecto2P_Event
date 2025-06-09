@@ -45,22 +45,25 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
 </head>
 <body>
     <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Bienvenido, <span><?= htmlspecialchars($_SESSION['usuario'] ?? 'Usuario') ?></span></h1>
+            <div class="container">
+                <div class="logo">
+                <h1>Bienvenido! 👋</h1>
+
+                </div>
+                <nav>
+        <ul>
+            <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+            <li><a href="./inscripciones/inscripciones.php"><i class="fas fa-edit"></i> Inscripciones</a></li>
+            <li><a href="../usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
+            <li class="profile-link">
+                <a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
+            </li>
+            <li><a href="./logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        </ul>
+    </nav>
             </div>
-            
-            <nav>
-                <ul>
-                    <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="inscripciones/inscripciones.php"><i class="fas fa-calendar-alt"></i> Inscripciones</a></li>
-                    <li><a href="mis_eventos.php" class="active"><i class="fas fa-calendar-check"></i> Mis Eventos</a></li>
-                    <li><a href="perfil.php"><i class="fas fa-user"></i> Perfil</a></li>
-                    <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+        </header>
 
     <main class="container">
         <section class="recent-activity">
@@ -201,32 +204,32 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
             });
         });
     </script>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="inicio.php">Inicio</a></li>
-                        <li><a href="eventos.php">Eventos</a></li>
-                        <li><a href="#">Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; <?= date('Y') ?> Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
+<footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
         </div>
-    </footer>
+        <div class="footer-section">
+          <h3><i class="fas fa-envelope"></i> Contacto</h3>
+          <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
+          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Sistema de Inscripciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
