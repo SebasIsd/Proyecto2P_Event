@@ -90,13 +90,9 @@ Proyecto2P_Event/
 ## 📧 Contacto
 
 - **Desarrolladores**:
-- [Sebastián]  - SebasIsd
-- [viviana]    - maribelsailema
-- [Alex]       - alexJonarey
-- [Anthony]    - zamukay
+  - [Sebastián]  - SebasIsd
+  - [viviana]    - maribelsailema
+  - [Alex]       - alexJonarey
+  - [Anthony]    - zamukay
 - **GitHub**: [https://github.com/SebasIsd](https://github.com/SebasIsd)
 - **Issues**: [Reportar problemas](https://github.com/SebasIsd/Proyecto2P_Event/issues)
-
-## 📄 Licencia
-
-Este proyecto está bajo la licencia MIT. Ver archivo `LICENSE` para más detalles.
