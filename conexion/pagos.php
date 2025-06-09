@@ -19,20 +19,20 @@ try {
 
         $stmt = $conn->prepare("
             SELECT i.ID_INS as id_inscripcion, ec.TIT_EVE_CUR as nombre_evento,
-                   ec.TIP_EVE as tipo_evento, ec.FEC_INI_EVE_CUR as fecha_inicio,
-                   ec.FEC_FIN_EVE_CUR as fecha_fin, ec.COS_EVE_CUR as costo_evento,
-                   i.EST_PAG_INS as estado_pago, p.FEC_PAG as fecha_pago,
-                   p.MON_PAG as monto_pago, p.MET_PAG as metodo_pago, p.ID_PAG as id_pago
+                ec.TIP_EVE as tipo_evento, ec.FEC_INI_EVE_CUR as fecha_inicio,
+                ec.FEC_FIN_EVE_CUR as fecha_fin, ec.COS_EVE_CUR as costo_evento,
+                i.EST_PAG_INS as estado_pago, img.COMPROBANTE_PAG_OID as comprobante_oid
             FROM INSCRIPCIONES i
             INNER JOIN EVENTOS_CURSOS ec ON ec.ID_EVE_CUR = i.ID_EVE_CUR
-            LEFT JOIN PAGOS p ON p.ID_INS = i.ID_INS
+            LEFT JOIN IMAGENES img ON img.ID_INS = i.ID_INS
             WHERE i.CED_USU = :cedula
             ORDER BY ec.FEC_INI_EVE_CUR DESC
         ");
         $stmt->execute(['cedula' => $cedula]);
-        $rows = $stmt->fetchAll();
+        $inscripciones = $stmt->fetchAll();
 
-        $inscripciones = [];
+        echo json_encode(['success' => true, 'inscripciones' => $inscripciones]);
+        /*$inscripciones = [];
         foreach ($rows as $row) {
             $id = $row['id_inscripcion'];
             if (!isset($inscripciones[$id])) {
@@ -56,7 +56,7 @@ try {
             }
         }
 
-        echo json_encode(['success' => true, 'inscripciones' => array_values($inscripciones)]);
+        echo json_encode(['success' => true, 'inscripciones' => array_values($inscripciones)]);*/
     }
 
     elseif ($accion === 'actualizar') {

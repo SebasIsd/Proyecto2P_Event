@@ -40,6 +40,29 @@ function mostrarInscripciones(inscripciones) {
     return;
   }
 
+  // Crear el modal (se añade solo una vez)
+  if (!document.getElementById('modalComprobante')) {
+    const modalHTML = `
+      <div id="modalComprobante" class="modal" style="display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8)">
+        <div class="modal-content" style="margin:5% auto;width:80%;max-width:800px">
+          <span class="close" style="color:#fff;float:right;font-size:28px;cursor:pointer">&times;</span>
+          <img id="imagenComprobante" style="width:100%">
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Eventos para cerrar el modal
+    document.querySelector('.close').onclick = function() {
+      document.getElementById('modalComprobante').style.display = 'none';
+    };
+    window.onclick = function(event) {
+      if (event.target == document.getElementById('modalComprobante')) {
+        document.getElementById('modalComprobante').style.display = 'none';
+      }
+    };
+  }
+
   const tabla = document.createElement('table');
   tabla.innerHTML = `
     <thead>
@@ -50,7 +73,7 @@ function mostrarInscripciones(inscripciones) {
         <th>Costo</th>
         <th>Estado</th>
         <th>Cambiar Estado</th>
-        <th>Pagos</th>
+        <th>Comprobante</th>
       </tr>
     </thead>
     <tbody>
@@ -68,9 +91,11 @@ function mostrarInscripciones(inscripciones) {
             </select>
           </td>
           <td>
-            ${(insc.pagos || []).map(p => `
-              <div><strong>${p.fecha_pago}</strong><br>${p.monto_pago} (${p.metodo_pago})</div>
-            `).join('') || 'Sin pagos'}
+            ${insc.comprobante_oid ? 
+              `<a href="#" onclick="mostrarComprobante(${insc.id_inscripcion}); return false;">
+                Ver Comprobante
+              </a>` : 
+              'Sin comprobante'}
           </td>
         </tr>`).join('')}
     </tbody>
@@ -83,7 +108,15 @@ function mostrarInscripciones(inscripciones) {
   guardarBtn.textContent = 'Guardar Cambios';
   guardarBtn.onclick = guardarCambios;
   resultadosDiv.appendChild(guardarBtn);
+}
+
+// Función para mostrar el comprobante en el modal
+function mostrarComprobante(idInscripcion) {
+  const modal = document.getElementById('modalComprobante');
+  const img = document.getElementById('imagenComprobante');
   
+  img.src = `../usuarios/inscripciones/ver_comprobante.php?id_inscripcion=${idInscripcion}`;
+  modal.style.display = 'block';
 }
 
 async function guardarCambios() {
@@ -117,6 +150,6 @@ async function guardarCambios() {
     });
   }
 
-  
+  console.log(await response.text());
   buscarBtn.click(); // recargar tabla
 }
