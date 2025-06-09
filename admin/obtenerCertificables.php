@@ -31,7 +31,7 @@ try {
         N.PORC_ASI_NOT_ASI >= 80 AND (
             E.MOD_EVE_CUR = 'Gratis' OR (
                 I.EST_PAG_INS = 'Pagado' AND 
-                P.FEC_PAG <= E.FEC_FIN_EVE_CUR - INTERVAL '1 day'
+                I.EST_PAG_INS = 'Pagado'
             )
         )
 ");

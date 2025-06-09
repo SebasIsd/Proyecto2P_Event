@@ -21,7 +21,18 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch(`../admin/obtenerInscritosPorEvento.php?idEvento=${idEvento}`)
       .then(res => res.json())
       .then(data => {
+        console.log("Datos recibidos:", data);
         tablaCuerpo.innerHTML = "";
+        if (data.length === 0) {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td colspan="5" style="text-align: center; padding: 10px; font-weight: bold;">
+        No hay usuarios con notas y asistencia pendientes.
+      </td>
+    `;
+    tablaCuerpo.appendChild(fila);
+    return;
+  }
         data.forEach(p => {
           const fila = document.createElement("tr");
           fila.innerHTML = `
@@ -83,4 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
   eventoSelect.addEventListener("change", () => {
     cargarInscritos(eventoSelect.value);
   });
+    tablaCuerpo.innerHTML = `<tr><td colspan="5" style="text-align:center; font-weight:bold;">Seleccione un evento</td></tr>`;
+
 });

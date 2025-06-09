@@ -20,7 +20,7 @@ try {
         FROM INSCRIPCIONES I
         INNER JOIN USUARIOS U ON I.CED_USU = U.CED_USU
         LEFT JOIN NOTAS_ASISTENCIAS N ON N.ID_INS = I.ID_INS
-        WHERE I.ID_EVE_CUR = :idEvento
+        WHERE I.ID_EVE_CUR = :idEvento And N.ID_INS IS NULL
     ";
 
     $stmt = $conn->prepare($sql);
