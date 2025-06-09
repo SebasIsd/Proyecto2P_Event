@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verificar Pagos</title>
+  <link rel="stylesheet" href="../styles/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Estilos mejorados */
+    .search-container {
+      background: white;
+      padding: 1%;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+    
+    .form-group {
+      flex: 1;
+      width: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .form-control {
+      width: 30%;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: #6c1313;
+      box-shadow: 0 0 0 3px rgba(108, 19, 19, 0.1);
+      outline: none;
+    }
+    
+    .btn-search {
+      background-color: #6c1313;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: max-content;
+    }
+    
+    .btn-search:hover {
+      background-color: #5a0f0f;
+    }
+    
+    /* Tabla mejorada */
+    .results-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .results-table th {
+      background-color: #6c1313;
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    .results-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+    }
+    
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .results-table tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    
+    .results-table tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    /* Estados */
+    .estado {
+      font-weight: 600;
+      padding: 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+      min-width: 100px;
+      text-align: center;
+    }
+    
+    .estado.pagado {
+      background-color: #e6f7ee;
+      color: #28a745;
+    }
+    
+    .estado.pendiente {
+      background-color: #feeaea;
+      color: #dc3545;
+    }
+    
+    /* Select mejorado */
+    .estadoSelect {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-weight: 500;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .estadoSelect:focus {
+      border-color: #6c1313;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(108, 19, 19, 0.2);
+    }
+    
+    .estadoSelect.pagado {
+      color: #28a745;
+      border-color: #28a745;
+    }
+    
+    .estadoSelect.pendiente {
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+    
+    /* Botón de acción */
+    .action-btn {
+      background-color: #6c1313;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .action-btn:hover {
+      background-color: #5a0f0f;
+      transform: translateY(-2px);
+    }
+    
+    /* Modal mejorado */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      background: white;
+      margin: 5% auto;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .close {
+      position: absolute;
+      right: 1.5rem;
+      top: 1.5rem;
+      font-size: 1.5rem;
+      color: #6c1313;
+      cursor: pointer;
+      background: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    
+    .close:hover {
+      color: white;
+      background-color: #6c1313;
+    }
+    
+    #imagenComprobante {
+      max-width: 100%;
+      max-height: 70vh;
+      display: block;
+      margin: 1rem auto;
+      border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    /* Mensajes */
+    .message {
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    
+    .error {
+      background-color: #feeaea;
+      color: #dc3545;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .info {
+      background-color: #e6f7ee;
+      color: #28a745;
+      border-left: 4px solid #28a745;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .results-table {
+        display: block;
+        overflow-x: auto;
+      }
+      
+      .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Verificador de Pagos</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="admin.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>          
+          <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+          <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 style="margin-bottom: 1.5rem; color: #6c1313; display: flex; align-items: center; gap: 10px;">
+      <i class="fas fa-search-dollar"></i> Verificar Pagos
+    </h2>
+
+    <div class="search-container">
+      <div class="form-group">
+        <label for="cedula"><i class="fas fa-id-card"></i> Cédula del Usuario</label>
+        <input type="text" id="cedula" class="form-control" placeholder="Ingrese cédula del usuario" />
+        <button id="buscarBtn" class="btn-search"><i class="fas fa-search"></i> Buscar Inscripciones</button>
+      </div>
+    </div>
+
+    <!-- Info del usuario -->
+    <div id="infoUsuarioDatos" class="vp-info-usuario"></div>
+
+    <!-- Resultados -->
+    <div id="resultados"></div>
+  </main>
+
+  <!-- Modal para comprobante -->
+  <div id="modalComprobante" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3 style="color: #6c1313; margin-bottom: 1rem;"><i class="fas fa-file-invoice-dollar"></i> Comprobante de Pago</h3>
+      <img id="imagenComprobante" alt="Comprobante de pago">
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+          <p>Sistema de gestión de inscripciones para eventos y cursos académicos de la institución.</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-envelope"></i> Contacto</h3>
+          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const buscarBtn = document.getElementById('buscarBtn');
+      const cedulaInput = document.getElementById('cedula');
+      const resultadosDiv = document.getElementById('resultados');
+      const modal = document.getElementById('modalComprobante');
+      const closeBtn = document.querySelector('.close');
+      
+      // Configurar eventos del modal
+      closeBtn.onclick = function() {
+        modal.style.display = 'none';
+      };
+      
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      };
+
+      buscarBtn.addEventListener('click', buscarInscripciones);
+      
+      async function buscarInscripciones() {
+        const cedula = cedulaInput.value.trim();
+        if (!cedula) {
+          resultadosDiv.innerHTML = `<div class="message error">
+            <i class="fas fa-exclamation-circle"></i> Por favor, ingrese una cédula.
+          </div>`;
+          return;
+        }
+
+        resultadosDiv.innerHTML = `<div class="message info" style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-spinner fa-spin"></i> Buscando información...
+        </div>`;
+
+        try {
+          const formData = new FormData();
+          formData.append('accion', 'buscar');
+          formData.append('cedula', cedula);
+
+          const response = await fetch('../conexion/pagos.php', {
+            method: 'POST',
+            body: formData
+          });
+
+          const data = await response.json();
+
+          if (!data.success) {
+            resultadosDiv.innerHTML = `<div class="message error">
+              <i class="fas fa-exclamation-circle"></i> ${data.error}
+            </div>`;
+            return;
+          }
+          mostrarInscripciones(data.inscripciones);
+        } catch (error) {
+          resultadosDiv.innerHTML = `<div class="message error">
+            <i class="fas fa-exclamation-circle"></i> Ocurrió un error: ${error.message}
+          </div>`;
+        }
+      }
+
+      function mostrarInscripciones(inscripciones) {
+        if (inscripciones.length === 0) {
+          resultadosDiv.innerHTML = `<div class="message info">
+            <i class="fas fa-info-circle"></i> No se encontraron inscripciones.
+          </div>`;
+          return;
+        }
+
+        const tabla = document.createElement('table');
+        tabla.className = 'results-table';
+        tabla.innerHTML = `
+          <thead>
+            <tr>
+              <th><i class="fas fa-calendar-alt"></i> Evento</th>
+              <th><i class="fas fa-tag"></i> Tipo</th>
+              <th><i class="fas fa-calendar-day"></i> Fechas</th>
+              <th><i class="fas fa-money-bill-wave"></i> Costo</th>
+              <th><i class="fas fa-info-circle"></i> Estado</th>
+              <th><i class="fas fa-edit"></i> Cambiar Estado</th>
+              <th><i class="fas fa-file-invoice"></i> Comprobante</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${inscripciones.map(insc => `
+              <tr data-id="${insc.id_inscripcion}">
+                <td>${insc.nombre_evento}</td>
+                <td>${insc.tipo_evento}</td>
+                <td><strong>Inicio:</strong> ${insc.fecha_inicio}<br><strong>Fin:</strong> ${insc.fecha_fin}</td>
+                <td>$${insc.costo_evento}</td>
+                <td><span class="estado ${insc.estado_pago === 'Pagado' ? 'pagado' : 'pendiente'}">
+                  ${insc.estado_pago}
+                </span></td>
+                <td>
+                  <select class="estadoSelect ${insc.estado_pago === 'Pagado' ? 'pagado' : 'pendiente'}">
+                    <option value="Pagado" ${insc.estado_pago === 'Pagado' ? 'selected' : ''}>Pagado</option>
+                    <option value="Pendiente" ${insc.estado_pago === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                  </select>
+                </td>
+                <td>
+                  ${insc.comprobante_oid ? 
+                    `<a href="#" onclick="mostrarComprobante(${insc.id_inscripcion}); return false;" 
+                      style="color: #6c1313; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 5px;">
+                      <i class="fas fa-eye"></i> Ver
+                    </a>` : 
+                    '<span style="color: #999;"><i class="fas fa-ban"></i> Sin comprobante</span>'}
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        `;
+
+        resultadosDiv.innerHTML = '';
+        resultadosDiv.appendChild(tabla);
+
+        const guardarBtn = document.createElement('button');
+        guardarBtn.className = 'action-btn';
+        guardarBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+        guardarBtn.onclick = guardarCambios;
+        resultadosDiv.appendChild(guardarBtn);
+      }
+
+      function mostrarComprobante(idInscripcion) {
+        const img = document.getElementById('imagenComprobante');
+        img.src = `../usuarios/inscripciones/ver_comprobante.php?id_inscripcion=${idInscripcion}`;
+        modal.style.display = 'block';
+      }
+
+      async function guardarCambios() {
+        const filas = document.querySelectorAll('tbody tr');
+        const cambios = [];
+        const guardarBtn = document.querySelector('.action-btn');
+
+        // Deshabilitar botón durante el guardado
+        guardarBtn.disabled = true;
+        guardarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+        filas.forEach(fila => {
+          const id = fila.getAttribute('data-id');
+          const nuevoEstado = fila.querySelector('.estadoSelect').value;
+          const estadoActual = fila.querySelector('.estado').textContent.trim();
+
+          if (nuevoEstado !== estadoActual) {
+            cambios.push({ id, nuevoEstado });
+          }
+        });
+
+        if (cambios.length === 0) {
+          resultadosDiv.insertAdjacentHTML('beforeend', `<div class="message info" style="margin-top: 1rem;">
+            <i class="fas fa-info-circle"></i> No hay cambios para guardar.
+          </div>`);
+          guardarBtn.disabled = false;
+          guardarBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+          return;
+        }
+
+        try {
+          for (let cambio of cambios) {
+            const formData = new FormData();
+            formData.append('accion', 'actualizar');
+            formData.append('id_inscripcion', cambio.id);
+            formData.append('estado_pago', cambio.nuevoEstado);
+
+            await fetch('../conexion/pagos.php', {
+              method: 'POST',
+              body: formData
+            });
+          }
+
+          resultadosDiv.insertAdjacentHTML('beforeend', `<div class="message info" style="margin-top: 1rem;">
+            <i class="fas fa-check-circle"></i> Cambios guardados correctamente.
+          </div>`);
+          
+          // Recargar datos después de 1 segundo
+          setTimeout(buscarInscripciones, 1000);
+        } catch (error) {
+          resultadosDiv.insertAdjacentHTML('beforeend', `<div class="message error" style="margin-top: 1rem;">
+            <i class="fas fa-exclamation-circle"></i> Error al guardar cambios: ${error.message}
+          </div>`);
+        } finally {
+          guardarBtn.disabled = false;
+          guardarBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+        }
+      }
+
+      // Hacer la función disponible globalmente
+      window.mostrarComprobante = mostrarComprobante;
+    }); 
+  </script>
+  <script src="../styles/buscar_usuario.js"></script>
+</body>
+</html>

@@ -1,74 +1,102 @@
-# 🎉 Proyecto Segundo Parcial 🎊  
+# 📚 Sistema de Gestión de Eventos Académicos
 
-Este repositorio contiene el proyecto **Proyecto2P_Event**, una plataforma para la gestión de eventos. ¡Organiza tus eventos de manera fácil!  
+## 🌟 Descripción del Proyecto
 
----
+**Sistema de Gestión de Eventos Académicos** es una plataforma web completa para administrar eventos, cursos, inscripciones y certificaciones en instituciones educativas. El sistema ofrece funcionalidades diferenciadas para administradores y estudiantes, con un enfoque en la facilidad de uso y automatización de procesos.
 
-## 📌 Descripción  
+## 🛠️ Tecnologías Utilizadas
 
-- **Objetivo**: Crear una plataforma intuitiva para gestionar eventos, permitiendo a los usuarios:  
-  - ✅ **Crear** eventos  
-  - ✏️ **Editar** eventos existentes  
-  - 🗑️ **Eliminar** eventos  
-- **Tecnologías utilizadas**:  
-  - 🌐 HTML  
-  - 🎨 CSS  
-  - 🗃️ SQL  
+- **Frontend**: HTML5, CSS, JavaScript
+- **Backend**: PHP
+- **Base de Datos**: PostgreSQL
+- **Generación de PDF**: DomPDF (via Composer)
+- **Control de Versiones**: Git
 
----
+## ✨ Características Principales
 
-## 🛠️ Instalación  
+### 👨‍💻 Panel de Administración
+- **Gestión de Eventos/Cursos**
+  - Creación, edición y eliminación de eventos
+  - Configuración de fechas, horarios
+- **Gestión de Usuarios**
+  - Registro y administración de cuentas
+  - Asignación de roles (admin, estudiante)
+- **Control de Asistencias**
+  - Registro de asistencia a eventos
+  - Sistema de calificaciones para cursos
+- **Certificaciones**
+  - Generación automática de certificados en PDF
+  - Almacenamiento seguro de documentos
+  - Visualización de certificados generados
 
-Sigue estos pasos para instalar y ejecutar el proyecto en tu máquina local:  
+### 🎓 Panel de Estudiante
+- **Registro e Inscripción**
+  - Creación de cuenta personal
+  - Inscripción a eventos/cursos disponibles
+- **Consulta de Información**
+  - Visualización de eventos activos
 
-1. **Clona el repositorio**:  
+## 🚀 Instalación y Configuración
+
+### Requisitos del Sistema
+- PHP 7.4 o superior
+- PostgreSQL 17
+- Composer (para dependencias PHP)
+
+### Pasos de Instalación
+
+1. **Clonar el repositorio**
    ```bash
    git clone https://github.com/SebasIsd/Proyecto2P_Event.git
-   ```  
-
-2. **Navega al directorio del proyecto**:  
-   ```bash
    cd Proyecto2P_Event
-   ```  
+   ```
 
-3. **Abre la aplicación en tu navegador**:  
-   - Haz doble clic en el archivo `index.html` o ábrelo desde tu navegador favorito.  
+2. **Configurar base de datos**
+   - Importar el archivo SQL (`sql/BaseDatos_Proyecto.sql`)
+   - Ejemplo para configurar credenciales en `includes/conexion1.php`
 
----
-
-## 🚀 Uso  
-
-- **Crear un evento**:  
-  📝 Completa el formulario y ¡listo! Tu evento se guardará automáticamente.  
-
-- **Editar un evento**:  
-  ✨ Selecciona un evento existente, modifica los detalles y guarda los cambios.  
-
-- **Eliminar un evento**:  
-  🗑️ Selecciona el evento y confirma su eliminación. ¡Fácil y rápido!  
-
----
-
-## 🤝 Contribuciones  
-
-¡Tus contribuciones son bienvenidas! Si deseas mejorar el proyecto, sigue estos pasos:  
-
-1. **Haz un fork** del repositorio.  
-2. **Crea una rama** para tu nueva característica:  
+3. **Instalar dependencias**
    ```bash
-   git checkout -b feature/nueva-caracteristica
-   ```  
-3. **Realiza tus cambios** y haz commit:  
-   ```bash
-   git commit -m 'Añadir nueva característica'
-   ```  
-4. **Envía un pull request** para que revisemos tus cambios.  
+   composer init
+   composer requiere dompdf/dompdf
+   ```
 
----
+## 📂 Estructura del Proyecto
 
-## 📧 Contacto  
+```
+Proyecto2P_Event/
+├── admin/                # Panel de administración
+├── certificados/         # Certificados generados
+├── conexion/             # PHP para consultas SQL
+├── includes/             # Conexion para BD
+├── SQL/                  # Contiene el .sql
+├── styles/               # Hojas de estilo CSS junto JS
+├── usuarios/             # Panel de Usuario(Estudiante)
+├── .gitignore            # Configuración para ignorar archivos
+├── composer.json         # Configuración de Composer
+├── composer.lock         # Configuración de Composer, control versiones
+├── index.html            # Punto de entrada principal
+└── README.md             # Documentación
+```
 
-¿Tienes preguntas o sugerencias? ¡Contáctame!  
+## 🤝 Contribución
 
-- 📬 Perfil de GitHub: [SebasIsd](https://github.com/SebasIsd)  
-- 💬 Abre un **issue** en el repositorio para cualquier consulta.  
+1. Haz fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/awesome-feature`)
+3. Haz commit de tus cambios (`git commit -m 'Add awesome feature'`)
+4. Haz push a la rama (`git push origin feature/awesome-feature`)
+5. Abre un Pull Request
+
+## 📧 Contacto
+
+- **Desarrolladores**:
+- [Sebastián]  - SebasIsd
+- [viviana]    - maribelsailema
+- [Alex]       - alexJonarey
+- [Anthony]    - zamukay
+- **GitHub**: [https://github.com/SebasIsd](https://github.com/SebasIsd)
+- **Issues**: [Reportar problemas](https://github.com/SebasIsd/Proyecto2P_Event/issues)
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT. Ver archivo `LICENSE` para más detalles.

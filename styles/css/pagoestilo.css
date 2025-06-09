@@ -1,0 +1,139 @@
+/* General */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(255, 1, 1, 0.1);
+  overflow: hidden;
+}
+
+th {
+  background-color: #6c1313;
+  color: #ffffff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: bold;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+  background-color: #e9ecef;
+}
+
+/* Estados */
+.estado {
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+#estado.pagado {
+  color: #28a745;
+}
+
+#estado.pendiente {
+  color: #dc3545;
+}
+
+/* Select personalizado */
+#estadoSelect {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+#estadoSelect.pagado {
+  color: #28a745;
+}
+
+#estadoSelect.pendiente {
+  color: #dc3545;
+}
+
+/* Pagos */
+#pago-item {
+  padding: 6px;
+  margin-bottom: 6px;
+  border-left: 4px solid #007bff;
+  background-color: #f1f9ff;
+  border-radius: 4px;
+}
+
+.sin-pago {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Botón Guardar */
+.guardar-btn,
+button {
+  background-color: #a71313;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 5px 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.guardar-btn:hover,
+button:hover {
+  background-color: #e86a6a;
+}
+
+/* Mensajes */
+.error {
+  color: #dc3545;
+  font-weight: bold;
+  text-align: center;
+}
+
+.info {
+  color: #f77b00;
+  text-align: center;
+}
+
+.cargando {
+  color: #ffc107;
+  text-align: center;
+}
+
+p {
+  color: #000000;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+#button{
+  background-color: #d6251c;
+  color: rgb(21, 1, 1);
+  border: none;
+  padding: 10px 18px;
+  margin-top: 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+}
