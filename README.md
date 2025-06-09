@@ -1,65 +1,102 @@
-🧾 Módulo de Generación de Certificados
+# 📚 Sistema de Gestión de Eventos Académicos
 
-📑 Este módulo permite generar certificados en formato PDF para los participantes de eventos académicos.
+## 🌟 Descripción del Proyecto
 
-🖼️ Se utiliza una plantilla general definida por el administrador, y se insertan dinámicamente los siguientes datos del estudiante:
+**Sistema de Gestión de Eventos Académicos** es una plataforma web completa para administrar eventos, cursos, inscripciones y certificaciones en instituciones educativas. El sistema ofrece funcionalidades diferenciadas para administradores y estudiantes, con un enfoque en la facilidad de uso y automatización de procesos.
 
-👤 Nombre completo
+## 🛠️ Tecnologías Utilizadas
 
-🆔 Cédula
+- **Frontend**: HTML5, CSS, JavaScript
+- **Backend**: PHP
+- **Base de Datos**: PostgreSQL
+- **Generación de PDF**: DomPDF (via Composer)
+- **Control de Versiones**: Git
 
-🎓 Evento en el que participó
+## ✨ Características Principales
 
-📅 Fecha de finalización del evento
+### 👨‍💻 Panel de Administración
+- **Gestión de Eventos/Cursos**
+  - Creación, edición y eliminación de eventos
+  - Configuración de fechas, horarios
+- **Gestión de Usuarios**
+  - Registro y administración de cuentas
+  - Asignación de roles (admin, estudiante)
+- **Control de Asistencias**
+  - Registro de asistencia a eventos
+  - Sistema de calificaciones para cursos
+- **Certificaciones**
+  - Generación automática de certificados en PDF
+  - Almacenamiento seguro de documentos
+  - Visualización de certificados generados
 
-📂 Los certificados generados se almacenan en una carpeta del servidor (/certificados/) y 📌 su ruta queda registrada en la base de datos para ser visualizada posteriormente.
+### 🎓 Panel de Estudiante
+- **Registro e Inscripción**
+  - Creación de cuenta personal
+  - Inscripción a eventos/cursos disponibles
+- **Consulta de Información**
+  - Visualización de eventos activos
 
-⚙️ Requisitos del Módulo
+## 🚀 Instalación y Configuración
 
-✅ PHP 7.4 o superior
-✅ Composer instalado
+### Requisitos del Sistema
+- PHP 7.4 o superior
+- PostgreSQL 17
+- Composer (para dependencias PHP)
 
-📦 Instalación de dependencias PHP (🔧 Solo para este módulo)
-Este módulo hace uso del paquete dompdf/dompdf para convertir contenido HTML en archivos PDF.
+### Pasos de Instalación
 
-🚀 Pasos para instalar
-📁 Ve a la carpeta raíz del proyecto (donde está el archivo composer.json)
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/SebasIsd/Proyecto2P_Event.git
+   cd Proyecto2P_Event
+   ```
 
-💻 Ejecuta en la terminal:
+2. **Configurar base de datos**
+   - Importar el archivo SQL (`sql/BaseDatos_Proyecto.sql`)
+   - Ejemplo para configurar credenciales en `includes/conexion1.php`
 
-composer install
+3. **Instalar dependencias**
+   ```bash
+   composer init
+   composer requiere dompdf/dompdf
+   ```
 
-✅ Composer descargará las dependencias necesarias en la carpeta /vendor
+## 📂 Estructura del Proyecto
 
-📚 Librería utilizada
-Paquete	        Descripción
-dompdf/dompdf	📄 Generador de PDFs a partir de HTML y CSS en PHP
+```
+Proyecto2P_Event/
+├── admin/                # Panel de administración
+├── certificados/         # Certificados generados
+├── conexion/             # PHP para consultas SQL
+├── includes/             # Conexion para BD
+├── SQL/                  # Contiene el .sql
+├── styles/               # Hojas de estilo CSS junto JS
+├── usuarios/             # Panel de Usuario(Estudiante)
+├── .gitignore            # Configuración para ignorar archivos
+├── composer.json         # Configuración de Composer
+├── composer.lock         # Configuración de Composer, control versiones
+├── index.html            # Punto de entrada principal
+└── README.md             # Documentación
+```
 
-📂 Ubicación de PDFs generados
-Los certificados se almacenan automáticamente en la carpeta:
+## 🤝 Contribución
 
-/certificados/
-Asegúrate de que el servidor tenga permisos de escritura en esa carpeta (chmod 775 certificados)
+1. Haz fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/awesome-feature`)
+3. Haz commit de tus cambios (`git commit -m 'Add awesome feature'`)
+4. Haz push a la rama (`git push origin feature/awesome-feature`)
+5. Abre un Pull Request
 
-📤 Punto de entrada
-El archivo responsable de generar certificados es:
+## 📧 Contacto
 
-admin/generarCertificado.php
+- **Desarrolladores**:
+- [Sebastián]  - SebasIsd
+- [viviana]    - maribelsailema
+- [Alex]       - alexJonarey
+- [Anthony]    - zamukay
+- **GitHub**: [https://github.com/SebasIsd](https://github.com/SebasIsd)
+- **Issues**: [Reportar problemas](https://github.com/SebasIsd/Proyecto2P_Event/issues)
 
-Este archivo recibe el ID_INS mediante una solicitud POST en formato JSON, genera el PDF correspondiente y guarda la ruta en la base de datos.
+## 📄 Licencia
 
-🙈 Archivos/Carteras ignoradas (.gitignore)
-Asegúrate de no subir archivos innecesarios o sensibles:
-
-/vendor/          # Librerías instaladas con Composer
-/certificados/    # Certificados PDF generados
-composer.lock     # Puede ignorarse si se desea no fijar versión de dependencias
-*.log             # Archivos de log
-
-🚀 Uso
-Selecciona un usuario apto en la interfaz de certificados.
-
-Haz clic en "Generar" para crear y guardar el certificado.
-
-Se habilita el botón "Ver" para abrir el PDF en una nueva pestaña.
-
+Este proyecto está bajo la licencia MIT. Ver archivo `LICENSE` para más detalles.
