@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ape_pri_usu  = $_POST["ape_pri_usu"] ?? '';
     $ape_seg_usu  = $_POST["ape_seg_usu"] ?? '';
     $correo       = $_POST["correo"] ?? '';
-    $password     = $_POST["password"] ?? '';
+    $password     = $_POST["password"] ?? ''; // SIN hash
     $telefono     = $_POST["telefono"] ?? '';
     $direccion    = $_POST["direccion"] ?? '';
     $id_rol_usu   = $_POST["id_rol_usu"] ?? '';
@@ -25,9 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo json_encode(['error' => 'Faltan campos obligatorios']);
         exit;
     }
-
-    // Hashear la contraseña
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
     try {
         $sql = "INSERT INTO usuarios (
@@ -49,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $ape_pri_usu,
             $ape_seg_usu,
             $correo,
-            $password_hash,
+            $password, // sin hash
             $telefono,
             $direccion,
             $id_rol_usu,

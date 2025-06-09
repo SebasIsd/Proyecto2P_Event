@@ -73,9 +73,6 @@ if ($usuario = pg_fetch_assoc($result)) {
                 <h1 class="profile-name"><?= htmlspecialchars($nombreCompleto) ?></h1>
                 <p class="profile-title"><?= htmlspecialchars($carrera) ?></p>
             </div>
-            <a href="editar_perfil.php" class="profile-edit-btn">
-                <i class="fas fa-user-edit"></i> Editar Perfil
-            </a>
         </div>
         
         <div class="profile-details">
