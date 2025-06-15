@@ -25,11 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         // Validaciones básicas
-    if ($password !== $confirm_password) {
-        $error = "Las contraseñas no coinciden";
-    } elseif (!preg_match('/@uta\.edu\.ec$/i', $correo)) {
-        $error = "Debe usar un correo institucional @uta.edu.ec";
-    } else {
+   if ($password !== $confirm_password) {
+    $error = "Las contraseñas no coinciden";
+} elseif (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/', $password)) {
+    $error = "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial";
+} elseif (!preg_match('/@uta\.edu\.ec$/i', $correo)) {
+    $error = "Debe usar un correo institucional @uta.edu.ec";
+} else {
+
         // Verificar si el usuario ya existe
         $check_sql = "SELECT ced_usu FROM usuarios WHERE ced_usu = $1";
         $check_result = pg_query_params($conn, $check_sql, array($cedula));

@@ -292,6 +292,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     errorDiv.style.display = 'block';
                 }
             }
+
+            
         });
     </script>
 </body>
