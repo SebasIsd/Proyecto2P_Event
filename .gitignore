@@ -19,3 +19,10 @@ vendor/
 
 #Ignorar archivos .log
 .log
+
+# ignorar archivos pdf
+certificados/*
+!certificados/.gitkeep
+*.pdf
+*.log
+.env

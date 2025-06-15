@@ -87,8 +87,6 @@ $result = pg_query_params($conn, $insert_sql, $params);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
-
     <div class="register-container">
         <div class="register-card">
             <div class="register-header">
