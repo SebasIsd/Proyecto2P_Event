@@ -2,129 +2,222 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Evento Académico</title>
-    <link rel="stylesheet" href="../styles/css/style.css">
-    <link rel="stylesheet" href="../styles/css/estilosEventos.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear Evento Académico</title>
+  <link rel="stylesheet" href="../styles/css/style.css" />
+  <link rel="stylesheet" href="../styles/css/estilosEventos.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .formulario-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    fieldset {
+      border: 2px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    legend {
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #8b0000;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: normal;
+    }
+
+    .boton-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .boton-container button {
+      padding: 12px 25px;
+      background-color: #8b0000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .boton-container button:hover {
+      background-color: #6b0000;
+    }
+  </style>
 </head>
 
 <body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Sistema de <span>Eventos</span></h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+          <li><a href="../admin/verEventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Sistema de <span>Eventos</span></h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i>
-                            Eventos</a></li>
-                    <li><a href="../admin/verEventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
-                </ul>
-            </nav>
+  <main>
+    <div class="formulario-container">
+      <form id="eventoForm">
+        <fieldset>
+          <legend>Información General</legend>
+
+          <label for="titulo">Título del Evento</label>
+          <input type="text" id="titulo" name="titulo" required placeholder="Ej. Curso de Redes Avanzadas" />
+
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" rows="3" required placeholder="Describe brevemente el evento"></textarea>
+
+    <fieldset>
+  <legend>Tipo de Evento</legend>
+  <div class="grid-group">
+    <label><input type="checkbox" name="tipoEvento[]" value="Curso" /> Curso</label>
+    <label><input type="checkbox" name="tipoEvento[]" value="Congreso" /> Congreso</label>
+    <label><input type="checkbox" name="tipoEvento[]" value="Webinar" /> Webinar</label>
+    <label><input type="checkbox" name="tipoEvento[]" value="Conferencia" /> Conferencia</label>
+    <label><input type="checkbox" name="tipoEvento[]" value="Socialización" /> Socialización</label>
+    <div>
+      <label>Otro:</label>
+      <input type="text" name="tipoEventoOtro" placeholder="Especificar otro tipo" />
+    </div>
+  </div>
+</fieldset>
+
+
+
+          <label>Modalidad</label>
+          <select id="modalidad" name="modalidad" required>
+            <option value="">Selecciona una opción</option>
+            <option value="Gratis">Gratis</option>
+            <option value="Pagado">Pagado</option>
+          </select>
+
+          <label for="costo">Costo</label>
+          <input type="text" id="costo" name="costo" required placeholder="Ej. 0.00 o Gratis" />
+        </fieldset>
+
+        <fieldset>
+          <legend>Fechas</legend>
+          <label for="fechaInicio">Fecha de Inicio</label>
+          <input type="date" id="fechaInicio" name="fechaInicio" required />
+
+          <label for="fechaFin">Fecha de Fin</label>
+          <input type="date" id="fechaFin" name="fechaFin" required />
+        </fieldset>
+
+        <fieldset>
+          <legend>Carreras Participantes</legend>
+          <div class="grid-group">
+            <label><input type="checkbox" name="carreras[]" value="Ing. Software" /> Ing. Software</label>
+            <label><input type="checkbox" name="carreras[]" value="Ing. Industrial" /> Ing. Industrial</label>
+            <label><input type="checkbox" name="carreras[]" value="Ing. TI" /> Ing. Tecnologías de la Información</label>
+            <label><input type="checkbox" name="carreras[]" value="Ing. Telecomunicaciones" /> Ing. Telecomunicaciones</label>
+            <label><input type="checkbox" name="carreras[]" value="Ing. Automatización" /> Ing. en Automatización y Robótica</label>
+            <label><input type="checkbox" name="carreras[]" value="Todos" /> Todos</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Requisitos del Evento</legend>
+
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="reqNota" onclick="toggleField('notaMinima')" /> Nota mínima requerida</label>
+            <input type="number" name="notaMinima" id="notaMinima" placeholder="Ej. 7" min="0" max="10" disabled />
+
+            <label><input type="checkbox" id="reqAsistencia" onclick="toggleField('asistenciaMinima')" /> Asistencia mínima (%)</label>
+            <input type="number" name="asistenciaMinima" id="asistenciaMinima" placeholder="Ej. 80" min="0" max="100" disabled />
+
+            <label><input type="checkbox" name="requiereMatricula" /> Requiere Matrícula</label>
+          </div>
+        </fieldset>
+
+        <div class="boton-container">
+          <button type="submit">GUARDAR</button>
         </div>
-    </header>
+      </form>
+    </div>
+  </main>
 
-    <main>
-        <div class="formulario-container">
-            <form id="eventoForm">
-                <div class="columnas">
-                    <div class="columna">
-                        <label for="titulo">Título del Evento</label>
-                        <input type="text" id="titulo" name="titulo" placeholder="Ej. Curso de Redes Avanzadas"
-                            required>
-
-                        <label for="descripcion">Descripción</label>
-                        <textarea id="descripcion" name="descripcion" rows="4"
-                            placeholder="Describe brevemente el evento" required></textarea>
-
-                        <label for="tipo">Tipo de Evento</label>
-                        <select id="tipo" name="tipo" required>
-                            <option value="">Selecciona una opción</option>
-                            <option value="curso">Curso</option>
-                            <option value="congreso">Congreso</option>
-                            <option value="webinar">Webinar</option>
-                            <option value="conferencia">Conferencia</option>
-                            <option value="socializacion">Socialización</option>
-                        </select>
-
-                        <label for="carrera">Carrera</label>
-                        <select id="carrera" name="carrera" required>
-                            <option value="">Selecciona una carrera</option>
-                            <option value="Ing. Software">Ing. Software</option>
-                            <option value="Ing. Industrial">Ing. Industrial</option>
-                            <option value="Ing. Tecnologias de la Informacion">Ing. Tecnologias de la Informacion
-                            </option>
-                            <option value="Ing. Telecomunicaciones">Ing. Telecomunicaciones</option>
-                            <option value="Ing. en Automatizacion y Robotica">Ing. en Automatizacion y Robotica</option>
-                            <option value="Todos">Todos</option>
-                        </select>
-
-                    </div>
-                    <div class="columna">
-                        <label for="fechaInicio">Fecha de Inicio</label>
-                        <input type="date" id="fechaInicio" name="fechaInicio" required>
-
-                        <label for="fechaFin">Fecha de Fin</label>
-                        <input type="date" id="fechaFin" name="fechaFin" required>
-
-                        <label for="modalidad">Modalidad</label>
-                        <select id="modalidad" name="modalidad" required>
-                            <option value="">Selecciona una opción</option>
-                            <option value="Gratis">Gratis</option>
-                            <option value="Pagado">Pagado</option>
-                        </select>
-
-                        <label for="costo">Costo</label>
-                        <input type="text" id="costo" name="costo" placeholder="Ej. 50.00 o Gratis" required>
-
-                    </div>
-                </div>
-                <div class="boton-container">
-                    <button type="submit">GUARDAR</button>
-                </div>
-            </form>
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
         </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-envelope"></i> Contacto</h3>
-
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-envelope"></i> Contacto</h3>
+          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
         </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
 
-    </footer>
-
-    <script src="../styles/scriptEventos.js"></script>
+  <script>
+    function toggleField(id) {
+      const field = document.getElementById(id);
+      field.disabled = !field.disabled;
+    }
+  </script>
 </body>
 
 </html>
