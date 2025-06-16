@@ -8,27 +8,54 @@ $error = "";
 $success = "";
 $show_form = true;
 
-$cedula = $_SESSION['reset_cedula'] ?? $_GET['ced'] ?? null;
+$token = $_GET['token'] ?? null;
+$cedula = null;
 
-if (!$cedula) {
+if ($token) {
+    $sql = "SELECT ced_usu FROM usuarios WHERE token_recuperacion = $1 AND token_expira > NOW()";
+    $result = pg_query_params($conn, $sql, [$token]);
+
+    if (pg_num_rows($result) > 0) {
+        $user = pg_fetch_assoc($result);
+        $cedula = $user['ced_usu'];
+        $_SESSION['reset_cedula'] = $cedula; // Guarda para el POST
+    } else {
+        $error = "El enlace de recuperación ha expirado o no es válido.";
+        $show_form = false;
+    }
+} elseif (isset($_SESSION['reset_cedula'])) {
+    $cedula = $_SESSION['reset_cedula'];
+} else {
     header("Location: recuperar.php");
     exit();
 }
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     
-    if (empty($password) || strlen($password) < 6) {
-        $error = "La contraseña debe tener al menos 6 caracteres.";
-    } elseif ($password !== $confirm_password) {
-        $error = "Las contraseñas no coinciden.";
-    } else {
-        // Se elimino l aincriptación de la contraseña, ahora se almacena en texto plano
-        $sql = "UPDATE usuarios SET pas_usu = $1 WHERE ced_usu = $2";
-        $result = pg_query_params($conn, $sql, array($password, $cedula));
-        
-        if ($result && pg_affected_rows($result) > 0) {
+
+    
+if (empty($password) || strlen($password) < 6) {
+    $error = "La contraseña debe tener al menos 6 caracteres.";
+} elseif (!preg_match('/[A-Z]/', $password) ||
+          !preg_match('/[a-z]/', $password) ||
+          !preg_match('/[0-9]/', $password) ||
+          !preg_match('/[^a-zA-Z0-9]/', $password)) {
+    $error = "Debe incluir al menos una mayúscula, una minúscula, un número y un carácter especial.";
+} elseif (strlen($password) < 6) {
+    $error = "La contraseña debe tener al menos 6 caracteres.";
+} elseif ($password !== $confirm_password) {
+    $error = "Las contraseñas no coinciden.";
+} else {
+    // Se elimino l aincriptación de la contraseña, ahora se almacena en texto plano
+    $sql = "UPDATE usuarios SET pas_usu = $1 WHERE ced_usu = $2";
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $sql = "UPDATE usuarios SET pas_usu = $1, token_recuperacion = NULL, token_expira = NULL WHERE ced_usu = $2";
+    $result = pg_query_params($conn, $sql, array($hashed_password, $cedula));
+
+    if ($result && pg_affected_rows($result) > 0) {
             $success = "¡Contraseña actualizada! </a>.";
             unset($_SESSION['reset_cedula']);
             $show_form = false;
