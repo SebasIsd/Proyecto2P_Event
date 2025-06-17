@@ -1,57 +1,58 @@
 <?php
- require_once ("../conexion/conexion.php");
-//Verificar si es una solicitud POST
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    
-       
-        // Obtener y limpiar datos del formulario
-        $titulo = $_POST["titulo"] ?? '';
-        $descripcion = $_POST["descripcion"] ?? '';
-        $tipo = $_POST["tipo"] ?? '';
-         $carrera = $_POST["carrera"] ?? '';
-        $fechaInicio = $_POST["fechaInicio"] ?? '';
-        $fechaFin = $_POST["fechaFin"] ?? '';
-        $modalidad = $_POST["modalidad"] ?? '';
-        $costo = $_POST["costo"] ?? '0.00';
-        
+include '../conexion.php';
+
 try {
-        $conn = CConexion::ConexionBD();
-        $sql = "INSERT INTO EVENTOS_CURSOS (
-                TIT_EVE_CUR, 
-                DES_EVE_CUR, 
-                FEC_INI_EVE_CUR, 
-                FEC_FIN_EVE_CUR, 
-                COS_EVE_CUR, 
-                TIP_EVE, 
-                MOD_EVE_CUR,
-                CAR_EVE_CUR
-            ) VALUES (
-                :titulo, 
-                :descripcion, 
-                :fechaInicio, 
-                :fechaFin, 
-                :costo, 
-                :tipo, 
-                :modalidad,
-                :carrera)";
-        
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':titulo', $titulo);
-        $stmt->bindParam(':descripcion', $descripcion);
-        $stmt->bindParam(':fechaInicio', $fechaInicio);
-        $stmt->bindParam(':fechaFin', $fechaFin);
-        $stmt->bindParam(':costo', $costo);
-        $stmt->bindParam(':tipo', $tipo);
-        $stmt->bindParam(':modalidad', $modalidad);
-        $stmt->bindParam(':carrera', $carrera);
-        
-        $stmt->execute();
-     echo " Evento guardado correctamente.";   
-     
-    } catch (PDOException $e) {
-        echo " Error al guardar el evento: " . $e->getMessage();
+    // Datos principales
+    $titulo = $_POST['titulo'];
+    $descripcion = $_POST['descripcion'];
+    $modalidad = $_POST['modalidad'];
+    $costo = $_POST['costo'];
+    $fechaInicio = $_POST['fechaInicio'];
+    $fechaFin = $_POST['fechaFin'];
+
+    // Insertar evento
+    $sql = "INSERT INTO eventos_cursos (tit_eve_cur, des_eve_cur, fec_ini_eve_cur, fec_fin_eve_cur, cos_eve_cur, mod_eve_cur)
+            VALUES (?, ?, ?, ?, ?, ?) RETURNING id_eve_cur";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$titulo, $descripcion, $fechaInicio, $fechaFin, $costo, $modalidad]);
+    $eventoId = $stmt->fetchColumn();
+
+    // Tipos de evento
+    if (!empty($_POST['tiposEvento'])) {
+        foreach ($_POST['tiposEvento'] as $tipoId) {
+            $conn->prepare("INSERT INTO eventos_tipos (id_eve_cur, id_tipo_eve) VALUES (?, ?)")
+                 ->execute([$eventoId, $tipoId]);
+        }
     }
-} else {
-    echo " Solicitud inválida.";
+
+    // Carreras
+    if (!empty($_POST['carreras'])) {
+        foreach ($_POST['carreras'] as $carreraId) {
+            $conn->prepare("INSERT INTO eventos_carreras (id_eve_cur, id_car) VALUES (?, ?)")
+                 ->execute([$eventoId, $carreraId]);
+        }
+    }
+
+    // Requisitos
+    if (!empty($_POST['requisitos'])) {
+        foreach ($_POST['requisitos'] as $reqId) {
+            $valor = null;
+
+            // ID de requisitos conocidos
+            if ($reqId == 1 && isset($_POST['valor_nota'])) {
+                $valor = $_POST['valor_nota'];
+            } elseif ($reqId == 2 && isset($_POST['valor_asistencia'])) {
+                $valor = $_POST['valor_asistencia'];
+            }
+
+            $conn->prepare("INSERT INTO eventos_requisitos (id_eve_cur, id_req, valor_req) VALUES (?, ?, ?)")
+                 ->execute([$eventoId, $reqId, $valor]);
+        }
+    }
+
+    echo "Evento guardado correctamente.";
+} catch (Exception $e) {
+    http_response_code(500);
+    echo "Error al guardar el evento: " . $e->getMessage();
 }
 ?>

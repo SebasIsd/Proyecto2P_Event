@@ -53,18 +53,27 @@
     }
 
     .checkbox-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
+  display: flex;
+  flex-direction: column; /* Mostrar uno debajo del otro */
+  gap: 8px;
+  margin-top: 10px;
+}
 
-    .checkbox-group label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: normal;
-    }
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  padding: 5px 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.checkbox-group label:hover {
+  background-color: #f0f0f0;
+}
 
     .boton-container {
       text-align: center;
@@ -113,26 +122,10 @@
           <input type="text" id="titulo" name="titulo" required placeholder="Ej. Curso de Redes Avanzadas" />
 
           <label for="descripcion">Descripción</label>
-          <textarea id="descripcion" name="descripcion" rows="3" required placeholder="Describe brevemente el evento"></textarea>
+          <textarea id="descripcion" name="descripcion" rows="3" required
+            placeholder="Describe brevemente el evento"></textarea>
 
-    <fieldset>
-  <legend>Tipo de Evento</legend>
-  <div class="grid-group">
-    <label><input type="checkbox" name="tipoEvento[]" value="Curso" /> Curso</label>
-    <label><input type="checkbox" name="tipoEvento[]" value="Congreso" /> Congreso</label>
-    <label><input type="checkbox" name="tipoEvento[]" value="Webinar" /> Webinar</label>
-    <label><input type="checkbox" name="tipoEvento[]" value="Conferencia" /> Conferencia</label>
-    <label><input type="checkbox" name="tipoEvento[]" value="Socialización" /> Socialización</label>
-    <div>
-      <label>Otro:</label>
-      <input type="text" name="tipoEventoOtro" placeholder="Especificar otro tipo" />
-    </div>
-  </div>
-</fieldset>
-
-
-
-          <label>Modalidad</label>
+          <label for="modalidad">Modalidad</label>
           <select id="modalidad" name="modalidad" required>
             <option value="">Selecciona una opción</option>
             <option value="Gratis">Gratis</option>
@@ -140,9 +133,21 @@
           </select>
 
           <label for="costo">Costo</label>
-          <input type="text" id="costo" name="costo" required placeholder="Ej. 0.00 o Gratis" />
-        </fieldset>
+          <input type="text" id="costo" name="costo" placeholder="Ej. 50.00 o Gratis" required>
 
+        </fieldset>
+        <!-- ... todo el head permanece igual ... -->
+        <fieldset>
+          <legend>Tipo de Evento</legend>
+          <div class="checkbox-group" id="tiposEventoContainer">
+            <!-- Aquí se cargan los tipos desde JS -->
+          </div>
+          <div style="margin-top: 10px;">
+            <label>Agregar otro tipo:</label>
+            <input type="text" id="nuevoTipoEvento" placeholder="Especificar otro tipo" />
+            <button type="button" onclick="agregarTipoEvento()">Agregar</button>
+          </div>
+        </fieldset>
         <fieldset>
           <legend>Fechas</legend>
           <label for="fechaInicio">Fecha de Inicio</label>
@@ -152,31 +157,21 @@
           <input type="date" id="fechaFin" name="fechaFin" required />
         </fieldset>
 
+
         <fieldset>
           <legend>Carreras Participantes</legend>
-          <div class="grid-group">
-            <label><input type="checkbox" name="carreras[]" value="Ing. Software" /> Ing. Software</label>
-            <label><input type="checkbox" name="carreras[]" value="Ing. Industrial" /> Ing. Industrial</label>
-            <label><input type="checkbox" name="carreras[]" value="Ing. TI" /> Ing. Tecnologías de la Información</label>
-            <label><input type="checkbox" name="carreras[]" value="Ing. Telecomunicaciones" /> Ing. Telecomunicaciones</label>
-            <label><input type="checkbox" name="carreras[]" value="Ing. Automatización" /> Ing. en Automatización y Robótica</label>
-            <label><input type="checkbox" name="carreras[]" value="Todos" /> Todos</label>
+          <div class="checkbox-group" id="carrerasContainer">
+            <!-- Se insertan desde JS -->
           </div>
         </fieldset>
 
         <fieldset>
           <legend>Requisitos del Evento</legend>
-
-          <div class="checkbox-group">
-            <label><input type="checkbox" id="reqNota" onclick="toggleField('notaMinima')" /> Nota mínima requerida</label>
-            <input type="number" name="notaMinima" id="notaMinima" placeholder="Ej. 7" min="0" max="10" disabled />
-
-            <label><input type="checkbox" id="reqAsistencia" onclick="toggleField('asistenciaMinima')" /> Asistencia mínima (%)</label>
-            <input type="number" name="asistenciaMinima" id="asistenciaMinima" placeholder="Ej. 80" min="0" max="100" disabled />
-
-            <label><input type="checkbox" name="requiereMatricula" /> Requiere Matrícula</label>
+          <div class="checkbox-group" id="requisitosContainer">
+            <!-- Se insertan desde JS -->
           </div>
         </fieldset>
+
 
         <div class="boton-container">
           <button type="submit">GUARDAR</button>
@@ -218,6 +213,8 @@
       field.disabled = !field.disabled;
     }
   </script>
+  <script src="../styles/scriptEventos.js"></script>
+
 </body>
 
 </html>
