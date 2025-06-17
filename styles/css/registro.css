@@ -253,6 +253,7 @@ body {
     border-left: 4px solid var(--success-color);
 }
 
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .register-container {
@@ -341,4 +342,16 @@ body {
         scrollbar-width: thin;
         scrollbar-color: var(--primary-color) #f1f1f1;
     }
+}
+/* Resaltar inputs con error */
+.input-error {
+    border-color: var(--error-color) !important;
+}
+
+.input-msg {
+    color: var(--error-color); /* ya está #d32f2f, rojo */
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
 }

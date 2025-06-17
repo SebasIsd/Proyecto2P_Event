@@ -13,7 +13,7 @@ function enviarCorreoRecuperacion($correoDestino, $token) {
         $mail->Host       = 'smtp.office365.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'asemblantes1588@uta.edu.ec';   
-        $mail->Password   = 'TU_CONTRASENA';            
+        $mail->Password   = 'XpdKnyeMqD';            
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
