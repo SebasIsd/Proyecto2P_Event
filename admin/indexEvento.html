@@ -138,16 +138,16 @@
         </fieldset>
         <!-- ... todo el head permanece igual ... -->
         <fieldset>
-          <legend>Tipo de Evento</legend>
-          <div class="checkbox-group" id="tiposEventoContainer">
-            <!-- Aquí se cargan los tipos desde JS -->
-          </div>
-          <div style="margin-top: 10px;">
-            <label>Agregar otro tipo:</label>
-            <input type="text" id="nuevoTipoEvento" placeholder="Especificar otro tipo" />
-            <button type="button" onclick="agregarTipoEvento()">Agregar</button>
-          </div>
-        </fieldset>
+  <fieldset>
+  <legend>Tipo de Evento</legend>
+  <div class="checkbox-group" id="tiposEventoContainer">
+    <!-- Aquí se insertan los tipos de evento como radio buttons -->
+  </div>
+  <div style="margin-top: 10px;">
+    <input type="text" id="nuevoTipoEspecifico" placeholder="Especificar otro tipo" disabled style="margin-top: 5px;" />
+  </div>
+</fieldset>
+
         <fieldset>
           <legend>Fechas</legend>
           <label for="fechaInicio">Fecha de Inicio</label>

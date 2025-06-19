@@ -1,58 +1,107 @@
 <?php
-include '../conexion.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+header('Content-Type: application/json');
+
+require_once '../conexion/conexion.php';
+$conn = CConexion::ConexionBD();
+
+if (!$conn) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Error al conectar con la base de datos']);
+    exit;
+}
+
+$response = ['success' => false, 'message' => ''];
 
 try {
-    // Datos principales
+    // 1. Validación mínima
+    if (empty($_POST['titulo'])) {
+        throw new Exception("El título del evento es obligatorio.");
+    }
+
+    // 2. Insertar nuevo tipo si viene desde "Otros"
+    $nuevoTipoId = null;
+    if (!empty($_POST['nuevoTipo'])) {
+        $stmt = $conn->prepare("SELECT id_tipo_eve FROM tipos_evento WHERE nom_tipo_eve = ?");
+        $stmt->execute([$_POST['nuevoTipo']]);
+        $tipoExistente = $stmt->fetchColumn();
+
+        if (!$tipoExistente) {
+            $stmt = $conn->prepare("INSERT INTO tipos_evento (nom_tipo_eve) VALUES (?) RETURNING id_tipo_eve");
+            $stmt->execute([$_POST['nuevoTipo']]);
+            $nuevoTipoId = $stmt->fetchColumn();
+        } else {
+            $nuevoTipoId = $tipoExistente;
+        }
+    }
+
+    // 3. Insertar evento
     $titulo = $_POST['titulo'];
-    $descripcion = $_POST['descripcion'];
+    $descripcion = $_POST['descripcion'] ?? '';
     $modalidad = $_POST['modalidad'];
-    $costo = $_POST['costo'];
+    $costo = ($modalidad === 'Gratis') ? 0.00 : $_POST['costo'];
     $fechaInicio = $_POST['fechaInicio'];
     $fechaFin = $_POST['fechaFin'];
 
-    // Insertar evento
-    $sql = "INSERT INTO eventos_cursos (tit_eve_cur, des_eve_cur, fec_ini_eve_cur, fec_fin_eve_cur, cos_eve_cur, mod_eve_cur)
-            VALUES (?, ?, ?, ?, ?, ?) RETURNING id_eve_cur";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare("INSERT INTO eventos_cursos (tit_eve_cur, des_eve_cur, fec_ini_eve_cur, fec_fin_eve_cur, cos_eve_cur, mod_eve_cur)
+                            VALUES (?, ?, ?, ?, ?, ?) RETURNING id_eve_cur");
     $stmt->execute([$titulo, $descripcion, $fechaInicio, $fechaFin, $costo, $modalidad]);
     $eventoId = $stmt->fetchColumn();
 
-    // Tipos de evento
-    if (!empty($_POST['tiposEvento'])) {
-        foreach ($_POST['tiposEvento'] as $tipoId) {
-            $conn->prepare("INSERT INTO eventos_tipos (id_eve_cur, id_tipo_eve) VALUES (?, ?)")
-                 ->execute([$eventoId, $tipoId]);
-        }
+    // 4. Tipos de evento (check y/o nuevo)
+    $tiposEvento = $_POST['tipoEvento'] ?? [];
+    if ($nuevoTipoId && !in_array($nuevoTipoId, $tiposEvento)) {
+        $tiposEvento[] = $nuevoTipoId;
     }
 
-    // Carreras
-    if (!empty($_POST['carreras'])) {
-        foreach ($_POST['carreras'] as $carreraId) {
-            $conn->prepare("INSERT INTO eventos_carreras (id_eve_cur, id_car) VALUES (?, ?)")
-                 ->execute([$eventoId, $carreraId]);
-        }
+    foreach ($tiposEvento as $tipoId) {
+        if ($tipoId === 'otros') continue;
+        $stmt = $conn->prepare("INSERT INTO eventos_tipos (id_eve_cur, id_tipo_eve) VALUES (?, ?)");
+        $stmt->execute([$eventoId, $tipoId]);
     }
 
-    // Requisitos
-    if (!empty($_POST['requisitos'])) {
-        foreach ($_POST['requisitos'] as $reqId) {
-            $valor = null;
-
-            // ID de requisitos conocidos
-            if ($reqId == 1 && isset($_POST['valor_nota'])) {
-                $valor = $_POST['valor_nota'];
-            } elseif ($reqId == 2 && isset($_POST['valor_asistencia'])) {
-                $valor = $_POST['valor_asistencia'];
-            }
-
-            $conn->prepare("INSERT INTO eventos_requisitos (id_eve_cur, id_req, valor_req) VALUES (?, ?, ?)")
-                 ->execute([$eventoId, $reqId, $valor]);
-        }
+    // 5. Carreras participantes
+    $carreras = $_POST['carreras'] ?? [];
+    foreach ($carreras as $idCar) {
+        $stmt = $conn->prepare("INSERT INTO eventos_carreras (id_eve_cur, id_car) VALUES (?, ?)");
+        $stmt->execute([$eventoId, $idCar]);
     }
 
-    echo "Evento guardado correctamente.";
+    // 6. Requisitos + valores (nota y asistencia si aplica)
+    $requisitos = $_POST['requisitos'] ?? [];
+    $notaMinima = $_POST['notaMinima'] ?? null;
+    $asistenciaMinima = $_POST['asistenciaMinima'] ?? null;
+
+    foreach ($requisitos as $idReq) {
+        $valorReq = null;
+
+        // Obtener el nombre del requisito
+        $stmt = $conn->prepare("SELECT LOWER(nom_req) FROM requisitos WHERE id_req = ?");
+        $stmt->execute([$idReq]);
+        $nombre = $stmt->fetchColumn();
+
+        if (strpos($nombre, 'nota') !== false && $notaMinima !== null) {
+            $valorReq = $notaMinima;
+        } elseif (strpos($nombre, 'asistencia') !== false && $asistenciaMinima !== null) {
+            $valorReq = $asistenciaMinima;
+        }
+
+        $stmt = $conn->prepare("INSERT INTO eventos_requisitos (id_eve_cur, id_req, valor_req) VALUES (?, ?, ?)");
+        $stmt->execute([$eventoId, $idReq, $valorReq]);
+    }
+
+    $response['success'] = true;
+    $response['message'] = 'Evento guardado correctamente.';
+    if ($nuevoTipoId) {
+        $response['nuevoTipoId'] = $nuevoTipoId;
+    }
 } catch (Exception $e) {
     http_response_code(500);
-    echo "Error al guardar el evento: " . $e->getMessage();
+    $response['message'] = 'Error al guardar el evento: ' . $e->getMessage();
 }
+
+echo json_encode($response);
+
 ?>
