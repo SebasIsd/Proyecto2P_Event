@@ -10,7 +10,7 @@ class CConexion {
             $conn = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $username, $password);
             return $conn;
         } catch (PDOException $exp) {
-            return $null;
+            return null;
         }
 
         

@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             console.log("Datos recibidos:", data);
 
-            // Verifica que la estructura sea correcta (no uses .data.data)
             if (!data) throw new Error('Estructura de datos incorrecta');
 
             if (data.carreras) {
@@ -44,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Error al cargar los datos iniciales.");
         });
 
+    // ✅ AQUÍ estaba el error: faltaba cerrar este bloque completo con una llave antes de las funciones
     form.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -75,25 +75,27 @@ document.addEventListener("DOMContentLoaded", () => {
             method: 'POST',
             body: formData
         })
-            .then(response => {
-                if (!response.ok) throw new Error('Error en la respuesta del servidor');
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert("Evento guardado correctamente");
-                    form.reset();
-                    nuevoTipoEspecifico.disabled = true;
-                    cargarTiposDeEvento();
-                } else {
-                    alert("Error al guardar el evento: " + (data.message || "Error desconocido"));
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Hubo un error al guardar el evento.");
-            });
-    });
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la respuesta del servidor');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert("Evento guardado correctamente");
+                form.reset();
+                nuevoTipoEspecifico.disabled = true;
+                cargarTiposDeEvento();
+            } else {
+                alert("Error al guardar el evento: " + (data.message || "Error desconocido"));
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Hubo un error al guardar el evento.");
+        });
+    }); 
+
+    // FUNCIONES
 
     function cargarCheckboxes(items, containerId, name, conInputExtra = false) {
         const container = document.getElementById(containerId);
@@ -165,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const radio = document.createElement('input');
             radio.type = 'radio';
             radio.name = name;
-            radio.value = item.nombre; // se envía el nombre o puedes usar item.id si prefieres
+            radio.value = item.nombre;
 
             radio.addEventListener('change', () => {
                 if (radio.value.toLowerCase() === 'otros') {
@@ -199,4 +201,5 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error('Error al cargar tipos de evento:', error);
             });
     }
-});
+}); 
+

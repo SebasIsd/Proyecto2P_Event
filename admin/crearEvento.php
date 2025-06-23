@@ -2,6 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 header('Content-Type: application/json');
 
 require_once '../conexion/conexion.php';
@@ -50,8 +51,14 @@ try {
     $stmt->execute([$titulo, $descripcion, $fechaInicio, $fechaFin, $costo, $modalidad]);
     $eventoId = $stmt->fetchColumn();
 
-    // 4. Tipos de evento (check y/o nuevo)
+    // 4. Tipos de evento (radio o nuevo)
     $tiposEvento = $_POST['tipoEvento'] ?? [];
+
+    // Si viene como string (radio), convertirlo en array
+    if (!is_array($tiposEvento)) {
+        $tiposEvento = [$tiposEvento];
+    }
+
     if ($nuevoTipoId && !in_array($nuevoTipoId, $tiposEvento)) {
         $tiposEvento[] = $nuevoTipoId;
     }
@@ -64,6 +71,10 @@ try {
 
     // 5. Carreras participantes
     $carreras = $_POST['carreras'] ?? [];
+    if (!is_array($carreras)) {
+        $carreras = [$carreras];
+    }
+
     foreach ($carreras as $idCar) {
         $stmt = $conn->prepare("INSERT INTO eventos_carreras (id_eve_cur, id_car) VALUES (?, ?)");
         $stmt->execute([$eventoId, $idCar]);
@@ -71,6 +82,10 @@ try {
 
     // 6. Requisitos + valores (nota y asistencia si aplica)
     $requisitos = $_POST['requisitos'] ?? [];
+    if (!is_array($requisitos)) {
+        $requisitos = [$requisitos];
+    }
+
     $notaMinima = $_POST['notaMinima'] ?? null;
     $asistenciaMinima = $_POST['asistenciaMinima'] ?? null;
 
@@ -103,5 +118,3 @@ try {
 }
 
 echo json_encode($response);
-
-?>
