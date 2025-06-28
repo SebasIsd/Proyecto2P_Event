@@ -167,6 +167,19 @@ document.addEventListener("DOMContentLoaded", function () {
     return /^09\d{8}$/.test(celular);
     };
 
+    // Habilitar/deshabilitar el select de carrera según el correo
+        const carreraSelect = document.getElementById("carrera");
+
+    inputs.correo.addEventListener("input", function () {
+        if (esCorreoInstitucional(inputs.correo.value)) {
+            carreraSelect.disabled = false;
+        } else {
+            carreraSelect.disabled = true;
+            carreraSelect.value = ""; // Opcional: limpiar selección si el correo deja de ser válido
+        }
+    });
+
+
     form.addEventListener("submit", function (e) {
         let valid = true;
 
@@ -262,9 +275,14 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
     </div>
 
+       <div class="form-group">
+        <label for="correo"><i class="fas fa-envelope"></i> Correo </label>
+        <input type="email" id="correo" name="correo" required placeholder="ejemplo@uta.edu.ec">
+    </div>
+
     <div class="form-group">
         <label for="carrera"><i class="fas fa-graduation-cap"></i> Carrera</label>
-        <select id="carrera" name="carrera" required>
+        <select id="carrera" name="carrera" required disabled>
             <option value="">Seleccione una carrera</option>
             <option value="Ing. Software">Ing. Software</option>
             <option value="Ing. Industrial">Ing. Industrial</option>
@@ -274,10 +292,6 @@ document.addEventListener("DOMContentLoaded", function () {
         </select>
     </div>
 
-    <div class="form-group">
-        <label for="correo"><i class="fas fa-envelope"></i> Correo Institucional</label>
-        <input type="email" id="correo" name="correo" required placeholder="ejemplo@uta.edu.ec">
-    </div>
 
     <div class="form-row">
         <div class="form-group">

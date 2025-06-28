@@ -355,3 +355,9 @@ body {
     font-weight: 600;
     font-family: 'Montserrat', sans-serif;
 }
+select:disabled {
+    background-color: #eee;
+    color: #666;
+    cursor: not-allowed;
+}
+
