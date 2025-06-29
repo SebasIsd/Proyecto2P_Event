@@ -40,6 +40,16 @@ if ($usuario = pg_fetch_assoc($result)) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mi Perfil - Sistema de Inscripciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    });
+</script>
     <link rel="stylesheet" href="../styles/css/perfil.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -448,3 +448,17 @@ input[readonly]:focus {
     box-shadow: none;
 }
 
+.profile-detail-section {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transform-origin: center;
+}
+
+.profile-detail-section:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+

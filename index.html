@@ -176,7 +176,16 @@
                 </a>
 
             </div>
+
+            <div id="contenedor-eventos" style="margin-top: 2rem;">
+    <p>Cargando eventos...</p>
+</div>
         </section>
+        
+
+
+
+        
 
         <section class="dashboard">
             <div class="card">
@@ -199,23 +208,7 @@
             </div>
         </section>
 
-        <section class="recent-activity" id="eventos">
-            <h2><i class="fas fa-calendar-week"></i> Próximos Eventos</h2>
-            <div id="proximos-eventos-container">
-                <div class="card" style="text-align: left;">
-                    <p>Cargando próximos eventos...</p>
-                </div>
-            </div>
-        </section>
-        <br>
-
-        <section>
-            <div class="evento-footer">
-                <br>
-                <center><a href="usuarios/eventos.html" class="btn-secondary">Ver más eventos</a></center>
-                <br>
-            </div>
-        </section>
+    
     </main>
 
     <footer>
@@ -254,5 +247,21 @@
     </footer>
 
     <script src="styles/script.js"></script>
+
+    <script>
+  // Al cargar la página, cargar el contenido de eventos.php (solo fragmento)
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('usuarios/eventos.php?fragment=1')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('contenedor-eventos').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('contenedor-eventos').innerHTML = '<p>Error al cargar los eventos.</p>';
+        console.error('Error al cargar eventos:', err);
+      });
+  });
+</script>
+
 </body>
 </html>
