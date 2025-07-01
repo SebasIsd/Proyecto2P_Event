@@ -31,6 +31,7 @@
       flex-direction: column;
       overflow: hidden;
       position: relative;
+      margin-bottom: 30px;
     }
 
     .evento-card img {
@@ -135,7 +136,7 @@
         <ul>
           <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
           <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-          <li><a href="../admin/verEventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
+          <li><a href="../admin/eventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
         </ul>
       </nav>
     </div>
@@ -175,9 +176,23 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    let idsFavoritos = [];
+
+function esFavorito(idEvento) {
+  return idsFavoritos.includes(idEvento);
+}
+    document.addEventListener('DOMContentLoaded', async () => {
       const contenedor = document.getElementById('contenedor-eventos');
 
+        try {
+    // Primero cargamos favoritos desde la base
+    const favResponse = await fetch('../admin/obtenerFavoritos.php');
+    const favoritosData = await favResponse.json();
+    idsFavoritos = favoritosData.map(f => f.id_eve_cur);
+  } catch (e) {
+    console.warn('No se pudieron cargar los favoritos:', e);
+    idsFavoritos = [];
+  }
       fetch('../admin/obtenerEventos.php')
         .then(response => {
           if (!response.ok) throw new Error('Error en la respuesta del servidor');
@@ -235,7 +250,7 @@
     }
 
     function editarEvento(id) {
-      window.location.href = `../admin/editarEvento.html?id=${id}`;
+      window.location.href = `../admin/editarEvento.php?id=${id}`;
     }
 
     function verMas(id) {
@@ -253,25 +268,31 @@
       });
     }
 
-    function toggleFavorito(idEvento, boton) {
-      const favoritos = JSON.parse(localStorage.getItem('eventosFavoritos') || '[]');
+function toggleFavorito(idEvento, boton) {
+  const esFavorito = boton.classList.contains('favorito');
+  const accion = esFavorito ? 'remover' : 'agregar';
 
-      const index = favoritos.indexOf(idEvento);
-      if (index === -1) {
-        favoritos.push(idEvento);
-        boton.classList.add('favorito');
-      } else {
-        favoritos.splice(index, 1);
-        boton.classList.remove('favorito');
-      }
-
-      localStorage.setItem('eventosFavoritos', JSON.stringify(favoritos));
+  fetch('../admin/favoritoEvento.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: idEvento, accion })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.ok) {
+      boton.classList.toggle('favorito');
+    } else {
+      alert('Error al actualizar favorito: ' + (data.mensaje || 'Desconocido'));
     }
+  })
+  .catch(err => {
+    console.error('Error en fetch favorito:', err);
+    alert('Error al procesar la solicitud');
+  });
+}
 
-    function esFavorito(idEvento) {
-      const favoritos = JSON.parse(localStorage.getItem('eventosFavoritos') || '[]');
-      return favoritos.includes(idEvento);
-    }
   </script>
 </body>
 
