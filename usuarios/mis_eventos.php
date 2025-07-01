@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuarios']) || !isset($_SESSION['ced_usu'])) {
     header("Location: login.php");
     exit();
 }
@@ -10,7 +10,7 @@ require_once "../includes/conexion1.php";
 
 $conexion = new Conexion();
 $conn = $conexion->getConexion();
-$cedula = $_SESSION['cedula']; 
+$cedula = $_SESSION['ced_usu']; 
 // Obtener eventos inscritos por el usuario
 $sql = "SELECT 
             ec.ID_EVE_CUR, 

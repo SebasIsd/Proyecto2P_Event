@@ -588,5 +588,19 @@
             });
         });
     </script>
+        <script>
+  // Al cargar la página, cargar el contenido de eventos.php (solo fragmento)
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('usuarios/eventos.php?fragment=1')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('contenedor-eventos').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('contenedor-eventos').innerHTML = '<p>Error al cargar los eventos.</p>';
+        console.error('Error al cargar eventos:', err);
+      });
+  });
+</script>
 </body>
 </html>
