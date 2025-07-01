@@ -21,6 +21,9 @@ $autoridades = pg_fetch_all($result2);
 // Traer contacto (asumimos solo 1 fila)
 $result3 = pg_query($conn, "SELECT * FROM contacto LIMIT 1");
 $contacto = pg_fetch_assoc($result3);
+
+$sobreNosotros = pg_query($conn, "SELECT * FROM sobre_nosotros ORDER BY id DESC LIMIT 1");
+$dataSobre = pg_fetch_assoc($sobreNosotros);
 ?>
 
 <!DOCTYPE html>
@@ -172,11 +175,13 @@ $contacto = pg_fetch_assoc($result3);
 
 <div class="container">
 
-    <ul class="nav-tabs" id="tabs">
-        <li><a href="#" data-target="carrusel" class="active">Carrusel</a></li>
-        <li><a href="#" data-target="autoridades">Autoridades</a></li>
-        <li><a href="#" data-target="contacto">Contacto</a></li>
-    </ul>
+<ul class="nav-tabs" id="tabs">
+    <li><a href="#" data-target="carrusel" class="active">Carrusel</a></li>
+    <li><a href="#" data-target="autoridades">Autoridades</a></li>
+    <li><a href="#" data-target="contacto">Contacto</a></li>
+    <li><a href="#" data-target="dataSobre">Sobre Nosotros</a></li> <!-- 🔧 Agregado -->
+</ul>
+    <li><a href="admin.php">Volver al Sitio</a></li>
 
     <!-- CARRUSEL -->
     <div id="carrusel" class="seccion-admin active">
@@ -262,6 +267,36 @@ $contacto = pg_fetch_assoc($result3);
             </form>
         <?php else: ?>
             <p>No se encontró información de contacto.</p>
+        <?php endif; ?>
+    </div>
+
+    <!-- SOBRE NOSOTROS -->
+    <div id="dataSobre" class="seccion-admin">
+        <?php if (isset($dataSobre)): ?>
+        <form method="POST" action="actualizar_sobre.php" enctype="multipart/form-data">
+        <div class="form-section-title">Sección: Sobre Nosotros</div>
+        <input type="hidden" name="id" value="<?= htmlspecialchars($dataSobre['id'] ?? '') ?>">
+    
+        <label>Título</label>
+        <input type="text" name="titulo" value="<?= htmlspecialchars($dataSobre['titulo'] ?? '') ?>" required>
+        
+        <label>Descripción</label>
+        <textarea name="descripcion" rows="5" required><?= htmlspecialchars($dataSobre['descripcion'] ?? '') ?></textarea>
+        
+        <label>URL de Imagen (opcional si subes una)</label>
+        <input type="text" name="imagen_url" value="<?= htmlspecialchars($dataSobre['imagen_url'] ?? '') ?>">
+        
+        <label>Subir Imagen</label>
+        <input type="file" name="imagen_archivo" accept="image/*" onchange="mostrarVistaPrevia(this, 'sobre-preview'); limpiarURL(this)">
+        
+        <div style="margin-top: 10px;">
+            <img id="sobre-preview" src="<?= htmlspecialchars($dataSobre['imagen_url'] ?? '') ?>" style="max-width: 50%; height: auto;">
+        </div>
+
+        <button type="submit" class="btn">Guardar Cambios</button>
+    </form>
+        <?php else: ?>
+            <p>No se encontró información de "Sobre Nosotros".</p>
         <?php endif; ?>
     </div>
 </div>
