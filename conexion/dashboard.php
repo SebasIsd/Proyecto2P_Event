@@ -2,6 +2,12 @@
 header('Content-Type: application/json');
 require_once '../includes/conexion1.php';
 
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+header('Content-Type: application/json');
+
 try {
     $conexion = new Conexion();
     $conn = $conexion->getConexion();
@@ -28,7 +34,6 @@ try {
                                 FEC_INI_EVE_CUR as fechaInicio, 
                                 FEC_FIN_EVE_CUR as fechaFin,
                                 COS_EVE_CUR as costo,
-                                TIP_EVE as tipo,
                                 MOD_EVE_CUR as modalidad
                             FROM EVENTOS_CURSOS
                             ORDER BY FEC_INI_EVE_CUR ASC";

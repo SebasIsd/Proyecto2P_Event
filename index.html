@@ -459,7 +459,7 @@
     <header class="header">
         <div class="header-container">
             <div class="logo-container">
-                <img src="https://ielektro.es/wp-content/uploads/2021/02/uta-logo-1FF83B1EE9-seeklogo.com_.png" alt="Logo FISEI">
+                <img src="https://images.seeklogo.com/logo-png/27/2/uta-logo-png_seeklogo-272349.png" alt="Logo FISEI">
                 <div class="logo-text">
                     <h1>FACULTAD DE INGENIERÍA EN SISTEMAS, ELECTRÓNICA E INDUSTRIAL</h1>
                     <p>UNIVERSIDAD TÉCNICA DE AMBATO</p>
@@ -471,18 +471,34 @@
     <!-- Barra de navegación -->
     <nav class="nav-bar">
         <div class="nav-container">
-            <a href="./usuarios/inicio.php" class="nav-link active">Inicio</a>
-            <a href="./usuarios/eventos.php" class="nav-link">Eventos</a>
-            <a href="./usuarios/cursos.php" class="nav-link">Cursos</a>
-            <a href="./usuarios/inscripciones.php" class="nav-link">Inscripciones</a>
-            <a href="./usuarios/contacto.php" class="nav-link">Contacto</a>
+            <a href="#" class="nav-link active">Inicio</a>
+            <a href="#" class="nav-link">Eventos</a>
+            <a href="#" class="nav-link">Cursos</a>
+            <a href="#" class="nav-link">Inscripciones</a>
+            <a href="#" class="nav-link">Contacto</a>
         </div>
     </nav>
     
     <!-- Carrusel de banner -->
-    <div class="banner-carousel" id="main-carousel">
+    <div class="banner-carousel main-carousel">
         <!-- Las slides se cargarán dinámicamente -->
-        <div class="slide" style="background-image: url('https://fisei.uta.edu.ec/wp-content/uploads/2021/05/fachada-fisei.jpg')">
+        <div class="slide" style="background-image: url('https://uta.edu.ec/wp-content/uploads/2025/04/Estudiantes02-2048x1368.jpg')">
+            <div class="slide-content">
+                <h2>Eventos y Cursos Académicos FISEI</h2>
+                <p>Participa en nuestros eventos de capacitación, talleres y cursos especializados para tu desarrollo profesional.</p>
+                <a href="#eventos" class="btn">Ver eventos disponibles</a>
+            </div>
+        </div>
+
+        <div class="slide" style="background-image: url('https://uta.edu.ec/wp-content/uploads/2025/04/DSC07944-e1745918653597.jpg')">
+            <div class="slide-content">
+                <h2>Eventos y Cursos Académicos FISEI</h2>
+                <p>Participa en nuestros eventos de capacitación, talleres y cursos especializados para tu desarrollo profesional.</p>
+                <a href="#eventos" class="btn">Ver eventos disponibles</a>
+            </div>
+        </div>
+
+        <div class="slide" style="background-image: url('https://uta.edu.ec/wp-content/uploads/2025/04/DSC07650-scaled.jpg')">
             <div class="slide-content">
                 <h2>Eventos y Cursos Académicos FISEI</h2>
                 <p>Participa en nuestros eventos de capacitación, talleres y cursos especializados para tu desarrollo profesional.</p>
@@ -520,9 +536,6 @@
         <div class="events-container">
             <h2 class="section-title">Próximos Eventos</h2>
             <div class="events-grid" id="proximos-eventos-container">
-              
-       
-
                 <!-- Los eventos se cargarán dinámicamente aquí -->
                 <div class="event-card">
                     <div class="event-header">
@@ -534,14 +547,6 @@
                 </div>
             </div>
         </div>
-
-
-
-                             <div id="contenedor-eventos" style="margin-top: 2rem;">
-    <p>Cargando eventos...</p>
-</div>
-
-
     </section>
 
         <section class="authorities-section">
@@ -551,8 +556,6 @@
                 <!-- Las autoridades se cargarán dinámicamente -->
             </div>
         </div>
-
-        
     </section>
     
     <!-- Footer -->
@@ -590,7 +593,7 @@
     <script>
         // Inicializar carrusel
         $(document).ready(function(){
-            $('#main-carousel').slick({
+            $('.main-carousel').slick({
                 dots: true,
                 infinite: true,
                 speed: 500,
@@ -601,19 +604,35 @@
             });
         });
     </script>
-        <script>
-  // Al cargar la página, cargar el contenido de eventos.php (solo fragmento)
-  document.addEventListener('DOMContentLoaded', () => {
-    fetch('./usuarios/eventos.php?fragment=1')
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('contenedor-eventos').innerHTML = html;
-      })
-      .catch(err => {
-        document.getElementById('contenedor-eventos').innerHTML = '<p>Error al cargar los eventos.</p>';
-        console.error('Error al cargar eventos:', err);
-      });
-  });
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("./usuarios/eventos_dinamicos.php")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al cargar los eventos");
+            }
+            return response.text(); // si eventos.php retorna HTML
+        })
+        .then(html => {
+            document.getElementById("proximos-eventos-container").innerHTML = html;
+        })
+        .catch(error => {
+            document.getElementById("proximos-eventos-container").innerHTML = `
+                <div class="event-card">
+                    <div class="event-header">
+                        <h3>Error al cargar eventos</h3>
+                    </div>
+                    <div class="event-body">
+                        <p>${error.message}</p>
+                    </div>
+                </div>`;
+        });
+});
 </script>
+
+
+
 </body>
 </html>
