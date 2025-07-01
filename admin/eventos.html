@@ -136,7 +136,7 @@
         <ul>
           <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
           <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-          <li><a href="../admin/eventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
+          
         </ul>
       </nav>
     </div>
@@ -145,6 +145,7 @@
   <div class="filtro-inscripciones">
     <input type="text" id="filtroNombre" placeholder="Filtrar por nombre..." onkeyup="filtrarInscripciones()">
   </div>
+
 
   <div class="contenedor-eventos" id="contenedor-eventos"></div>
 
@@ -206,6 +207,11 @@ function esFavorito(idEvento) {
             return;
           }
 
+              data.sort((a, b) => {
+      const aFav = esFavorito(a.id_eve_cur) ? 0 : 1;
+      const bFav = esFavorito(b.id_eve_cur) ? 0 : 1;
+      return aFav - bFav;
+    });
           data.forEach(evento => {
             const card = document.createElement('div');
             card.classList.add('evento-card');
