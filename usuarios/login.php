@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['id'] = $usuario['id_usu'];
 
                 if ($_SESSION['rol'] == 1) {
-                    header("Location: ../admin/admin.html");
+                    header("Location: ../admin/admin.php");
                 } else {
                     header("Location: inicio.php");
                 }
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistema de Inscripciones</title>
+    <title>LOGIN | Gestión de Eventos</title>
     <link rel="stylesheet" href="../styles/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -232,7 +232,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <i class="fas fa-sign-in-alt"></i> Ingresar
                         </button>
                         <br>
-                        <a href="../index.html" class="btn-secondary">
+                        <a href="../index.php" class="btn-secondary">
                             <i class="fas fa-arrow-left"></i> Regresar
                         </a>
                     </div>

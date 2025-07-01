@@ -1,9 +1,52 @@
+<?php
+include './includes/conexion1.php';
+
+$conexion = new Conexion();
+$db = $conexion->getConexion();
+
+// Carrusel
+$slides = [];
+$consulta = "SELECT * FROM carrusel ORDER BY id";
+$resultado = pg_query($db, $consulta);
+if ($resultado) {
+    while ($fila = pg_fetch_assoc($resultado)) {
+        $slides[] = $fila;
+    }
+}
+
+// Autoridades
+$autoridades = [];
+$consulta2 = "SELECT * FROM autoridades ORDER BY id";
+$resultado2 = pg_query($db, $consulta2);
+if ($resultado2) {
+    while ($fila2 = pg_fetch_assoc($resultado2)) {
+        $autoridades[] = $fila2;
+    }
+}
+
+// Contacto (solo un registro)
+$contacto = null;
+$consulta3 = "SELECT * FROM contacto LIMIT 1";
+$resultado3 = pg_query($db, $consulta3);
+if ($resultado3) {
+    $contacto = pg_fetch_assoc($resultado3);
+}
+// Sobre Nosotros
+$sobreNosotros = null;
+$resultadoSobre = pg_query($db, "SELECT * FROM sobre_nosotros ORDER BY id DESC LIMIT 1");
+if ($resultadoSobre) {
+    $sobreNosotros = pg_fetch_assoc($resultadoSobre);
+}
+
+$conexion->cerrar();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FISEI | Gestión de Eventos Académicos</title>
+    <title>FISEI | Gestión de Eventos</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
@@ -228,57 +271,51 @@
             gap: 2rem;
         }
         
-        .event-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-        
-        .event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        
-        .event-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem;
-        }
-        
-        .event-header h3 {
-            margin: 0;
-            font-size: 1.3rem;
-        }
-        
-        .event-body {
-            padding: 1.5rem;
-        }
-        
-        .event-meta {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-            color: var(--gray);
-        }
-        
-        .event-meta i {
-            margin-right: 0.5rem;
-            color: var(--primary);
-        }
-        
-        .event-description {
-            margin: 1rem 0;
-            color: var(--dark);
-            line-height: 1.6;
-        }
-        
-        .event-footer {
-            display: flex;
-            justify-content: flex-end;
-            padding: 0 1.5rem 1.5rem;
-        }
+        /* Añade esto a tu CSS */
+.evento-moderno {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.evento-moderno:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.evento-header {
+    background-color: var(--primary);
+    color: white;
+    padding: 1rem;
+}
+
+.evento-header h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.evento-body {
+    padding: 1.5rem;
+}
+
+.evento-body p {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.evento-descripcion {
+    color: var(--dark);
+    line-height: 1.5;
+    margin-bottom: 1rem !important;
+}
         
         /* Footer */
         .footer {
@@ -453,11 +490,36 @@
             color: var(--dark);
             line-height: 1.6;
         }
+
+        .evento-footer {
+            text-align: right;
+            padding: 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }
+
+        .evento-moderno:hover .evento-footer {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-inscribirse {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-inscribirse:hover {
+            background-color: #e64a19;
+        }
     </style>
 </head>
 <body>
-    <!-- Header con logo UTA/FISEI -->
-    <body>
     <!-- Header con logo UTA/FISEI -->
     <header class="header">
         <div class="header-container">
@@ -470,6 +532,7 @@
             </div>
         </div>
     </header>
+
     
     <!-- Barra de navegación -->
     <nav class="nav-bar">
@@ -481,36 +544,74 @@
             <a href="#" class="nav-link">Contacto</a>
         </div>
     </nav>
+        <!-- Carrusel dinámico -->
+        <div class="banner-carousel main-carousel">
+            <?php foreach($slides as $slide): ?>
+            <div class="slide" style="background-image: url('<?= htmlspecialchars($slide['link_url']) ?>')">
+                <div class="slide-content">
+                    <h2><?= htmlspecialchars($slide['titulo']) ?></h2>
+                    <p><?= htmlspecialchars($slide['descripcion']) ?></p>
+                    <a href="<?= htmlspecialchars($slide['imagen_url']) ?>" class="btn">Ver mas</a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if ($sobreNosotros): ?>
+        <section class="authorities-section" style="background-color: #fdfdfd;">
+            <div class="authorities-container">
+                <h2 class="section-title"><?= htmlspecialchars($sobreNosotros['titulo']) ?></h2>
+                <div class="authorities-grid">
+                    <div class="authority-card">
+                        <div class="authority-image" style="background-image: url('<?= htmlspecialchars($sobreNosotros['imagen_url']) ?>'); height: 250px;"></div>
+                        <div class="authority-info">
+                            <p class="description" style="text-align: justify;"><?= nl2br(htmlspecialchars($sobreNosotros['descripcion'])) ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <?php endif; ?>
+
+    <!-- Sección de eventos -->
+    <section class="events-section" id="eventos">
+        <div class="events-container">
+            <h2 class="section-title">Próximos Eventos</h2>
+            <div class="events-grid" id="proximos-eventos-container">
+                <!-- Los eventos se cargarán dinámicamente aquí -->
+                <div class="evento-moderno">
+                    <div class="event-header">
+                        <h3>Cargando eventos...</h3>
+                    </div>
+                    <div class="event-body">
+                        <p>Por favor espera mientras cargamos los próximos eventos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     
-<!-- Carrusel de banner -->
-<div class="banner-carousel main-carousel">
-    <!-- Slide 1 -->
-    <div class="slide" style="background-image: url('https://www.lahora.com.ec/__export/1742572935822/sites/lahora/img/2025/03/21/20250321_100215517_La_Universidad_Txcnica_de_Ambato_ofrece_mxs_cupos_para_el_primer_periodo_acadxmico_de_2025.jpg')">
-        <div class="slide-content">
-            <h2>Capacitación Continua FISEI</h2>
-            <p>Potencia tus habilidades con nuestros cursos y talleres diseñados para estudiantes y profesionales.</p>
-            <a href="#eventos" class="btn">Mira nuestros cursos</a>
+<section class="authorities-section">
+    <div class="authorities-container">
+        <h2 class="section-title">Nuestras Autoridades</h2>
+        <div class="authorities-grid">
+            <?php if (!empty($autoridades)): ?>
+                <?php foreach($autoridades as $auth): ?>
+                    <div class="authority-card">
+                        <div class="authority-image" style="background-image: url('<?= htmlspecialchars($auth['imagen_url']) ?>')"></div>
+                        <div class="authority-info">
+                            <h3><?= htmlspecialchars($auth['nombre']) ?></h3>
+                            <p class="position"><?= htmlspecialchars($auth['cargo']) ?></p>
+                            <p class="position"><?= htmlspecialchars($auth['dependencia']) ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No hay autoridades registradas.</p>
+            <?php endif; ?>
         </div>
     </div>
-
-    <!-- Slide 2 -->
-    <div class="slide" style="background-image: url('https://uta.edu.ec/wp-content/uploads/2025/04/DSC07944-e1745918653597.jpg')">
-        <div class="slide-content">
-            <h2>Eventos Académicos Destacados</h2>
-            <p>Participa en conferencias, simposios y charlas con expertos nacionales e internacionales.</p>
-            <a href="#eventos" class="btn">Ver próximos eventos</a>
-        </div>
-    </div>
-
-    <!-- Slide 3 -->
-    <div class="slide" style="background-image: url('https://uta.edu.ec/wp-content/uploads/2025/04/DSC07650-scaled.jpg')">
-        <div class="slide-content">
-            <h2>Inscríbete y Sé Parte del Cambio</h2>
-            <p>Accede a oportunidades académicas únicas y forma parte de la comunidad FISEI.</p>
-            <a href="#eventos" class="btn">Inscribirme ahora</a>
-        </div>
-    </div>
-</div>
+</section>
 
     
     <!-- Sección de estadísticas -->
@@ -536,34 +637,6 @@
             </div>
         </div>
     </section>
-    
-    <!-- Sección de eventos -->
-    <section class="events-section" id="eventos">
-        <div class="events-container">
-            <h2 class="section-title">Próximos Eventos</h2>
-            <div class="events-grid" id="proximos-eventos-container">
-                <!-- Los eventos se cargarán dinámicamente aquí -->
-                <div class="event-card">
-                    <div class="event-header">
-                        <h3>Cargando eventos...</h3>
-                    </div>
-                    <div class="event-body">
-                        <p>Por favor espera mientras cargamos los próximos eventos.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-        <section class="authorities-section">
-        <div class="authorities-container">
-            <h2 class="section-title">Nuestras Autoridades</h2>
-            <div class="authorities-grid" id="autoridades-container">
-                <!-- Las autoridades se cargarán dinámicamente -->
-            </div>
-        </div>
-    </section>
-    
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
@@ -579,21 +652,21 @@
                     <li><a href="#">Inscripciones</a></li>
                 </ul>
             </div>
-            <div class="footer-links">
-                <h4>Contacto</h4>
-                <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Av. Los Chasquis y Río Payamino</li>
-                    <li><i class="fas fa-phone"></i> (03) 3701-275</li>
-                    <li><i class="fas fa-envelope"></i> fisei@uta.edu.ec</li>
-                </ul>
-            </div>
+        <div class="footer-links">
+            <h4>Contacto</h4>
+            <ul>
+                <li><i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($contacto['direccion'] ?? 'No disponible') ?></li>
+                <li><i class="fas fa-phone"></i> <?= htmlspecialchars($contacto['telefono'] ?? 'No disponible') ?></li>
+                <li><i class="fas fa-envelope"></i> <?= htmlspecialchars($contacto['correo'] ?? 'No disponible') ?></li>
+            </ul>
+        </div>
         </div>
         <div class="copyright">
             <p>&copy; 2023 Facultad de Ingeniería en Sistemas, Electrónica e Industrial - Universidad Técnica de Ambato</p>
         </div>
     </footer>
     
-    <script src="./styles/script.js"></script>
+   <script src="./styles/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script>
@@ -602,7 +675,7 @@
             $('.main-carousel').slick({
                 dots: true,
                 infinite: true,
-                speed: 500,
+                speed: 400,
                 fade: true,
                 cssEase: 'linear',
                 autoplay: true,
