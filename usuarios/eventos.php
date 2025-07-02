@@ -3,6 +3,7 @@ require_once "../includes/conexion1.php";
 $conexion = new Conexion();
 $conn = $conexion->getConexion();
 
+// Consulta todos los eventos ordenados por fecha de inicio
 $sql = "SELECT * FROM eventos_cursos ORDER BY fec_ini_eve_cur ASC";
 $result = pg_query($conn, $sql);
 ?>
@@ -11,7 +12,7 @@ $result = pg_query($conn, $sql);
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Cursos </title>
+  <title>Cursos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap 5 -->
@@ -70,10 +71,27 @@ $result = pg_query($conn, $sql);
     <div class="row g-4">
 
       <?php while ($row = pg_fetch_assoc($result)): ?>
+        <?php
+          $hoy = date('Y-m-d');
+          $inicio = $row['fec_ini_eve_cur'];
+          $fin = $row['fec_fin_eve_cur'];
+
+          if ($hoy < $inicio) {
+              $estado = "Próximo";
+              $color = "primary";
+          } elseif ($hoy >= $inicio && $hoy <= $fin) {
+              $estado = "En curso";
+              $color = "warning";
+          } else {
+              $estado = "Finalizado";
+              $color = "secondary";
+          }
+        ?>
         <div class="col-sm-6 col-md-4 col-lg-3">
           <div class="course-box h-100">
             <div class="course-details">
               <h5><?= htmlspecialchars($row['tit_eve_cur']) ?></h5>
+              <p><strong>Estado:</strong> <span class="badge bg-<?= $color ?>"><?= $estado ?></span></p>
               <p><?= htmlspecialchars($row['des_eve_cur']) ?></p>
               <p><strong>Inicio:</strong> <?= date('d/m/Y', strtotime($row['fec_ini_eve_cur'])) ?></p>
               <p><strong>Fin:</strong> <?= date('d/m/Y', strtotime($row['fec_fin_eve_cur'])) ?></p>

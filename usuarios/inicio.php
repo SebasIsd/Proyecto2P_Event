@@ -59,7 +59,7 @@ if ($usuario = pg_fetch_assoc($result)) {
                 <nav>
         <ul>
             <li><a href="inicio.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+            <li><a href="/eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
             <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
             <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
             <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
