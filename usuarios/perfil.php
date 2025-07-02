@@ -45,6 +45,8 @@ if ($usuario = pg_fetch_assoc($result)) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="../styles/css/componente.css">
+
 </head>
 <body>
     <header>
@@ -106,33 +108,33 @@ if ($usuario = pg_fetch_assoc($result)) {
 
     </main>
 
-<footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-        </div>
-        <div class="footer-section">
-          <h3><i class="fas fa-envelope"></i> Contacto</h3>
-          <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-          <p><i class="fas fa-phone"></i> +123 456 7890</p>
-        </div>
-        <div class="footer-section">
-          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-          <ul>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Sistema de Inscripciones. Todos los derechos reservados.</p>
-      </div>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-logo">
+      <img src="https://play-lh.googleusercontent.com/EqL3NouatH9jKPfrOdoBrhbL7w0jGSB1czNYxRc5f3oRN8eja0WvsrsYtAmHypGlu4w" alt="Logo FISEI">
     </div>
-  </footer>
+    <div class="footer-links">
+      <h4>Enlaces Rápidos</h4>
+      <ul>
+        <li><a href="inicio.php">Inicio</a></li>
+        <li><a href="mis_eventos.php">Eventos</a></li>
+        <li><a href="./inscripciones/inscripciones.php">Cursos</a></li>
+        <li><a href="./inscripciones/inscripciones.php">Inscripciones</a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h4>Contacto</h4>
+      <ul>
+        <li><i class="fas fa-map-marker-alt"></i> Ambato, Ecuador</li>
+        <li><i class="fas fa-phone"></i> +593 3 999 999</li>
+        <li><i class="fas fa-envelope"></i> contacto@fisei.edu.ec</li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; <?= date('Y') ?> FISEI - Universidad Técnica de Ambato</p>
+  </div>
+</footer>
     <script src="/styles/script.js"></script>
 </body>
 </html>

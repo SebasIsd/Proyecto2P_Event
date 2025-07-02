@@ -1,88 +1,204 @@
+:root {
+    --primary-color: #8B0000;
+    --secondary-color: #000000;
+    --light-gray: #696969;
+    --white: #ffffff;
+    --hover-color: #8B0000;
+}
+
+/* Contenedor del formulario de inscripción */
+.form-inscripcion {
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Grupo de campos (label + input/select) */
+.form-inscripcion .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-inscripcion .form-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.form-inscripcion .form-group label i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+/* Campos de entrada */
+.form-inscripcion .form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--light-gray);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-inscripcion .form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(108, 19, 19, 0.2);
+}
+
+.form-inscripcion .form-control::placeholder {
+    color: #aaa;
+}
+
+/* Botón principal */
+.form-inscripcion .btn-submit {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-inscripcion .btn-submit i {
+    margin-right: 8px;
+}
+
+.form-inscripcion .btn-submit:hover {
+    background-color: var(--hover-color);
+}
+
+.form-inscripcion .btn-submit:disabled {
+    background-color: #cccccc !important;
+    cursor: not-allowed;
+}
+
+/* Mensajes de retroalimentación */
+.form-inscripcion .feedback {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.form-inscripcion .feedback.success {
+    background-color: #28a745;
+}
+
+.form-inscripcion .feedback.error {
+    background-color: #dc3545;
+}
+
+.form-inscripcion .feedback.info {
+    background-color: #17a2b8;
+}
+
+/* Modal para éxito o error */
 .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed; /* Posición fija para cubrir toda la pantalla */
-            z-index: 1000; 
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Habilitar scroll si el contenido es grande */
-            background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
-            justify-content: center; /* Centrar horizontalmente */
-            align-items: center; /* Centrar verticalmente */
-        }
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            position: relative;
-            animation: fadeIn 0.3s ease-out; /* Animación de aparición */
-        }
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
 
-        /* Animación de entrada */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-        .close-modal {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.close-modal {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .close-modal:hover,
-        .close-modal:focus {
-            color: #000;
-            text-decoration: none;
-        }
+.close-modal:hover,
+.close-modal:focus {
+    color: #000;
+    text-decoration: none;
+}
 
-        .modal-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
+.modal-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
 
-        .modal-icon.success {
-            color: #28a745; /* Color verde para éxito */
-        }
+.modal-icon.success {
+    color: #28a745;
+}
 
-        .modal-icon.error {
-            color: #dc3545; /* Color rojo para error */
-        }
+.modal-icon.error {
+    color: #dc3545;
+}
 
-        .modal-content h3 {
-            color: #333;
-            margin-bottom: 0.8rem;
-            font-size: 1.8rem;
-        }
+.modal-content h3 {
+    color: #333;
+    margin-bottom: 0.8rem;
+    font-size: 1.8rem;
+}
 
-        .modal-content p {
-            color: #666;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
+.modal-content p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
 
-        .btn-modal {
-            background-color: var(--primary-color); 
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
+.btn-modal {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
 
-        .btn-modal:hover {
-            background-color: #0056b3; 
-        }
+.btn-modal:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive: modal y formulario */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 20% auto;
+        width: 85%;
+    }
+}
