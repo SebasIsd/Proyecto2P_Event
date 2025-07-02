@@ -4,14 +4,13 @@ require_once('../includes/conexion1.php');
 
 $conexion = new Conexion();
 $conn = $conexion->getConexion();
-
 $error = "";
 
+// Procesar formulario POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST['correo'];
     $password = $_POST['password'];
     
-    // Validar formato de correo en el servidor también
     if (!preg_match('/@uta\.edu\.ec$/', $correo)) {
         $error = "Debe usar un correo institucional @uta.edu.ec";
     } else {
@@ -26,11 +25,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['cedula'] = $usuario['ced_usu'];
                 $_SESSION['id'] = $usuario['id_usu'];
 
-                if ($_SESSION['rol'] == 1) {
-                    header("Location: ../admin/admin.php");
+                // Redirigir según rol y evento
+            if ($_SESSION['rol'] == 1) {
+                header("Location: ../admin/admin.php");
+            } else {
+                if (isset($_SESSION['evento_redireccion'])) {
+                    $evento_id = $_SESSION['evento_redireccion'];
+                    unset($_SESSION['evento_redireccion']);
+                    header("Location: ../usuarios/inscripciones/inscripciones.php?evento=" . urlencode($evento_id));
                 } else {
                     header("Location: inicio.php");
                 }
+            }
+
                 exit();
             }
         }
@@ -38,7 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Correo o contraseña incorrectos.";
     }
 }
+
+// Si viene de evento, guardar para redireccionar luego
+if (isset($_GET['evento'])) {
+    $_SESSION['evento_redireccion'] = $_GET['evento'];
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

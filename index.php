@@ -586,6 +586,10 @@ $conexion->cerrar();
                     <div class="event-body">
                         <p>Por favor espera mientras cargamos los próximos eventos.</p>
                     </div>
+                    <?php if (!isset($_SESSION['usuario'])): ?>
+                    <a href="usuarios/login.php?evento=<?= $evento['id_evento'] ?>" class="btn btn-primary">Inscribirse</a>                <?php else: ?>
+                    <a href="usuarios/inscripciones/inscripciones.php?evento=<?= $evento['id_evento'] ?>" class="btn btn-primary">Inscribirse</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -65,11 +65,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             ${evento.tipo ? `<p><i class="fas fa-tag"></i> ${evento.tipo}</p>` : ''}
                             <p><i class="fas fa-laptop-house"></i> ${evento.modalidad === 'Pagado' ? 'Gratis' : evento.modalidad || 'Sin modalidad'}</p>
                         </div>
+                        <!-- Cambiar esta parte en el evento-footer -->
                         <div class="evento-footer">
-                            <a href="./usuarios/login.php" class="btn-inscribirse">Inscribirse</a>
+                            <a href="usuarios/login.php?evento=${evento.id_evento || evento.codigo}" class="btn btn-primary">Inscribirse</a>
                         </div>
-                    `;
 
+                    `;
                     eventosContainer.appendChild(eventoCard);
                 });
             } else {

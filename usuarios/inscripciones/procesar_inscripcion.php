@@ -1,9 +1,11 @@
 <?php
 session_start();
 require_once "../../includes/conexion1.php";
+$conexion = new Conexion();
+$conn = $conexion->getConexion();
 
 $cedula = $_SESSION['cedula'];
-$id_evento = $_POST['id_evento'];  // Asegúrate de que este dato llega desde el formulario
+$id_evento = filter_var($_POST['evento'], FILTER_VALIDATE_INT);
 
 $sql = "INSERT INTO inscripciones (id_eve_cur, ced_usu, fec_ini_ins, est_pag_ins) 
         VALUES ($1, $2, CURRENT_DATE, 'pendiente')";
@@ -33,9 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['evento'])) {
     header("Location: inscripciones.php?error=Datos incompletos");
     exit();
 }
-
-$conexion = new Conexion();
-$conn = $conexion->getConexion();
 
 // Obtener y validar datos
 $cedula = $_SESSION['cedula'];

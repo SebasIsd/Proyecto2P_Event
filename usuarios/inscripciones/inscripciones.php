@@ -146,7 +146,7 @@ if ($datos = pg_fetch_assoc($result)) {
         <div class="form-container">
             <h2><i class="fas fa-edit"></i> Nueva Inscripción</h2>
             
-            <form id="formInscripcion" method="POST" action="procesar_inscripcion.php">
+            <form id="formInscripcion" method="POST" action="procesar_inscripcion.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="cedula">Cédula del Usuario</label>
                     <input type="text" id="cedula" name="cedula" class="form-control" value="<?php echo htmlspecialchars($cedula); ?>" readonly required>
@@ -241,8 +241,67 @@ if ($datos = pg_fetch_assoc($result)) {
                 }
             }
 
+                const urlParams = new URLSearchParams(window.location.search);
+                const eventoId = urlParams.get('evento');
+
             // Cargar eventos disponibles
             fetch('get_eventos_disponibles.php')
+            .then(response => response.json())
+            .then(data => {
+                const selectEvento = document.getElementById('evento');
+                selectEvento.innerHTML = '<option value="">Seleccione un evento...</option>';
+
+                data.forEach(evento => {
+                const option = document.createElement('option');
+                option.value = evento.codigo;
+                option.textContent = `${evento.titulo} (${formatearFecha(evento.fechaInicio)})`;
+                option.setAttribute('data-tipo', (evento.tipo_evento || '').toLowerCase());
+                option.setAttribute('data-costo', evento.costo);
+                selectEvento.appendChild(option);
+                });
+
+                // Evento cambio para llenar campos adicionales
+                selectEvento.addEventListener('change', function() {
+                const selected = this.options[this.selectedIndex];
+                const tipo = selected.getAttribute('data-tipo') || '';
+                const costo = selected.getAttribute('data-costo') || '';
+
+                document.getElementById('tipo_evento').value = tipo;
+                document.getElementById('costo').value = costo;
+
+                const comprobanteGroup = document.getElementById('comprobante_group');
+                const infoGratis = document.getElementById('info_gratis');
+                const estadoPago = document.getElementById('estado_pago');
+
+                if (tipo === 'pagado') {
+                    comprobanteGroup.style.display = 'block';
+                    infoGratis.style.display = 'none';
+                    estadoPago.value = 'Pendiente';
+                } else {
+                    comprobanteGroup.style.display = 'none';
+                    infoGratis.style.display = 'block';
+                    estadoPago.value = 'Pagado';
+                }
+                });
+
+                // Si viene preseleccionado por URL, disparar cambio para actualizar campos
+                const urlParams = new URLSearchParams(window.location.search);
+                const eventoId = urlParams.get('evento');
+                if (eventoId) {
+                const optionToSelect = Array.from(selectEvento.options).find(o => o.value === eventoId);
+                if (optionToSelect) {
+                    optionToSelect.selected = true;
+                    selectEvento.dispatchEvent(new Event('change'));
+                }
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar eventos:', error);
+                const selectEvento = document.getElementById('evento');
+                selectEvento.innerHTML = '<option value="">Error al cargar eventos</option>';
+            });
+            }
+
                 .then(response => {
                     const contentType = response.headers.get('content-type');
                     if (!contentType || !contentType.includes('application/json')) {
@@ -255,7 +314,7 @@ if ($datos = pg_fetch_assoc($result)) {
                 .then(data => {
                     const selectEvento = document.getElementById('evento');
                     selectEvento.innerHTML = '<option value="">Seleccione un evento...</option>';
-
+                    
                     data.forEach(evento => {
                         const option = document.createElement('option');
                         option.value = evento.codigo;
@@ -263,6 +322,12 @@ if ($datos = pg_fetch_assoc($result)) {
                         option.setAttribute('data-tipo', evento.tipo_evento.toLowerCase());
                         option.setAttribute('data-costo', evento.costo);
                         selectEvento.appendChild(option);
+                        
+                        // Seleccionar automáticamente si coincide con el parámetro
+                        if (eventoId && evento.codigo == eventoId) {
+                            option.selected = true;
+                            selectEvento.dispatchEvent(new Event('change'));
+                        }
                     });
 
                     // Event listener para el cambio de evento
