@@ -277,7 +277,7 @@ if ($datos = pg_fetch_assoc($result)) {
       opacity: 1;
     }
     .modal-content {
-      background: linear-gradient(135deg, rgb(255 255 255) 0%, rgb(220 181 192) 100%);
+      background: white;
       border-radius: 12px;
       width: 90%;
       max-width: 500px;
@@ -320,9 +320,6 @@ if ($datos = pg_fetch_assoc($result)) {
     .modal-close:hover {
       color: #dc3545;
     }
-    .modal-field {
-      margin-bottom: 1.2rem;
-    }
     .modal-label {
       display: block;
       font-weight: 600;
@@ -348,7 +345,7 @@ if ($datos = pg_fetch_assoc($result)) {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: #28a745;
+      background:rgb(145, 21, 21);
       color: white;
       border: none;
       padding: 0.8rem 1.5rem;
