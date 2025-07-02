@@ -97,26 +97,147 @@ $requisitos = getCatalogo($conn, 'REQUISITOS', 'ID_REQ', 'NOM_REQ');
 <head>
   <meta charset="UTF-8" />
   <title>Crear Evento Académico</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+    :root {
+    --primary-color: #6c1313;
+    --secondary-color: #000000;
+    --light-gray: #696969;
+    --white: #ffffff;
+    --hover-color: #5a0f0f;
+    --secondary-btn-color: #4a4a4a;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --card-hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.logo span {
+    font-weight: 400;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+nav ul li a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li a i {
+    margin-right: 8px;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    background-color: var(--hover-color);
+}
+
+    footer {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 2rem 0 0;
+    margin-top: auto;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    margin-bottom: 1rem;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+}
+
+.footer-section h3 i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.footer-section p, .footer-section a {
+    color: #cccccc;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    color: var(--white);
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section ul li a {
+    display: flex;
+    align-items: center;
+}
+
+.footer-section ul li a i {
+    margin-right: 5px;
+    font-size: 0.8rem;
+}
+
+.social-icons {
+    display: flex;
+    margin-top: 1rem;
+    gap: 10px;
+}
+
+.social-icons a {
+    color: #cccccc;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: var(--primary-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid var(--light-gray);
+    color: #cccccc;
+    font-size: 0.9rem;
+}
+
+
+
     body { font-family: Arial; background: #f4f4f4; margin: 0; padding: 20px; }
     .formulario-container { background: #fff; padding: 25px; border-radius: 10px; max-width: 800px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     fieldset { border: 1px solid #ccc; margin-bottom: 20px; padding: 20px; border-radius: 8px; }
     legend { font-weight: bold; color: #8b0000; font-size: 1.1em; }
     label { margin-top: 10px; display: block; font-weight: bold; }
-    input[type="text"], input[type="date"], select, textarea {
-      width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;
+    input[type="text"], input[type="date"], input[type="number"],select, textarea {
+      width: 100%; padding: 8px; border-radius: 5px; border: 2px solid #ccc; margin-top: 10px;
     }
-    
     .checkbox-group label { display: flex; align-items: center; margin-top: 8px; background: #f8f8f8; padding: 5px; border-radius: 5px; }
-    .checkbox-group label input[type="number"] {
-  width: 200px;
-  padding: 4px 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9em;
-  margin-left: 10px;
-}
-
     .boton-container { text-align: center; margin-top: 20px; }
     .boton-container button {
       padding: 10px 20px; background: #8b0000; color: white; border: none; border-radius: 5px; cursor: pointer;
@@ -125,6 +246,19 @@ $requisitos = getCatalogo($conn, 'REQUISITOS', 'ID_REQ', 'NOM_REQ');
   </style>
 </head>
 <body>
+  <header>
+    <div class="container">
+      <h1 style="text-align: center; padding: 20px;"> <span>Ingreso de eventos</span></h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a href="../admin/ingresoEventos.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+          
+        </ul>
+      </nav>
+    </div>
+  </header>
   <div class="formulario-container">
     <form method="POST" id="eventoForm">
       <fieldset>
@@ -190,7 +324,32 @@ $requisitos = getCatalogo($conn, 'REQUISITOS', 'ID_REQ', 'NOM_REQ');
       </div>
     </form>
   </div>
-
+<footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-envelope"></i> Contacto</h3>
+          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
   <script>
 document.addEventListener("DOMContentLoaded", () => {
   const modalidad = document.getElementById("modalidad");
