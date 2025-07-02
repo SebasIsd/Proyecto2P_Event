@@ -9,7 +9,7 @@
         <li><a href="inicio.php">Inicio</a></li>
         <li><a href="mis_eventos.php">Eventos</a></li>
         <li><a href="./inscripciones/inscripciones.php">Cursos</a></li>
-        <li><a href="./inscripciones/inscripciones.php">Inscripciones</a></li>
+        <li><a href="./soli.html">Solicita un cambio</a></li>
       </ul>
     </div>
     <div class="footer-links">
