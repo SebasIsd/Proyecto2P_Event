@@ -277,7 +277,7 @@ if ($datos = pg_fetch_assoc($result)) {
       opacity: 1;
     }
     .modal-content {
-      background: white;
+      background: linear-gradient(135deg, rgb(255 255 255) 0%, rgb(220 181 192) 100%);
       border-radius: 12px;
       width: 90%;
       max-width: 500px;
@@ -520,61 +520,98 @@ if ($datos = pg_fetch_assoc($result)) {
 </main>
 <?php include "../includes/footer.php"; ?>
 <script>
+const imagenesEventos = [
+  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1000', // Conferencia
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000', // Estudio/Curso
+  'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1000', // Presentación
+  'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1000', // Trabajo en equipo
+  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000', // Reunión
+  'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1000', // Capacitación
+  'https://images.unsplash.com/photo-1553028826-f4804a6dba3b?q=80&w=1000', // Seminario
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000', // Workshop
+  'https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=1000', // Educación
+  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1000'  // Networking
+];
+
+function obtenerImagenAleatoria() {
+  const indice = Math.floor(Math.random() * imagenesEventos.length);
+  return imagenesEventos[indice];
+}
+
+// Función mejorada para formatear fechas
 function formatearFecha(fecha) {
-  if (!fecha) return 'Sin fecha definida';
+  if (!fecha || fecha === 'null' || fecha === '') return 'Sin fecha definida';
+
   try {
-    const fechaObj = new Date(fecha);
+    let fechaObj;
+    
+    // Si la fecha viene con formato YYYY-MM-DD HH:MM:SS
+    if (fecha.includes(' ')) {
+      fechaObj = new Date(fecha.replace(' ', 'T'));
+    } 
+    // Si la fecha viene con formato YYYY-MM-DD
+    else if (fecha.includes('-')) {
+      fechaObj = new Date(fecha + 'T00:00:00');
+    } 
+    // Otros formatos
+    else {
+      fechaObj = new Date(fecha);
+    }
+
+    // Verificar si la fecha es válida
+    if (isNaN(fechaObj.getTime())) {
+      console.warn('Fecha inválida:', fecha);
+      return 'Fecha no válida';
+    }
+
+    // Formatear la fecha en español
     return fechaObj.toLocaleDateString('es-ES', {
+      weekday: 'short',
       day: '2-digit',
       month: 'short',
       year: 'numeric'
     });
-  } catch {
-    return fecha;
+  } catch (error) {
+    console.error('Error al formatear fecha:', error, fecha);
+    return 'Error en fecha';
   }
 }
 
-  function mostrarModal(evento) {
-    const modal = document.getElementById('modalEvento');
-    const modalContent = modal.querySelector('.modal-content');
-    
-    // Limpiar estilos previos
-    modalContent.style.maxHeight = '90vh';
-    
-    document.getElementById('modalTitulo').textContent = evento.titulo;
-    document.getElementById('modalDescripcion').value = evento.descripcion || 'No disponible';
-    document.getElementById('modalFechaInicio').value = formatearFecha(evento.fechaInicio);
-    document.getElementById('modalFechaFin').value = formatearFecha(evento.fechaFin);
-    
-    const esGratuito = evento.tipo_evento.toLowerCase() === 'gratuito';
-    const costoTexto = esGratuito ? 'Gratuito' : `$${evento.costo || '0'}`;
-    
-    document.getElementById('modalCosto').value = costoTexto;
-    document.getElementById('modalTipo').value = evento.tipo_evento;
-    document.getElementById('inputEventoId').value = evento.codigo;
-    document.getElementById('estadoPagoInput').value = esGratuito ? 'Pagado' : 'Pendiente';
-    
-    // Mostrar/ocultar campo de comprobante
-    const comprobanteDiv = document.getElementById('modalComprobanteDiv');
-    comprobanteDiv.style.display = esGratuito ? 'none' : 'block';
-    if (!esGratuito) {
-      comprobanteDiv.querySelector('input').required = true;
-    }
-    
-    modal.classList.add('active');
-    
-    // Ajustar altura después de cargar el contenido
-    setTimeout(() => {
-      const contentHeight = modalContent.scrollHeight;
-      const windowHeight = window.innerHeight;
-      
-      if (contentHeight > windowHeight * 0.9) {
-        modalContent.style.maxHeight = '80vh';
-      }
-    }, 10);
+function mostrarModal(evento) {
+  const modal = document.getElementById('modalEvento');
+  
+  document.getElementById('modalTitulo').textContent = evento.titulo;
+  document.getElementById('modalDescripcion').value = evento.descripcion || 'No disponible';
+  document.getElementById('modalFechaInicio').value = formatearFecha(evento.fechaInicio);
+  document.getElementById('modalFechaFin').value = formatearFecha(evento.fechaFin);
+  
+  const esGratuito = evento.tipo_evento && evento.tipo_evento.trim().toLowerCase() === 'gratuito';
+  const costoTexto = esGratuito ? 'Gratuito' : `$${evento.costo || '0'}`;
+  
+  document.getElementById('modalCosto').value = costoTexto;
+  document.getElementById('modalTipo').value = evento.tipo_evento || 'No especificado';
+  document.getElementById('inputEventoId').value = evento.codigo;
+  document.getElementById('estadoPagoInput').value = esGratuito ? 'Pagado' : 'Pendiente';
+  
+  // Mostrar/ocultar campo de comprobante
+  const comprobanteDiv = document.getElementById('modalComprobanteDiv');
+  const comprobanteInput = document.getElementById('modalComprobante');
+  
+  if (esGratuito) {
+    comprobanteDiv.style.display = 'none';
+    comprobanteInput.required = false;
+  } else {
+    comprobanteDiv.style.display = 'block';
+    comprobanteInput.required = true;
   }
+  
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+}
+
 function cerrarModal() {
   document.getElementById('modalEvento').classList.remove('active');
+  document.body.style.overflow = 'auto'; // Restaurar scroll del body
 }
 
 function mostrarCarga() {
@@ -590,23 +627,29 @@ function mostrarCarga() {
 function validarComprobante() {
   const tipo = document.getElementById('modalTipo').value.toLowerCase();
   if (tipo === 'gratuito') return true;
+  
   const archivo = document.getElementById('modalComprobante');
   if (!archivo.files.length) {
     alert('Debe subir el comprobante de pago.');
     return false;
   }
+  
   const file = archivo.files[0];
   const sizeMB = file.size / (1024 * 1024);
+  
   if (!['image/jpeg', 'image/png'].includes(file.type)) {
     alert('El archivo debe ser JPG o PNG.');
     return false;
   }
+  
   if (sizeMB > 2) {
     alert('El archivo no debe superar los 2MB.');
     return false;
   }
+  
   return true;
 }
+
 
 let eventos = [];
 
@@ -617,16 +660,17 @@ function renderizarEventos(filtrados) {
     container.innerHTML = '<p style="text-align:center;color:#777">No se encontraron eventos</p>';
     return;
   }
-  filtrados.forEach(ev => {
-    const esGratuito = ev.tipo_evento.toLowerCase() === 'gratuito';
+filtrados.forEach((ev, index) => {
+    const esGratuito = ev.tipo_evento && ev.tipo_evento.toLowerCase() === 'gratuito';
     const tipoClase = esGratuito ? 'gratuito' : 'pagado';
     const precioTexto = esGratuito ? 'Gratuito' : `$${ev.costo || '0'}`;
-    const imagenEvento = ev.imagen || 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1000';
+    const imagenEvento = obtenerImagenAleatoria(); // Imagen aleatoria para cada evento
+    
     const card = document.createElement('div');
     card.className = 'event-card';
     card.innerHTML = `
       <div class="event-image">
-        <img src="${imagenEvento}" alt="${ev.titulo}">
+        <img src="${imagenEvento}" alt="${ev.titulo}" onerror="this.src='https://via.placeholder.com/300x180/4361ee/ffffff?text=Evento'">
       </div>
       <div class="event-content">
         <h3 class="event-title">${ev.titulo}</h3>
@@ -636,13 +680,13 @@ function renderizarEventos(filtrados) {
             ${formatearFecha(ev.fechaInicio)}
           </div>
           <span class="event-type ${tipoClase}">
-            ${ev.tipo_evento}
+            ${ev.tipo_evento || 'Sin especificar'}
           </span>
         </div>
         <p class="event-description">${ev.descripcion || 'Descripción no disponible'}</p>
         <div class="event-footer">
           <div class="event-price ${tipoClase}">${precioTexto}</div>
-          <button class="event-btn" onclick='mostrarModal(${JSON.stringify(ev)})'>
+          <button class="event-btn" onclick='mostrarModal(${JSON.stringify(ev).replace(/'/g, "\\'")})'}>
             <i class="fas fa-ticket-alt"></i> Inscribirse
           </button>
         </div>
