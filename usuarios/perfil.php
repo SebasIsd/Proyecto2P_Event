@@ -40,16 +40,6 @@ if ($usuario = pg_fetch_assoc($result)) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mi Perfil - Sistema de Inscripciones</title>
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        AOS.init({
-            duration: 1000,
-            once: true
-        });
-    });
-</script>
     <link rel="stylesheet" href="../styles/css/perfil.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -60,19 +50,17 @@ if ($usuario = pg_fetch_assoc($result)) {
     <header>
         <div class="container">
             <div class="logo">
-                <h1>Sistema de Inscripciones</h1>
+                <h1>Perfil</h1>
             </div>
             <nav>
                 <ul>
                     <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-                    <li><a href="/usuarios/inscripciones/inscripciones.html"><i class="fas fa-edit"></i> Inscripciones</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
-                    <li><a href="/usuarios/SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes</a></li>
+                    <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+                    <li><a href="../usuarios/inscripciones/inscripciones.php"><i class="fas fa-edit"></i> Inscripciones</a></li>
                     <li class="profile-link">
                         <a href="perfil.php" class="active"><i class="fas fa-user-circle"></i> Perfil</a>
                     </li>
-                    <li><a href="../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                    <li><a href="../../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
                 </ul>
             </nav>
         </div>
@@ -118,33 +106,33 @@ if ($usuario = pg_fetch_assoc($result)) {
 
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="inicio.php">Inicio</a></li>
-                        <li><a href="perfil.php">Mi Perfil</a></li>
-                        <li><a href="#">Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
+<footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
         </div>
-    </footer>
-
+        <div class="footer-section">
+          <h3><i class="fas fa-envelope"></i> Contacto</h3>
+          <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
+          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Sistema de Inscripciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
     <script src="/styles/script.js"></script>
 </body>
 </html>
