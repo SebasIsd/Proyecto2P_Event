@@ -120,8 +120,8 @@ if ($idEvento) {
       <nav>
         <ul>
           <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-          <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-          <li><a href="../admin/verEventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
+          <li><a href="../admin/ingresarEventos.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+          <li><a href="../admin/eventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
         </ul>
       </nav>
     </div>
