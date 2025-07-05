@@ -20,16 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.classList.add('evento-card');
 
-        card.innerHTML = `
-          <h3>${evento.tit_eve_cur}</h3>
-          <p>${evento.des_eve_cur}</p>
-          <p><strong>Fecha:</strong> Inicia el ${evento.fec_ini_eve_cur} y finaliza el ${evento.fec_fin_eve_cur}</p>
-          <p><strong>Tipo:</strong> ${evento.tip_eve}</p>
-          <p><strong>Modalidad:</strong> ${evento.mod_eve_cur} - $${evento.cos_eve_cur}</p>
-          <p><strong>Carrera:</strong> ${evento.car_eve_cur}</p>
-          <button class="btn-editar" onclick="editarEvento(${evento.id_eve_cur})">Editar</button>
-          <button class="btn-eliminar" onclick="eliminarEvento(${evento.id_eve_cur})">Eliminar</button>
-        `;
+card.innerHTML = `
+  <h3>${evento.tit_eve_cur}</h3>
+  <p>${evento.des_eve_cur}</p>
+  <p><i class="fas fa-calendar-day"></i> <strong>Fecha:</strong> Inicia el ${evento.fec_ini_eve_cur} y finaliza el ${evento.fec_fin_eve_cur}</p>
+  <p><i class="fas fa-tag"></i> <strong>Tipo:</strong> ${evento.tip_eve ?? 'N/A'}</p>
+  <p><i class="fas fa-chalkboard"></i> <strong>Modalidad:</strong> ${evento.mod_eve_cur} - $${evento.cos_eve_cur}</p>
+  <p><i class="fas fa-graduation-cap"></i> <strong>Carrera:</strong> ${evento.car_eve_cur ?? 'N/A'}</p>
+  <button class="btn-editar" onclick="editarEvento(${evento.id_eve_cur})"><i class="fas fa-edit"></i> Editar</button>
+  <button class="btn-eliminar" onclick="eliminarEvento(${evento.id_eve_cur})"><i class="fas fa-trash"></i> Eliminar</button>
+`;
+
         contenedor.appendChild(card);
       });
     })

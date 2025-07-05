@@ -9,7 +9,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+<style>
+  main.contenido {
+      position: relative;
+      padding-top: 50px; /* Para dejar espacio arriba si quieres */
+    }
+    #btnFinalizar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 10px 20px;
+      background-color: #6c1313;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #btnFinalizar:hover {
+      background-color: #a86e2e;
+    }
+</style>
 </head>
 <body>
   <header>
@@ -30,6 +51,7 @@
   </header>
 
   <main class="contenido">
+    <button id="btnFinalizar">Finalizar</button>
     <h2>Selecciona un Evento</h2>
   <select id="evento">
     <option value="">-- Seleccione --</option>
@@ -41,7 +63,6 @@
           <tr>
             <th>Participante</th>
             <th>Nota Final</th>
-            <th>Estado</th>
             <th>Asistencia (%)</th>
             <th>Acción</th>
           </tr>

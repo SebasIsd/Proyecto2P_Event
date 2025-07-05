@@ -18,12 +18,18 @@ try {
         if (!$cedula) throw new Exception("Cédula requerida");
 
         $stmt = $conn->prepare("
-            SELECT i.ID_INS as id_inscripcion, ec.TIT_EVE_CUR as nombre_evento,
-                ec.TIP_EVE as tipo_evento, ec.FEC_INI_EVE_CUR as fecha_inicio,
-                ec.FEC_FIN_EVE_CUR as fecha_fin, ec.COS_EVE_CUR as costo_evento,
-                i.EST_PAG_INS as estado_pago, img.COMPROBANTE_PAG_OID as comprobante_oid
+        
+            SELECT i.ID_INS as id_inscripcion, 
+            ec.TIT_EVE_CUR as nombre_evento,
+           te.NOM_TIPO_EVE      AS tipo_evento,       
+            ec.FEC_INI_EVE_CUR as fecha_inicio,
+            ec.FEC_FIN_EVE_CUR as fecha_fin, 
+             ec.COS_EVE_CUR as costo_evento,
+                i.EST_PAG_INS as estado_pago, 
+                img.COMPROBANTE_PAG_OID as comprobante_oid
             FROM INSCRIPCIONES i
             INNER JOIN EVENTOS_CURSOS ec ON ec.ID_EVE_CUR = i.ID_EVE_CUR
+                INNER JOIN TIPOS_EVENTO     te ON te.ID_TIPO_EVE = ec.ID_TIPO_EVE
             LEFT JOIN IMAGENES img ON img.ID_INS = i.ID_INS
             WHERE i.CED_USU = :cedula
             ORDER BY ec.FEC_INI_EVE_CUR DESC

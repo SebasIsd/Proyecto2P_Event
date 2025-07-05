@@ -1,74 +1,156 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Eventos</title>
-  <link rel="stylesheet" href="../styles/css/estilosEventos.css">
-    <link rel="stylesheet" href="../styles/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <title>Detalle del Evento</title>
+  <link rel="stylesheet" href="../styles/css/style.css" />
+  <link rel="stylesheet" href="../styles/css/estilosEventos.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
 
+    .detalle-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .detalle-container img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .detalle-container h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .detalle-container p {
+      font-size: 16px;
+      margin: 8px 0;
+    }
+
+    .detalle-container .label {
+      font-weight: bold;
+    }
+
+    .volver-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 18px;
+      background-color: #94754d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .volver-btn:hover {
+      background-color: #6c1313;
+    }
+  </style>
 </head>
+
 <body>
-    <style>
-        button {
-    background-color: #6c1313;
-    color: white;
-    padding: 10px 20px;
-    border: 2px solid black;
-    border-radius: 12px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-    </style>
 
-      <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Eventos <span>disponibles</span></h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i>Crear Eventos</a></li>
-                </ul>
-            </nav>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Sistema de <span>Eventos</span></h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+          <li><a href="../admin/eventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="detalle-container" id="detalleEvento">
+    <p>Cargando evento...</p>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
         </div>
-    </header>
-      <div class="contenedor-eventos" id="contenedor-eventos"></div>
-     <footer>
-              <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                  
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-envelope"></i> Contacto</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-envelope"></i> Contacto</h3>
+          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
         </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const idEvento = urlParams.get("id");
 
-    </footer>
+    if (!idEvento) {
+      document.getElementById("detalleEvento").innerHTML = "<p style='color:red;'>Evento no encontrado.</p>";
+    } else {
+      fetch(`../admin/obtenerEventoPorId.php?id=${idEvento}`)
+        .then(response => response.json())
+        .then(evento => {
+          if (evento.error) {
+            document.getElementById("detalleEvento").innerHTML = `<p style='color:red;'>${evento.error}</p>`;
+            return;
+          }
 
-  <script src="../styles/verEvento.js"></script>
+          const contenedor = document.getElementById("detalleEvento");
+          contenedor.innerHTML = `
+            <img src="../images/${evento.img_tipo_eve}" alt="Imagen del tipo de evento">
+            <h1>${evento.tit_eve_cur}</h1>
+            <p><span class="label">Descripción:</span> ${evento.des_eve_cur}</p>
+            <p><span class="label">Fecha Inicio:</span> ${evento.fec_ini_eve_cur}</p>
+            <p><span class="label">Fecha Fin:</span> ${evento.fec_fin_eve_cur}</p>
+            <p><span class="label">Modalidad:</span> ${evento.mod_eve_cur}</p>
+            <p><span class="label">Costo:</span> $${evento.cos_eve_cur}</p>
+            <p><span class="label">Tipo de Evento:</span> ${evento.tip_eve}</p>
+            <p><span class="label">Carreras Asociadas:</span> ${evento.carreras?.join(", ") ?? 'N/A'}</p>
+            <p><span class="label">Requisitos:</span></p>
+            <ul>
+              ${evento.requisitos?.map(r => `<li><strong>${r.nombre}:</strong> ${r.valor}</li>`).join("") ?? '<li>Ninguno</li>'}
+            </ul>
+            <a class="volver-btn" href="eventos.html"><i class="fas fa-arrow-left"></i> Volver</a>
+          `;
+        })
+        .catch(err => {
+          document.getElementById("detalleEvento").innerHTML = `<p style='color:red;'>Error al cargar el evento.</p>`;
+          console.error(err);
+        });
+    }
+  </script>
 </body>
+
 </html>
