@@ -109,13 +109,13 @@
     </header>
 
   <main class="admin-panel">
-    <div class="admin-card">
+         <div class="admin-card">
       <i class="fas fa-calendar-plus"></i>
-      <a href="../admin/indexEvento.html">Crear Evento/Curso</a>
+      <a href="../admin/ingresoEventos.php">Crear Evento/Curso</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-list"></i>
-      <a href="../admin/verEventos.html">Ver / Editar Eventos</a>
+      <a href="../admin/eventos.html">Ver / Editar Eventos</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-user-check"></i>
@@ -127,7 +127,11 @@
     </div>
     <div class="admin-card">
       <i class="fas fa-graduation-cap"></i>
-      <a href="../admin/notasAsistencia.html">Notas y Asistencias</a>
+      <a href="../admin/notas.php">Notas y Asistencias</a>
+    </div>
+        <div class="admin-card">
+      <i class="fas fa-check-circle"></i>
+      <a href="../admin/verificacionRequisitos.php">Validar requisitos adicionales</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-certificate"></i>
