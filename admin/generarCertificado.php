@@ -1,155 +1,119 @@
 <?php
-ini_set('display_errors', 0); 
-ini_set('log_errors', 1);     
-error_reporting(E_ALL);       
-
-
-require '../vendor/autoload.php';
 require_once '../conexion/conexion.php';
-use Dompdf\Dompdf;
+require_once '../fpdf186/fpdf.php';  // Ajusta la ruta según tu estructura
 
-header('Content-Type: application/json');
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_ins'])) {
+    $id_ins = (int) $_POST['id_ins'];
 
-$data = json_decode(file_get_contents("php://input"), true);
-$idIns = $data['id_ins'] ?? null;
+    $conn = CConexion::ConexionBD();
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-if (!$idIns) {
-    echo json_encode(['error' => 'ID inválido']);
-    exit;
-}
-
-try {
-  $conn = CConexion::ConexionBD();
-  
-
-  $plantilla = $conn->query("
-  SELECT * FROM PLANTILLAS_CERTIFICADOS where ID_PLAN_CER =1
-    ")->fetch(PDO::FETCH_ASSOC);
-
-    if (!$plantilla) {
-        echo json_encode(['error' => 'No se encontró ninguna plantilla de certificado']);
-        exit;
-    }
-
-$encabezado = trim($plantilla['encabezado_cer'] ?? '');
-$cuerpo     = trim($plantilla['cuerpo_cer'] ?? '');
-$pie        = trim($plantilla['pie_cer'] ?? '');
-
-
-
-
-    if (empty($encabezado) || empty($cuerpo) || empty($pie)) {
-        echo json_encode(['error' => 'La plantilla tiene campos vacíos']);
-        exit;
-    }
-
-    $stmt = $conn->prepare("
+    // Obtener datos
+    $sql = "
     SELECT 
-        CONCAT(U.NOM_PRI_USU, ' ', U.NOM_SEG_USU, ' ', U.APE_PRI_USU, ' ', U.APE_SEG_USU) AS nombre_completo,
-        U.CED_USU AS cedula,
-        E.TIT_EVE_CUR AS titulo_evento,
-        E.FEC_FIN_EVE_CUR AS fecha_fin
-    FROM INSCRIPCIONES I
-    JOIN USUARIOS U ON I.CED_USU = U.CED_USU
-    JOIN EVENTOS_CURSOS E ON I.ID_EVE_CUR = E.ID_EVE_CUR
-    WHERE I.ID_INS = :id
-");
+        i.ID_INS,
+        u.CED_USU,
+        COALESCE(u.NOM_PRI_USU,'') || ' ' || COALESCE(u.NOM_SEG_USU,'') || ' ' || COALESCE(u.APE_PRI_USU,'') || ' ' || COALESCE(u.APE_SEG_USU,'') AS nombre_completo,
+        e.TIT_EVE_CUR,
+        e.FEC_FIN_EVE_CUR
+    FROM INSCRIPCIONES i
+    JOIN USUARIOS u ON u.CED_USU = i.CED_USU
+    JOIN EVENTOS_CURSOS e ON e.ID_EVE_CUR = i.ID_EVE_CUR
+    WHERE i.ID_INS = :id_ins
+    ";
 
-    $stmt->execute([':id' => $idIns]);
-    $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':id_ins' => $id_ins]);
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$datos) {
-        echo json_encode(['error' => 'Datos de inscripción no encontrados']);
-        exit;
+    if (!$data) {
+        die("Inscripción no encontrada.");
     }
 
-    $fechaEmision = date('Y-m-d');
+    // Crear PDF
+    $pdf = new FPDF('P','mm','A4');
+    $pdf->AddPage();
 
-    // Generar HTML
-  $html = "
-<div style='
-    width: 100vw;
-    height: 100vh;
-    box-sizing: border-box;
-    padding: 3rem 4rem;
-    border: 5px solid #6c1313;
-    border-radius: 15px;
-    font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: #fff;
-'>
-    <h1 style='
-        font-size: 3rem;
-        font-weight: 700;
-        color: #6c1313;
-        margin-bottom: 2rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        '>$encabezado</h1>
-    <p style='
-        font-size: 1.4rem;
-        color: #000000;
-        line-height: 1.6;
-        max-width: 800px;
-        '>$cuerpo</p>
-    <p style='
-        margin-top: 3rem;
-        font-style: italic;
-        font-size: 1.1rem;
-        color: #7f8c8d;
-        '>$pie</p>
-</div>";
-
-    // Reemplazos
-    $html = str_replace(
-        ['[NOMBRE_COMPLETO]', '[CEDULA]', '[TITULO_EVENTO]', '[FECHA_FIN]', '[FECHA_EMISION]'],
-        [
-           $datos['nombre_completo'],
-    $datos['cedula'],
-    $datos['titulo_evento'],
-    $datos['fecha_fin'],
-    $fechaEmision
-        ],
-        $html
-    );
-
-    $dompdf = new Dompdf();
-    $dompdf->loadHtml($html);
-    $dompdf->setPaper('A4', 'landscape');
-    $dompdf->render();
-
-
-
-
-    $nombreArchivo = "certificado_{$idIns}.pdf";
-     $rutaCarpeta = "../certificados/";
-    $rutaCompleta = $rutaCarpeta . $nombreArchivo;
-
-    if (!is_dir($rutaCarpeta)) {
-        mkdir($rutaCarpeta, 0777, true);
+    // --- Logo ---
+    $logoPath = '../assets/logo.png';  // Ajusta ruta a tu logo
+    if (file_exists($logoPath)) {
+        $pdf->Image($logoPath, 15, 10, 40); // x=15mm, y=10mm, ancho=40mm
     }
 
-    file_put_contents($rutaCompleta, $dompdf->output());
+    // --- Título ---
+    $pdf->SetTextColor(31, 97, 141); // Azul oscuro
+    $pdf->SetFont('Arial', 'B', 28);
+    $pdf->Cell(0, 15, utf8_decode('Certificado de Participación'), 0, 1, 'C');
+    $pdf->Ln(10);
 
+    // --- Línea decorativa ---
+    $pdf->SetDrawColor(31, 97, 141);
+    $pdf->SetLineWidth(1);
+    $pdf->Line(40, $pdf->GetY(), 170, $pdf->GetY());
+    $pdf->Ln(15);
 
-    $insert = $conn->prepare("
-        INSERT INTO CERTIFICADOS (ID_INS, FEC_EMI_CER, ID_PLAN_CER, HTML_GENERADO)
-        VALUES (:id_ins, :fec, :id_plan, :ruta_pdf)
-    ");
-    $insert->execute([
-        ':id_ins' => $idIns,
-        ':fec' => $fechaEmision,
-        ':id_plan' => $plantilla['ID_PLAN_CER'],
-        ':ruta_pdf' => $rutaCompleta
+    // --- Cuerpo ---
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->SetFont('Arial', '', 16);
+    $pdf->MultiCell(0, 10, utf8_decode("Por medio del presente se certifica que:"), 0, 'C');
+    $pdf->Ln(10);
+
+    $pdf->SetFont('Arial', 'B', 24);
+    $pdf->Cell(0, 12, utf8_decode($data['nombre_completo']), 0, 1, 'C');
+    $pdf->Ln(8);
+
+    $pdf->SetFont('Arial', '', 16);
+    $pdf->MultiCell(0, 10, utf8_decode("Ha participado satisfactoriamente en el evento:"), 0, 'C');
+    $pdf->Ln(8);
+
+    $pdf->SetFont('Arial', 'B', 20);
+    $pdf->Cell(0, 12, utf8_decode($data['tit_eve_cur']), 0, 1, 'C');
+    $pdf->Ln(8);
+
+    $fechaFin = date('d/m/Y', strtotime($data['fec_fin_eve_cur']));
+    $pdf->SetFont('Arial', '', 14);
+    $pdf->Cell(0, 10, "Fecha de finalización: $fechaFin", 0, 1, 'C');
+
+    // --- Firma ---
+    $pdf->Ln(30);
+    $pdf->SetFont('Arial', '', 14);
+    $pdf->Cell(80, 0, '', 0, 0); // Espacio a la izquierda para centrar firma
+    $pdf->Cell(50, 10, '_________________________', 0, 1, 'C');
+    $pdf->Cell(80, 0, '', 0, 0);
+    $pdf->Cell(50, 10, 'Firma del Responsable', 0, 1, 'C');
+    $pdf->Cell(80, 0, '', 0, 0);
+    $pdf->Cell(50, 10, 'Director Académico', 0, 1, 'C');
+
+    // Guardar PDF en servidor
+    $dirCertificados = '../certificados/';
+    if (!is_dir($dirCertificados)) {
+        mkdir($dirCertificados, 0777, true);
+    }
+    $filename = "certificado_" . $id_ins . "_" . time() . ".pdf";
+    $rutaArchivo = $dirCertificados . $filename;
+    $pdf->Output('F', $rutaArchivo);
+
+    // Guardar registro en la BD
+    $htmlGenerado = "<h1>Certificado de Participación</h1>
+    <p>Participante: {$data['nombre_completo']}</p>
+    <p>Evento: {$data['tit_eve_cur']}</p>
+    <p>Fecha de finalización: $fechaFin</p>";
+
+    $insertSql = "
+    INSERT INTO CERTIFICADOS (ID_INS, FEC_EMI_CER, HTML_GENERADO)
+    VALUES (:id_ins, CURRENT_DATE, :html)
+    ";
+    $insertStmt = $conn->prepare($insertSql);
+    $insertStmt->execute([
+        ':id_ins' => $id_ins,
+        ':html' => $htmlGenerado
     ]);
 
-    echo json_encode(['success' => true, 'ruta' => $rutaCompleta]);
-} catch (PDOException $e) {
-    echo json_encode(['error' => $e->getMessage()]);
+    // Mostrar PDF en navegador
+    $pdf->Output('I', $filename);
+
+} else {
+    die("Solicitud inválida.");
 }
 
 ?>
