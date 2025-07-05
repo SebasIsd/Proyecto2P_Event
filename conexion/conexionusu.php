@@ -4,11 +4,11 @@ class ConexionUsu {
     private $conexion;
     
     private function __construct() {
-        $host = "mainline.proxy.rlwy.net";
+        $host = "maglev.proxy.rlwy.net";
         $dbname = "railway";
         $username = "postgres";
-        $password = "PlODJaMiNTNSbCvuomGjZfLVdPVzwQzY";
-        $port = "48148";
+        $password =  "knFFZcmuIhowgwGNQmnUMGuSMxkNTdqA";
+        $port = "10622";
         
         try {
             $this->conexion = pg_connect("host=$host port=$port dbname=$dbname user=$username password=$password");
