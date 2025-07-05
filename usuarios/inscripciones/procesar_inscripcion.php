@@ -1,6 +1,16 @@
 <?php
 session_start();
 require_once "../../includes/conexion1.php";
+$conexion = new Conexion();
+$conn = $conexion->getConexion();
+
+$cedula = $_SESSION['cedula'];
+$id_evento = filter_var($_POST['evento'], FILTER_VALIDATE_INT);
+
+$sql = "INSERT INTO inscripciones (id_eve_cur, ced_usu, fec_ini_ins, est_pag_ins) 
+        VALUES ($1, $2, CURRENT_DATE, 'pendiente')";
+
+pg_query_params($conn, $sql, array($id_evento, $cedula));
 
 // Verificar sesión
 if (!isset($_SESSION['usuario'])) {
@@ -26,15 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['evento'])) {
     exit();
 }
 
-$conexion = new Conexion();
-$conn = $conexion->getConexion();
-
 // Obtener y validar datos
 $cedula = $_SESSION['cedula'];
 $id_evento = filter_var($_POST['evento'], FILTER_VALIDATE_INT);
 $fecha_inscripcion = $_POST['fecha_inscripcion'];
-$estado_pago = $_POST['estado_pago']; // Definido por el tipo de evento
-$tipo_evento = $_POST['tipo_evento']; // 'pagado' o 'gratis'
+$estado_pago = $_POST['estado_pago'];
+$tipo_evento = $_POST['tipo_evento'];
 
 if (!$id_evento || !$fecha_inscripcion || !$estado_pago) {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
@@ -47,12 +54,28 @@ if (!$id_evento || !$fecha_inscripcion || !$estado_pago) {
     exit();
 }
 
+// ✅ Verificar si el evento existe
+$sql_existe_evento = "SELECT 1 FROM eventos_cursos WHERE id_eve_cur = $1";
+$evento_existe = pg_query_params($conn, $sql_existe_evento, array($id_evento));
+
+if (pg_num_rows($evento_existe) === 0) {
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'El evento seleccionado no existe o ya fue eliminado.']);
+        exit();
+    } else {
+        header("Location: inscripciones.php?error=Evento no válido");
+        exit();
+    }
+}
+
 try {
     // Verificar si el usuario ya está inscrito
     $sql_verificar = "SELECT 1 FROM INSCRIPCIONES 
                       WHERE CED_USU = $1 AND ID_EVE_CUR = $2";
     $result = pg_query_params($conn, $sql_verificar, array($cedula, $id_evento));
-    
+
     if (pg_num_rows($result) > 0) {
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             http_response_code(409);
@@ -71,10 +94,9 @@ try {
     $sql_inscripcion = "INSERT INTO INSCRIPCIONES 
                          (CED_USU, ID_EVE_CUR, FEC_INI_INS, FEC_CIE_INS, EST_PAG_INS) 
                          VALUES ($1, $2, $3, $4, $5) RETURNING ID_INS";
-    
-    // Calcular fecha de cierre (30 días después)
+
     $fecha_cierre = date('Y-m-d', strtotime($fecha_inscripcion . ' +30 days'));
-    
+
     $result = pg_query_params($conn, $sql_inscripcion, array(
         $cedula,
         $id_evento,
@@ -82,47 +104,41 @@ try {
         $fecha_cierre,
         $estado_pago
     ));
-    
+
     $id_inscripcion = pg_fetch_result($result, 0, 0);
 
-    // Manejar comprobante si es evento pagado
+    // Si es evento pagado y se subió comprobante
     if ($tipo_evento === 'pagado' && isset($_FILES['comprobante']) && $_FILES['comprobante']['error'] === UPLOAD_ERR_OK) {
-        // Validar tipo de imagen
         $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
         $tipo_archivo = $_FILES['comprobante']['type'];
-        
+
         if (!in_array($tipo_archivo, $permitidos)) {
             throw new Exception("Solo se permiten archivos de imagen (JPEG, PNG, GIF)");
         }
-        
-        // Importar archivo a PostgreSQL como Large Object
+
         $oid = pg_lo_import($conn, $_FILES['comprobante']['tmp_name']);
-        
         if ($oid === false) {
             throw new Exception("Error al subir el comprobante a la base de datos");
         }
-        
-        // Guardar en tabla IMAGENES
+
         $sql_imagen = "INSERT INTO IMAGENES (ID_INS, COMPROBANTE_PAG_OID) VALUES ($1, $2)";
         pg_query_params($conn, $sql_imagen, array($id_inscripcion, $oid));
     }
 
-    // Crear registro en NOTAS_ASISTENCIAS
+    // Insertar en NOTAS_ASISTENCIAS
     $sql_notas = "INSERT INTO NOTAS_ASISTENCIAS (ID_INS) VALUES ($1)";
     pg_query_params($conn, $sql_notas, array($id_inscripcion));
 
     // Confirmar transacción
     pg_query($conn, "COMMIT");
 
-    // Limpiar buffer de salida
     if (ob_get_length()) ob_clean();
-    
-    // Responder según tipo de petición
+
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'message' => 'Inscripción realizada exitosamente',
             'id_inscripcion' => $id_inscripcion
         ]);
@@ -133,14 +149,12 @@ try {
     }
 
 } catch (Exception $e) {
-    // Revertir transacción en caso de error
     if (isset($conn)) {
         pg_query($conn, "ROLLBACK");
     }
-    
-    // Limpiar buffer de salida
+
     if (ob_get_length()) ob_clean();
-    
+
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         http_response_code(500);
         header('Content-Type: application/json');
@@ -151,7 +165,6 @@ try {
         exit();
     }
 } finally {
-    // Cerrar conexión
     if (isset($conn)) {
         pg_close($conn);
     }

@@ -1,10 +1,10 @@
 /* Estilos generales */
 :root {
-    --primary-color: #6c1313;
+    --primary-color: #8B0000;
     --secondary-color: #000000;
     --light-gray: #696969;
     --white: #ffffff;
-    --hover-color: #5a0f0f;
+    --hover-color: #8B0000;
     --secondary-btn-color: #4a4a4a;
     --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     --card-hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);

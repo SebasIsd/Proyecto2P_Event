@@ -2,6 +2,12 @@
 header('Content-Type: application/json');
 require_once '../includes/conexion1.php';
 
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+header('Content-Type: application/json');
+
 try {
     $conexion = new Conexion();
     $conn = $conexion->getConexion();
@@ -22,22 +28,28 @@ try {
     $totalInscripciones = pg_fetch_assoc($resultInscripciones)['total'];
     
 // Consulta para obtener todos los eventos
-    $queryProximosEventos = "SELECT 
-                                TIT_EVE_CUR as titulo, 
-                                DES_EVE_CUR as descripcion,
-                                FEC_INI_EVE_CUR as fechaInicio, 
-                                FEC_FIN_EVE_CUR as fechaFin,
-                                COS_EVE_CUR as costo,
-                                TIP_EVE as tipo,
-                                MOD_EVE_CUR as modalidad
-                            FROM EVENTOS_CURSOS
-                            ORDER BY FEC_INI_EVE_CUR ASC";
+// Consulta para obtener eventos favoritos
+$queryProximosEventos = "SELECT 
+                            ec.ID_EVE_CUR as codigo,
+                            ec.TIT_EVE_CUR as titulo, 
+                            ec.DES_EVE_CUR as descripcion,
+                            ec.FEC_INI_EVE_CUR as fechaInicio, 
+                            ec.FEC_FIN_EVE_CUR as fechaFin,
+                            ec.COS_EVE_CUR as costo,
+                            ec.MOD_EVE_CUR as modalidad,
+                            true as es_favorito
+                        FROM 
+                            EVENTOS_CURSOS ec
+                        JOIN 
+                            favoritos_evento f ON ec.ID_EVE_CUR = f.ID_EVE_CUR
+                        ORDER BY 
+                            ec.FEC_INI_EVE_CUR ASC";
 
-    $resultProximosEventos = pg_query($conn, $queryProximosEventos);
-    $proximosEventos = [];
-    while ($row = pg_fetch_assoc($resultProximosEventos)) {
-        $proximosEventos[] = $row;
-    }
+$resultProximosEventos = pg_query($conn, $queryProximosEventos);
+$proximosEventos = [];
+while ($row = pg_fetch_assoc($resultProximosEventos)) {
+    $proximosEventos[] = $row;
+}
     
     // Devolver datos como JSON
     echo json_encode([
