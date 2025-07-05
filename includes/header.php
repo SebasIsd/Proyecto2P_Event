@@ -20,14 +20,17 @@ if ($datos = pg_fetch_assoc($result)) {
     $nombre_usuario = $datos['nom_pri_usu'];
 }
 ?>
-<header>
-  <h1>Bienvenido, <?= htmlspecialchars($nombre_usuario) ?> 👋</h1>
+
+<header class="main-header">
+  <div class="logo-nombre">
+    <h1>Bienvenido, <?= htmlspecialchars($nombre_usuario) ?> 👋</h1>
+  </div>
   <nav>
     <ul>
       <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
       <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
       <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
-      <li><a href="./logout.php"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+      <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
     </ul>
   </nav>
 </header>

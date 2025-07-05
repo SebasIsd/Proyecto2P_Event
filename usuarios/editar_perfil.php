@@ -104,27 +104,12 @@ $fecha_nacimiento_formatted = !empty($usuario['fec_nac_usu']) ? date('d/m/Y', st
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="../styles/css/componente.css">
+
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Perfil</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href=""><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href=""><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-                    <li><a href=""><i class="fas fa-edit"></i> Inscripciones</a></li>
-                    <li><a href=""><i class="fas fa-chart-bar"></i> Solicitudes</a></li>
-                    <li class="profile-link">
-                        <a href="" class="active"><i class="fas fa-user-circle"></i> Perfil</a>
-                    </li>
-                    <li><a href=""><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+   <?php include "../includes/header.php"; ?>
+
 
     <main class="container">
         <section class="profile-section">
@@ -230,32 +215,8 @@ $fecha_nacimiento_formatted = !empty($usuario['fec_nac_usu']) ? date('d/m/Y', st
         </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="inicio.php">Inicio</a></li>
-                        <li><a href="perfil.php">Mi Perfil</a></li>
-                        <li><a href="#">Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+   <?php include "../includes/footer.php"; ?>
+
 
     <script src="../styles/script.js"></script>
     <script>
