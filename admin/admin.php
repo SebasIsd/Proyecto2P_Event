@@ -129,7 +129,6 @@
     <div class="admin-card">
       <i class="fas fa-graduation-cap"></i>
       <a href="../admin/notas.php">Notas y Asistencias</a>
-    </div>
         <div class="admin-card">
       <i class="fas fa-check-circle"></i>
       <a href="../admin/verificacionRequisitos.php">Validar requisitos adicionales</a>
