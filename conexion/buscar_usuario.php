@@ -13,7 +13,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception("Método no permitido", 405);
     }
-
+ 
     $conexion = ConexionUsu::obtenerConexion();
     if (!$conexion) {
         throw new Exception("No se pudo conectar a la base de datos", 500);
