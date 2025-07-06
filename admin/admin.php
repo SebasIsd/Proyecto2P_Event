@@ -109,7 +109,7 @@
     </header>
 
   <main class="admin-panel">
-    <div class="admin-card">
+     <div class="admin-card">
       <i class="fas fa-calendar-plus"></i>
       <a href="../admin/ingresoEventos.php">Crear Evento/Curso</a>
     </div>
