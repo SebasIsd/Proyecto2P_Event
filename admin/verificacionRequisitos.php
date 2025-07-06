@@ -119,7 +119,7 @@ document.getElementById('evento').addEventListener('change', async function () {
       <td>${item.nombre_completo}</td>
       <td>${item.nom_req}</td>
       <td>
-        <button class="btn-ver" onclick="verPDF(${item.archivo_oid})">Ver PDF</button>
+      <button class="btn-ver" onclick="verPDF(${item.id_ins}, ${item.id_req})">Ver PDF</button>
       </td>
       <td>${item.estado_validacion ?? 'Pendiente'}</td>
       <td>
@@ -131,9 +131,10 @@ document.getElementById('evento').addEventListener('change', async function () {
   });
 });
 
-function verPDF(oid) {
-  window.open(`verPDF.php?oid=${oid}`, '_blank');
+function verPDF(id_ins, id_req) {
+  window.open(`verPDF.php?id_ins=${id_ins}&id_req=${id_req}`, '_blank');
 }
+
 
 async function validar(id_ins, id_req) {
   const res = await fetch('', {
