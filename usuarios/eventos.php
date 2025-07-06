@@ -501,7 +501,7 @@ $conexion->cerrar();
     <header class="header">
         <div class="header-container">
             <div class="logo-container">
-                <img src="imagenes/evento1.png" alt="Logo FISEI">
+                <img src="../imagenes/evento1.png" alt="Logo FISEI">
                 <div class="logo-text">
                     <h1>FACULTAD DE INGENIERÍA EN SISTEMAS, ELECTRÓNICA E INDUSTRIAL</h1>
                     <p>UNIVERSIDAD TÉCNICA DE AMBATO</p>
@@ -516,7 +516,7 @@ $conexion->cerrar();
             <a href="../index.php" class="nav-link">Inicio</a>
             <a href="#" class="nav-link active">Eventos</a>
             <a href="usuarios/login.php" class="nav-link">Inscripciones</a>
-            <a href="#" class="nav-link">Contacto</a>
+            <a href="desarrolladores.php" class="nav-link">Contacto</a>
         </div>
     </nav>
 

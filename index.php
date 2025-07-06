@@ -547,7 +547,7 @@ $conexion->cerrar();
             <a href="#" class="nav-link active">Inicio</a>
             <a href="usuarios/eventos.php" class="nav-link">Eventos</a>
             <a href="usuarios/login.php" class="nav-link">Inscripciones</a>
-            <a href="#" class="nav-link">Contacto</a>
+            <a href="usuarios/desarrolladores.php" class="nav-link">Contacto</a>
         </div>
     </nav>
         <!-- Carrusel dinámico -->
@@ -603,7 +603,7 @@ $conexion->cerrar();
     
 <section class="authorities-section">
     <div class="authorities-container">
-        <h2 class="section-title">Nuestras Autoridades</h2>
+        <h2 class="section-title">Nuestras Autoridades - Princiales</h2>
         <div class="authorities-grid">
             <?php if (!empty($autoridades)): ?>
                 <?php foreach($autoridades as $auth): ?>
