@@ -12,94 +12,198 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+<style>
 
-  <style>
-    .loading { display: none; color: #ff0000; font-weight: bold; }
-    .error { color: #dc3545; }
-    .form-container { display: none; margin-top: 15px; padding: 15px; border: 1px solid #ccc; background: #f9f9f9; }
-    .btn-toggle { margin-top: 20px; cursor: pointer; background-color: #6c1313; color: #fff; border: none; padding: 10px; border-radius: 5px; }
-    .btn-toggle:hover { background-color: #0056b3; }
-    #modificar {
-    display: none;
+  #userData {
+  display: none !important;
+}
+.resaltado {
+  background-color: #ffeaa7 !important;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+  :root {
+    --primary: #6c1313;
+    --primary-hover: #8B0000;
+    --gray: #f4f4f4;
+    --white: #ffffff;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+    --font: 'Montserrat', sans-serif;
   }
 
-  </style>
-  <style>
-  .loading { 
-    display: none; 
-    color: #6c1313; 
-    font-weight: bold; 
+  body {
+    font-family: var(--font);
+    background-color: var(--gray);
+    margin: 0;
+    color: #1e1e1e;
   }
 
-  .error { 
-    color: #dc3545; 
+  main.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
   }
 
-  .form-container {
-    display: none;
-    margin-top: 15px;
-    padding: 15px;
-    border: 2px solid #333; /* Borde más visible */
-    background: #6c1313;
-    border-radius: 8px;       /* Bordes redondeados */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Sombra suave */
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+  h2 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 30px;
   }
-
-  #userData form {
-    padding: 15px;
-    border: 2px solid #333;
-    border-radius: 8px;
-    background-color: #6c1313;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-
-  }
-  
-
 
   .btn-toggle {
-    margin-top: 20px;
-    cursor: pointer;
-    background-color: #6c1313;
-    color: #fff;
+    background-color: var(--primary);
+    color: var(--white);
     border: none;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    margin-right: 10px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease;
+    box-shadow: var(--shadow);
   }
 
   .btn-toggle:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
   }
 
-  #modificar {
+  .form-container {
+    background: var(--white);
+    padding: 25px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 0 auto 30px;
     display: none;
   }
-  
-  #formAgregarUsuario input {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
+
+  .form-container h3 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  form input,
+  form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+    background: var(--white);
     font-size: 14px;
+    transition: 0.3s ease;
+  }
+
+  form input:focus,
+  form select:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(108, 19, 19, 0.1);
+  }
+
+  form button {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  form button:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .search-box {
+    max-width: 600px;
+    margin: 30px auto;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+  }
+
+  .search-box button {
+    padding: 12px 18px;
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  #userData {
+    background: var(--white);
+    padding: 25px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 30px auto;
+  }
+
+  #userData label {
+    font-weight: 600;
+    color: var(--primary);
+    margin-top: 10px;
+    display: block;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  table th {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 14px;
+    text-align: left;
+  }
+
+  table td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+  }
+
+  table tr:hover {
+    background-color: #f9f9f9;
+  }
+
+  @media (max-width: 768px) {
+    .btn-toggle {
+      width: 100%;
+    }
+
+    .search-box {
+      flex-direction: column;
+    }
+
+    .search-box input,
+    .search-box button {
+      width: 100%;
+    }
   }
 </style>
-<style>
-  #formUsuario input {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
-    font-size: 14px;
-  }
-  #formEliminarUsuario input {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
-    font-size: 14px;
-  }
-  #ced_usu {
-    padding: 3px 5px;
-    height: 25px;  /* o menos si quieres */
-    font-size: 14px;
-  }
-</style>
+
 
 
   
@@ -121,7 +225,6 @@
 
 <main class="container">
   
-    <h2>Gestión de Usuarios</h2>
     <button class="btn-toggle" onclick="toggleForm('formAgregar')"><i class="fas fa-user-plus"></i> Añadir Usuario</button>
     <button class="btn-toggle" onclick="toggleForm('modificar')"><i class="fas fa-user-plus"></i> Modificar Usuario</button>
     <button class="btn-toggle" onclick="toggleForm('formEliminar')"><i class="fas fa-user-times"></i> Eliminar Usuario</button>
@@ -287,6 +390,34 @@
     });
   }
 </script>
+
+<script>
+  document.getElementById('buscarBtn').addEventListener('click', function () {
+    const cedulaBuscada = document.getElementById('ced_usu').value.trim();
+    const filas = document.querySelectorAll('#tablaUsuarios tbody tr');
+    const errorMsg = document.getElementById('errorMsg');
+    let encontrado = false;
+
+    // Limpiar estados anteriores
+    filas.forEach(fila => fila.classList.remove('resaltado'));
+
+    filas.forEach(fila => {
+      const cedulaTabla = fila.children[0].textContent.trim(); // Primera columna = cédula
+      if (cedulaTabla === cedulaBuscada) {
+        fila.classList.add('resaltado');
+        encontrado = true;
+        fila.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    if (!encontrado) {
+      errorMsg.textContent = 'Cédula no encontrada.';
+    } else {
+      errorMsg.textContent = '';
+    }
+  });
+</script>
+
 
 </body>
 </html>

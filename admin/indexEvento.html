@@ -6,93 +6,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crear Evento Académico</title>
   <link rel="stylesheet" href="../styles/css/style.css" />
-  <link rel="stylesheet" href="../styles/css/estilosEventos.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
-    .formulario-container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 30px;
-      background-color: #f9f9f9;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+    /* HEADER */
+.header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    padding: 1rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 
-    fieldset {
-      border: 2px solid #ccc;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
 
-    legend {
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #8b0000;
-    }
+.formulario-container {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
 
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: 600;
-    }
+/* --- Fieldsets como secciones visuales --- */
+fieldset {
+  border: none;
+  padding: 30px;
+  margin-bottom: 35px;
+  background-color: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
 
-    input[type="text"],
-    input[type="date"],
-    input[type="number"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-    }
+legend {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8b0000;
+  margin-bottom: 25px;
+}
 
-    .checkbox-group {
-  display: flex;
-  flex-direction: column; /* Mostrar uno debajo del otro */
-  gap: 8px;
+/* --- GRID FORMULARIO: dos columnas limpias --- */
+fieldset.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 30px;
+}
+
+/* --- Inputs full width cuando sea necesario --- */
+.full-width {
+  grid-column: span 2;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  background-color: #fff;
+  box-sizing: border-box;
+  transition: 0.2s border-color ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #8b0000;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* --- Checkboxes en cuadrícula tipo tarjetas --- */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
   margin-top: 10px;
 }
 
 .checkbox-group label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: normal;
-  padding: 5px 10px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  transition: background-color 0.2s;
+  padding: 10px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 500;
 }
 
 .checkbox-group label:hover {
-  background-color: #f0f0f0;
+  background-color: #f1f1f1;
 }
 
-    .boton-container {
-      text-align: center;
-      margin-top: 30px;
-    }
+/* --- Campo para nuevo tipo específico --- */
+#nuevoTipoEspecifico {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  width: 100%;
+}
 
-    .boton-container button {
-      padding: 12px 25px;
-      background-color: #8b0000;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+/* --- Botón centrado --- */
+.boton-container {
+  text-align: center;
+  margin-top: 30px;
+}
 
-    .boton-container button:hover {
-      background-color: #6b0000;
-    }
+.boton-container button {
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(139, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.boton-container button:hover {
+  background-color: #600000;
+}
+
+
+
   </style>
 </head>
 
@@ -104,81 +169,95 @@
       </div>
       <nav>
         <ul>
-          <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-          <li><a href="../admin/indexEvento.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-          <li><a href="../admin/eventos.html"><i class="fas fa-eye"></i> Ver Eventos</a></li>
+          <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Regresar</a></li>
+          
         </ul>
       </nav>
     </div>
   </header>
 
   <main>
-    <div class="formulario-container">
-      <form id="eventoForm">
-        <fieldset>
-          <legend>Información General</legend>
+  <div class="formulario-container">
+    <form id="eventoForm">
 
+      <!-- Información General -->
+      <fieldset class="grid-2col">
+        <legend>Información General</legend>
+
+        <div class="full-width">
           <label for="titulo">Título del Evento</label>
           <input type="text" id="titulo" name="titulo" required placeholder="Ej. Curso de Redes Avanzadas" />
+        </div>
 
+        <div class="full-width">
           <label for="descripcion">Descripción</label>
-          <textarea id="descripcion" name="descripcion" rows="3" required
-            placeholder="Describe brevemente el evento"></textarea>
+          <textarea id="descripcion" name="descripcion" rows="3" required placeholder="Describe brevemente el evento"></textarea>
+        </div>
 
+        <div>
           <label for="modalidad">Modalidad</label>
           <select id="modalidad" name="modalidad" required>
             <option value="">Selecciona una opción</option>
             <option value="Gratis">Gratis</option>
             <option value="Pagado">Pagado</option>
           </select>
+        </div>
 
+        <div>
           <label for="costo">Costo</label>
           <input type="text" id="costo" name="costo" placeholder="Ej. 50.00 o Gratis" required>
+        </div>
+      </fieldset>
 
-        </fieldset>
-        <!-- ... todo el head permanece igual ... -->
-        <fieldset>
-  <fieldset>
-  <legend>Tipo de Evento</legend>
-  <div class="checkbox-group" id="tiposEventoContainer">
-    <!-- Aquí se insertan los tipos de evento como radio buttons -->
-  </div>
-  <div style="margin-top: 10px;">
-    <input type="text" id="nuevoTipoEspecifico" placeholder="Especificar otro tipo" disabled style="margin-top: 5px;" />
-  </div>
-</fieldset>
+      <!-- Tipo de Evento -->
+      <fieldset>
+        <legend>Tipo de Evento</legend>
+        <div class="checkbox-group" id="tiposEventoContainer">
+          <!-- Aquí se insertan los tipos de evento como radio buttons -->
+        </div>
+        <div style="margin-top: 10px;">
+          <input type="text" id="nuevoTipoEspecifico" placeholder="Especificar otro tipo" disabled />
+        </div>
+      </fieldset>
 
-        <fieldset>
-          <legend>Fechas</legend>
+      <!-- Fechas -->
+      <fieldset class="grid-2col">
+        <legend>Fechas</legend>
+        <div>
           <label for="fechaInicio">Fecha de Inicio</label>
           <input type="date" id="fechaInicio" name="fechaInicio" required />
-
+        </div>
+        <div>
           <label for="fechaFin">Fecha de Fin</label>
           <input type="date" id="fechaFin" name="fechaFin" required />
-        </fieldset>
-
-
-        <fieldset>
-          <legend>Carreras Participantes</legend>
-          <div class="checkbox-group" id="carrerasContainer">
-            <!-- Se insertan desde JS -->
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Requisitos del Evento</legend>
-          <div class="checkbox-group" id="requisitosContainer">
-            <!-- Se insertan desde JS -->
-          </div>
-        </fieldset>
-
-
-        <div class="boton-container">
-          <button type="submit">GUARDAR</button>
         </div>
-      </form>
-    </div>
-  </main>
+      </fieldset>
+
+      <!-- Carreras Participantes -->
+      <fieldset>
+        <legend>Carreras Participantes</legend>
+        <div class="checkbox-group" id="carrerasContainer">
+          <!-- Se insertan desde JS -->
+        </div>
+      </fieldset>
+
+      <!-- Requisitos del Evento -->
+      <fieldset>
+        <legend>Requisitos del Evento</legend>
+        <div class="checkbox-group" id="requisitosContainer">
+          <!-- Se insertan desde JS -->
+        </div>
+      </fieldset>
+
+      <!-- Botón -->
+      <div class="boton-container">
+        <button type="submit">GUARDAR</button>
+      </div>
+
+    </form>
+  </div>
+</main>
+
 
   <footer>
     <div class="container">
