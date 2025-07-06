@@ -80,20 +80,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_ins'])) {
     $dirCertificados = '../certificados/';
     if (!is_dir($dirCertificados)) mkdir($dirCertificados, 0777, true);
     $filename = "certificado_" . $id_ins . "_" . time() . ".pdf";
-    $rutaArchivo = $dirCertificados . $filename;
-    $pdf->Output('F', $rutaArchivo);
+    $rutaRelativa = "certificados/" . $filename;
+    $rutaCompleta = "../" . $rutaRelativa;
 
-    $htmlGenerado = "<h1>Certificado</h1><p>{$data['nombre_completo']} - {$data['tit_eve_cur']}</p>";
+    $pdf->Output('F', $rutaCompleta);
+
     $conn->prepare("
         INSERT INTO CERTIFICADOS (ID_INS, FEC_EMI_CER, HTML_GENERADO)
-        VALUES (:id_ins, CURRENT_DATE, :html)
+        VALUES (:id_ins, CURRENT_DATE, :ruta)
     ")->execute([
         ':id_ins' => $id_ins,
-        ':html' => $htmlGenerado
+        ':ruta' => $rutaRelativa
     ]);
-
     header("Content-type: application/pdf");
-    readfile($rutaArchivo);
+    readfile($rutaCompleta);
     exit;
 }
 
@@ -233,8 +233,13 @@ if ($eventoSeleccionado !== '') {
                     <td>" . htmlspecialchars($p['tit_eve_cur']) . "</td>
                     <td>";
                 if ($p['ya_tiene']) {
-                    echo "<a href='../certificados/' target='_blank'><button class='btn'>Ver PDF</button></a>";
-                } else {
+$stmtRuta = $conn->prepare("SELECT HTML_GENERADO FROM CERTIFICADOS WHERE ID_INS = :id_ins");
+$stmtRuta->execute([':id_ins' => $p['id_ins']]);
+$ruta = $stmtRuta->fetchColumn();
+
+if ($ruta) {
+    echo "<a href='../$ruta' target='_blank'><button class='btn'>Ver PDF</button></a>";
+}                } else {
                     echo "<form method='POST' style='display:inline'>
                             <input type='hidden' name='id_ins' value='{$p['id_ins']}'>
                             <button type='submit'>Generar</button>
