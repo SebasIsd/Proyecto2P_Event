@@ -1,155 +1,286 @@
 <?php
-ini_set('display_errors', 0); 
-ini_set('log_errors', 1);     
-error_reporting(E_ALL);       
-
-
-require '../vendor/autoload.php';
 require_once '../conexion/conexion.php';
-use Dompdf\Dompdf;
+require_once '../fpdf186/fpdf.php';
 
-header('Content-Type: application/json');
+$conn = CConexion::ConexionBD();
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$data = json_decode(file_get_contents("php://input"), true);
-$idIns = $data['id_ins'] ?? null;
+// --- GENERAR CERTIFICADO ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_ins'])) {
+    $id_ins = (int) $_POST['id_ins'];
 
-if (!$idIns) {
-    echo json_encode(['error' => 'ID inválido']);
+    $stmt = $conn->prepare("SELECT ID_CER FROM CERTIFICADOS WHERE ID_INS = :id");
+    $stmt->execute([':id' => $id_ins]);
+    if ($stmt->fetchColumn()) {
+        exit("Este certificado ya fue generado.");
+    }
+
+    // Obtener datos para el certificado
+    $stmt = $conn->prepare("
+        SELECT 
+            i.ID_INS,
+            u.CED_USU,
+            COALESCE(u.NOM_PRI_USU,'') || ' ' || COALESCE(u.NOM_SEG_USU,'') || ' ' || COALESCE(u.APE_PRI_USU,'') || ' ' || COALESCE(u.APE_SEG_USU,'') AS nombre_completo,
+            e.TIT_EVE_CUR,
+            e.FEC_FIN_EVE_CUR
+        FROM INSCRIPCIONES i
+        JOIN USUARIOS u ON u.CED_USU = i.CED_USU
+        JOIN EVENTOS_CURSOS e ON e.ID_EVE_CUR = i.ID_EVE_CUR
+        WHERE i.ID_INS = :id_ins
+    ");
+    $stmt->execute([':id_ins' => $id_ins]);
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$data) exit("Inscripción no encontrada.");
+
+    $pdf = new FPDF('L','mm','A4');
+    $pdf->AddPage();
+
+    $logoPath = '../images/logo.jpg';
+    if (file_exists($logoPath)) $pdf->Image($logoPath, 20, 15, 30);
+
+    $pdf->SetXY(0, 20); // Establece posición Y para el título
+    $pdf->SetTextColor(31, 97, 141);
+    $pdf->SetFont('Arial', 'B', 24);
+    $pdf->Cell(0, 20, utf8_decode('UNIVERDIDAD TÉCNICA DE AMBATO'), 0, 1, 'C');
+    $pdf->Ln(10);
+
+    $pdf->SetDrawColor(31, 97, 141);
+    $pdf->SetLineWidth(1);
+    $pdf->Line(50, $pdf->GetY(), 250, $pdf->GetY());
+    $pdf->Ln(15);
+
+    $pdf->SetTextColor(0);
+    $pdf->SetFont('Arial', '', 18);
+    $pdf->MultiCell(0, 10, utf8_decode("Por medio del presente se certifica que:"), 0, 'C');
+    $pdf->Ln(5);
+
+    $pdf->SetFont('Arial', 'B', 26);
+    $pdf->Cell(0, 12, utf8_decode($data['nombre_completo']), 0, 1, 'C');
+    $pdf->Ln(5);
+
+    $pdf->SetFont('Arial', '', 18);
+    $pdf->MultiCell(0, 10, utf8_decode("Ha participado satisfactoriamente en el evento:"), 0, 'C');
+    $pdf->Ln(5);
+
+    $pdf->SetFont('Arial', 'B', 22);
+    $pdf->Cell(0, 12, utf8_decode($data['tit_eve_cur']), 0, 1, 'C');
+    $pdf->Ln(5);
+
+    $fechaFin = date('d/m/Y', strtotime($data['fec_fin_eve_cur']));
+    $pdf->SetFont('Arial', '', 16);
+    $pdf->Cell(0, 10,  utf8_decode("Fecha de finalización: $fechaFin"), 0, 1, 'C');
+
+    $pdf->Ln(30);
+    $pdf->SetFont('Arial', '', 14);
+    $pdf->Cell(120, 0, '', 0, 0);
+    $pdf->Cell(50, 10, '_________________________', 0, 1, 'C');
+    $pdf->Cell(120, 0, '', 0, 0);
+    $pdf->Cell(50, 10, utf8_decode("Director Académico"), 0, 1, 'C');
+
+    $dirCertificados = '../certificados/';
+    if (!is_dir($dirCertificados)) mkdir($dirCertificados, 0777, true);
+    $filename = "certificado_" . $id_ins . "_" . time() . ".pdf";
+    $rutaRelativa = "certificados/" . $filename;
+    $rutaCompleta = "../" . $rutaRelativa;
+
+    $pdf->Output('F', $rutaCompleta);
+
+    $conn->prepare("
+        INSERT INTO CERTIFICADOS (ID_INS, FEC_EMI_CER, HTML_GENERADO)
+        VALUES (:id_ins, CURRENT_DATE, :ruta)
+    ")->execute([
+        ':id_ins' => $id_ins,
+        ':ruta' => $rutaRelativa
+    ]);
+    header("Content-type: application/pdf");
+    readfile($rutaCompleta);
     exit;
 }
 
-try {
-  $conn = CConexion::ConexionBD();
-  
-
-  $plantilla = $conn->query("
-  SELECT * FROM PLANTILLAS_CERTIFICADOS where ID_PLAN_CER =1
-    ")->fetch(PDO::FETCH_ASSOC);
-
-    if (!$plantilla) {
-        echo json_encode(['error' => 'No se encontró ninguna plantilla de certificado']);
-        exit;
-    }
-
-$encabezado = trim($plantilla['encabezado_cer'] ?? '');
-$cuerpo     = trim($plantilla['cuerpo_cer'] ?? '');
-$pie        = trim($plantilla['pie_cer'] ?? '');
-
-
-
-
-    if (empty($encabezado) || empty($cuerpo) || empty($pie)) {
-        echo json_encode(['error' => 'La plantilla tiene campos vacíos']);
-        exit;
-    }
-
-    $stmt = $conn->prepare("
-    SELECT 
-        CONCAT(U.NOM_PRI_USU, ' ', U.NOM_SEG_USU, ' ', U.APE_PRI_USU, ' ', U.APE_SEG_USU) AS nombre_completo,
-        U.CED_USU AS cedula,
-        E.TIT_EVE_CUR AS titulo_evento,
-        E.FEC_FIN_EVE_CUR AS fecha_fin
-    FROM INSCRIPCIONES I
-    JOIN USUARIOS U ON I.CED_USU = U.CED_USU
-    JOIN EVENTOS_CURSOS E ON I.ID_EVE_CUR = E.ID_EVE_CUR
-    WHERE I.ID_INS = :id
-");
-
-    $stmt->execute([':id' => $idIns]);
-    $datos = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$datos) {
-        echo json_encode(['error' => 'Datos de inscripción no encontrados']);
-        exit;
-    }
-
-    $fechaEmision = date('Y-m-d');
-
-    // Generar HTML
-  $html = "
-<div style='
-    width: 100vw;
-    height: 100vh;
-    box-sizing: border-box;
-    padding: 3rem 4rem;
-    border: 5px solid #6c1313;
-    border-radius: 15px;
-    font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: #fff;
-'>
-    <h1 style='
-        font-size: 3rem;
-        font-weight: 700;
-        color: #6c1313;
-        margin-bottom: 2rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        '>$encabezado</h1>
-    <p style='
-        font-size: 1.4rem;
-        color: #000000;
-        line-height: 1.6;
-        max-width: 800px;
-        '>$cuerpo</p>
-    <p style='
-        margin-top: 3rem;
-        font-style: italic;
-        font-size: 1.1rem;
-        color: #7f8c8d;
-        '>$pie</p>
-</div>";
-
-    // Reemplazos
-    $html = str_replace(
-        ['[NOMBRE_COMPLETO]', '[CEDULA]', '[TITULO_EVENTO]', '[FECHA_FIN]', '[FECHA_EMISION]'],
-        [
-           $datos['nombre_completo'],
-    $datos['cedula'],
-    $datos['titulo_evento'],
-    $datos['fecha_fin'],
-    $fechaEmision
-        ],
-        $html
-    );
-
-    $dompdf = new Dompdf();
-    $dompdf->loadHtml($html);
-    $dompdf->setPaper('A4', 'landscape');
-    $dompdf->render();
-
-
-
-
-    $nombreArchivo = "certificado_{$idIns}.pdf";
-     $rutaCarpeta = "../certificados/";
-    $rutaCompleta = $rutaCarpeta . $nombreArchivo;
-
-    if (!is_dir($rutaCarpeta)) {
-        mkdir($rutaCarpeta, 0777, true);
-    }
-
-    file_put_contents($rutaCompleta, $dompdf->output());
-
-
-    $insert = $conn->prepare("
-        INSERT INTO CERTIFICADOS (ID_INS, FEC_EMI_CER, ID_PLAN_CER, HTML_GENERADO)
-        VALUES (:id_ins, :fec, :id_plan, :ruta_pdf)
-    ");
-    $insert->execute([
-        ':id_ins' => $idIns,
-        ':fec' => $fechaEmision,
-        ':id_plan' => $plantilla['ID_PLAN_CER'],
-        ':ruta_pdf' => $rutaCompleta
-    ]);
-
-    echo json_encode(['success' => true, 'ruta' => $rutaCompleta]);
-} catch (PDOException $e) {
-    echo json_encode(['error' => $e->getMessage()]);
-}
-
+// Obtener eventos
+$eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDER BY FEC_INI_EVE_CUR DESC")->fetchAll(PDO::FETCH_ASSOC);
+$eventoSeleccionado = $_GET['evento'] ?? '';
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificados</title>
+    <link rel="stylesheet" href="../styles/css/style.css">
+  <link rel="stylesheet" href="../styles/css/estilosNotas.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+  margin-bottom: 60px; /* Añade separación entre tabla y footer */
+
+  }
+
+  th, td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: center;
+    width: 33.33%;
+    word-wrap: break-word;
+  }
+
+  th {
+    background-color: #6c1313;
+    color: white;
+    font-weight: bold;
+  }
+
+  .btn, button[type="submit"] {
+    background-color:rgb(113, 176, 187);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .btn:hover, button[type="submit"]:hover {
+    background-color:rgb(142, 203, 211);
+  }
+</style>
+
+</head>
+<body>
+      <header>
+    <h1>Gestión de Certificados</h1>
+     <nav>
+                <ul>
+                    <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
+               <li><a href="../admin/generarCertificado.php" class="active"><i class="fas fa-certificate"></i> Certificados</a></li>
+                  <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+                    <li><a href="../usuarios/logout.php" ><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+              </ul>
+            </nav>
+  </header>
+ 
+  <form method="get">
+</br>
+    <select name="evento" id="evento"  onchange="this.form.submit()">
+      <option value="" <?= $eventoSeleccionado === '' ? 'selected' : '' ?>>-- Seleccione un evento --</option>
+      <?php foreach ($eventos as $e): ?>
+        <option value="<?= $e['id_eve_cur'] ?>" <?= $eventoSeleccionado == $e['id_eve_cur'] ? 'selected' : '' ?>>
+          <?= htmlspecialchars($e['tit_eve_cur']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </form>
+</br>
+<?php
+if ($eventoSeleccionado !== '') {
+    $stmt = $conn->prepare("
+        SELECT 
+            i.ID_INS,
+            u.NOM_PRI_USU || ' ' || u.NOM_SEG_USU || ' ' || u.APE_PRI_USU || ' ' || u.APE_SEG_USU AS nombre,
+            e.TIT_EVE_CUR,
+            (
+                SELECT COUNT(*) FROM EVENTOS_REQUISITOS er WHERE er.ID_EVE_CUR = e.ID_EVE_CUR
+            ) AS total_req,
+            (
+                SELECT COUNT(*) FROM EVENTOS_REQUISITOS er
+                JOIN REQUISITOS r ON r.ID_REQ = er.ID_REQ
+                LEFT JOIN EVIDENCIAS_REQUISITOS ev ON ev.ID_REQ = er.ID_REQ AND ev.ID_INS = i.ID_INS
+                LEFT JOIN NOTAS_ASISTENCIAS n ON n.ID_INS = i.ID_INS
+                WHERE er.ID_EVE_CUR = e.ID_EVE_CUR
+                  AND (
+                      (r.NOM_REQ = 'Nota mínima' AND CAST(er.VALOR_REQ AS DECIMAL) <= COALESCE(n.NOT_FIN_NOT_ASI, 0)) OR
+                      (r.NOM_REQ = 'Asistencia mínima' AND CAST(er.VALOR_REQ AS INT) <= COALESCE(n.PORC_ASI_NOT_ASI, 0)) OR
+                      (r.NOM_REQ NOT IN ('Nota mínima', 'Asistencia mínima') AND ev.ESTADO_VALIDACION = 'Aprobado')
+                  )
+            ) AS cumplidos,
+            (
+                SELECT c.ID_CER FROM CERTIFICADOS c WHERE c.ID_INS = i.ID_INS
+            ) AS ya_tiene
+        FROM INSCRIPCIONES i
+        JOIN USUARIOS u ON u.CED_USU = i.CED_USU
+        JOIN EVENTOS_CURSOS e ON e.ID_EVE_CUR = i.ID_EVE_CUR
+        WHERE e.ID_EVE_CUR = :id
+          AND ((e.MOD_EVE_CUR = 'Pagado' AND i.EST_PAG_INS = 'Pagado') OR e.MOD_EVE_CUR = 'Gratis')
+    ");
+    $stmt->execute([':id' => $eventoSeleccionado]);
+    $participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo "<h2>Participantes aptos</h2>";
+
+    $hayAptos = false;
+    foreach ($participantes as $p) {
+        if ($p['total_req'] == $p['cumplidos']) {
+            $hayAptos = true;
+            break;
+        }
+    }
+
+    if (!$hayAptos) {
+        echo "<p><strong>No hay participantes aptos.</strong></p>";
+    } else {
+        echo "<table><tr><th>Nombre</th><th>Evento</th><th>Acción</th></tr>";
+        foreach ($participantes as $p) {
+            if ($p['total_req'] == $p['cumplidos']) {
+                echo "<tr>
+                    <td>" . htmlspecialchars($p['nombre']) . "</td>
+                    <td>" . htmlspecialchars($p['tit_eve_cur']) . "</td>
+                    <td>";
+                if ($p['ya_tiene']) {
+$stmtRuta = $conn->prepare("SELECT HTML_GENERADO FROM CERTIFICADOS WHERE ID_INS = :id_ins");
+$stmtRuta->execute([':id_ins' => $p['id_ins']]);
+$ruta = $stmtRuta->fetchColumn();
+
+if ($ruta) {
+    echo "<a href='../$ruta' target='_blank'><button class='btn'>Ver PDF</button></a>";
+}                } else {
+                    echo "<form method='POST' style='display:inline'>
+                            <input type='hidden' name='id_ins' value='{$p['id_ins']}'>
+                            <button type='submit'>Generar</button>
+                          </form>";
+                }
+                echo "</td></tr>";
+            }
+        }
+        echo "</table>";
+    }
+}
+?>
+<footer>
+              <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
+                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
+                    
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-envelope"></i> Contacto</h3>
+                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
+                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
+            </div>
+        </div>
+
+    </footer>
+
+
+</body>
+</html>
