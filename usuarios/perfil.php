@@ -221,7 +221,7 @@ if ($resultCertificados) {
                             <?php foreach ($eventosConCertificado as $evento): ?>
                                 <li>
                                     <span><?= htmlspecialchars($evento['tit_eve_cur']) ?></span>
-                                    <a href="#" class="view-certificate-btn" data-pdf-url="<?= htmlspecialchars($evento['ruta_certificado']) ?>">Ver Certificado</a>
+                                    <a href="#" class="view-certificate-btn" data-pdf-url="../<?= htmlspecialchars($evento['ruta_certificado']) ?>">Ver Certificado</a>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
