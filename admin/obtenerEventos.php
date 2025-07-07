@@ -4,7 +4,10 @@ require_once ("../conexion/conexion.php");
 try {
     $conn = CConexion::ConexionBD();
 
-    $sql = "SELECT * FROM eventos_cursos ORDER BY id_eve_cur DESC";
+    $sql = "SELECT ec.*, te.img_tipo_eve
+FROM eventos_cursos ec
+JOIN tipos_evento te ON ec.id_tipo_eve = te.id_tipo_eve
+";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 

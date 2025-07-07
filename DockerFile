@@ -1,0 +1,18 @@
+FROM php:8.2-apache
+
+# Install PostgreSQL client libraries
+RUN apt-get update && \
+    apt-get install -y libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install and enable the PostgreSQL extension for PHP
+RUN docker-php-ext-install pgsql pdo_pgsql
+
+# Enable Apache rewrite module if needed (common for web apps)
+RUN a2enmod rewrite
+
+# Copy your application files (already handled by docker-compose volume, but good practice)
+# COPY . /var/www/html
+
+# Set document root to /var/www/html (default for apache image)
+# WORKDIR /var/www/html

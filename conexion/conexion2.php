@@ -4,12 +4,11 @@ class CConexion2 {
     private $conexion;
     
     private function __construct() {
-        $host = "mainline.proxy.rlwy.net";
-        $dbname = "railway";
-        $username = "postgres";
-        $password = "PlODJaMiNTNSbCvuomGjZfLVdPVzwQzY";
-        $port = "48148";
-        
+        $host = getenv("DB_HOST");
+        $dbname = getenv("DB_NAME");
+        $username = getenv("DB_USER");
+        $password = getenv("DB_PASSWORD");
+        $port = getenv("DB_PORT");
         try {
             $this->conexion = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $username, $password);
             $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

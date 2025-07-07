@@ -2,6 +2,6 @@
 session_start();
 $_SESSION = array();
 session_destroy();
-header("Location: ../index.html?msg=logout_success");
+header("Location: ../index.php?msg=logout_success");
 exit();
 ?>

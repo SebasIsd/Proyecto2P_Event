@@ -50,9 +50,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         `${fechaInicio} - ${fechaFin}` : fechaInicio;
                     
                     const descripcionCorta = evento.descripcion && evento.descripcion.length > 80 ? 
-                        evento.descripcion.substring(0, 80) + '...' : 
+                        evento.descripcion.substring(0, 10) + '...' : 
                         (evento.descripcion || 'Sin descripción');
                     
+                    // En script.js, modifica la parte donde creas las tarjetas de eventos
                     eventoCard.innerHTML = `
                         <div class="evento-header">
                             <h4><i class="fas fa-calendar-alt"></i> ${evento.titulo || 'Sin título'}</h4>
@@ -61,9 +62,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p class="evento-descripcion"><i class="fas fa-align-left"></i> ${descripcionCorta}</p>
                             <p><i class="fas fa-calendar-day"></i> ${fechaTexto}</p>
                             <p><i class="fas fa-dollar-sign"></i> $${evento.costo || '0.00'}</p>
-                            <p><i class="fas fa-tag"></i> ${evento.tipo || 'Sin tipo'}</p>
-                            <p><i class="fas fa-laptop-house"></i> ${evento.modalidad || 'Sin modalidad'}</p>
+                            ${evento.tipo ? `<p><i class="fas fa-tag"></i> ${evento.tipo}</p>` : ''}
+                            <p><i class="fas fa-laptop-house"></i> ${evento.modalidad === 'Pagado' ? 'Gratis' : evento.modalidad || 'Sin modalidad'}</p>
                         </div>
+                        <!-- Cambiar esta parte en el evento-footer -->
+                        <div class="evento-footer">
+                            <a href="usuarios/login.php?evento=${evento.id_evento || evento.codigo}" class="btn btn-primary">Inscribirse</a>
+                        </div>
+
                     `;
                     eventosContainer.appendChild(eventoCard);
                 });

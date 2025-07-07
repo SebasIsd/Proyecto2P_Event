@@ -1,34 +1,34 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../conexion/conexion.php';
-header('Content-Type: application/json');
+$conn = CConexion::ConexionBD();
 
 if (!isset($_GET['idEvento'])) {
-    echo json_encode(['error' => 'Falta el parámetro idEvento']);
+    echo json_encode([]);
     exit;
 }
 
 $idEvento = $_GET['idEvento'];
 
-try {
-    $conn = CConexion::ConexionBD();
-    $sql = "
-        SELECT 
-            I.ID_INS,
-            CONCAT(U.NOM_PRI_USU, ' ', U.NOM_SEG_USU, ' ', U.APE_PRI_USU, ' ', U.APE_SEG_USU) AS nombre_completo,
-            N.NOT_FIN_NOT_ASI,
-            N.ASI_NOT_ASI
-        FROM INSCRIPCIONES I
-        INNER JOIN USUARIOS U ON I.CED_USU = U.CED_USU
-        LEFT JOIN NOTAS_ASISTENCIAS N ON N.ID_INS = I.ID_INS
-        WHERE I.ID_EVE_CUR = :idEvento And N.ID_INS IS NULL
-    ";
+$sql = "
+    SELECT 
+        ins.ID_INS,
+        CONCAT(u.NOM_PRI_USU, ' ', u.NOM_SEG_USU, ' ', u.APE_PRI_USU, ' ', u.APE_SEG_USU) AS nombre_completo,
+        na.NOT_FIN_NOT_ASI,
+        na.PORC_ASI_NOT_ASI
+    FROM INSCRIPCIONES ins
+    INNER JOIN USUARIOS u ON ins.CED_USU = u.CED_USU
+    LEFT JOIN NOTAS_ASISTENCIAS na ON na.ID_INS = ins.ID_INS AND (na.FINALIZADO IS FALSE OR na.FINALIZADO IS NULL)
+    WHERE ins.ID_EVE_CUR = :idEvento
+";
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':idEvento', $idEvento);
-    $stmt->execute();
+$stmt = $conn->prepare($sql);
+$stmt->execute([':idEvento' => $idEvento]);
+$datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-} catch (PDOException $e) {
-    echo json_encode(['error' => 'Error en la base de datos: ' . $e->getMessage()]);
-}
+echo json_encode($datos);
 ?>
+

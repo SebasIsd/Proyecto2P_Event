@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  php-apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=maglev.proxy.rlwy.net
+      - DB_PORT=10622
+      - DB_USER=postgres
+      - DB_PASSWORD=knFFZcmuIhowgwGNQmnUMGuSMxkNTdqA
+      - DB_NAME=railway
+    restart: always

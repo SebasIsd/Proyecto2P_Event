@@ -127,31 +127,26 @@ if ($datos = pg_fetch_assoc($result)) {
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Bienvenido, <span><?= htmlspecialchars($nombre_usuario) ?></span></h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="../inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="../mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-                    <li><a href="./inscripciones.php" class="active"><i class="fas fa-edit"></i> Inscripciones</a></li>
-                    <li><a href="../SolicitudesCambios/solicitudCambios.html"><i class="fas fa-chart-bar"></i> Solicitudes de Cambios</a></li>
-                    <li class="profile-link">
-                        <a href="../perfil.php"><i class="fas fa-user-circle"></i> Perfil</a>
-                    </li>
-                    <li><a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <header>
+  <h1>Bienvenido, <?= htmlspecialchars($nombre_usuario) ?> 👋</h1>
+  <nav>
+    <ul>
+      <li><a href="../inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="../mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+      <li><a href="../inscripciones/inscripciones.php"><i class="fas fa-edit"></i> Inscripciones</a></li>
+      <li><a href="../perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+      <li><a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+          <link rel="stylesheet" href="../../styles/css/componente.css">
+
+    </ul>
+  </nav>
+</header>
 
     <main class="container">
         <div class="form-container">
             <h2><i class="fas fa-edit"></i> Nueva Inscripción</h2>
             
-            <form id="formInscripcion" method="POST" action="procesar_inscripcion.php">
+            <form id="formInscripcion" method="POST" action="procesar_inscripcion.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="cedula">Cédula del Usuario</label>
                     <input type="text" id="cedula" name="cedula" class="form-control" value="<?php echo htmlspecialchars($cedula); ?>" readonly required>
@@ -200,33 +195,34 @@ if ($datos = pg_fetch_assoc($result)) {
         </div>
     </main>
 
-<footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-        </div>
-        <div class="footer-section">
-          <h3><i class="fas fa-envelope"></i> Contacto</h3>
-          <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-          <p><i class="fas fa-phone"></i> +123 456 7890</p>
-        </div>
-        <div class="footer-section">
-          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-          <ul>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Sistema de Inscripciones. Todos los derechos reservados.</p>
-      </div>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-logo">
+      <img src="https://play-lh.googleusercontent.com/EqL3NouatH9jKPfrOdoBrhbL7w0jGSB1czNYxRc5f3oRN8eja0WvsrsYtAmHypGlu4w" alt="Logo FISEI">
     </div>
-  </footer>
+    <div class="footer-links">
+      <h4>Enlaces Rápidos</h4>
+      <ul>
+        <li><a href="inicio.php">Inicio</a></li>
+        <li><a href="mis_eventos.php">Eventos</a></li>
+        <li><a href="./inscripciones/inscripciones.php">Cursos</a></li>
+        <li><a href="./inscripciones/inscripciones.php">Inscripciones</a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h4>Contacto</h4>
+      <ul>
+        <li><i class="fas fa-map-marker-alt"></i> Ambato, Ecuador</li>
+        <li><i class="fas fa-phone"></i> +593 3 999 999</li>
+        <li><i class="fas fa-envelope"></i> contacto@fisei.edu.ec</li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; <?= date('Y') ?> FISEI - Universidad Técnica de Ambato</p>
+  </div>
+</footer>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -245,8 +241,67 @@ if ($datos = pg_fetch_assoc($result)) {
                 }
             }
 
+                const urlParams = new URLSearchParams(window.location.search);
+                const eventoId = urlParams.get('evento');
+
             // Cargar eventos disponibles
-            fetch('./get_eventos_disponibles.php')
+            fetch('get_eventos_disponibles.php')
+            .then(response => response.json())
+            .then(data => {
+                const selectEvento = document.getElementById('evento');
+                selectEvento.innerHTML = '<option value="">Seleccione un evento...</option>';
+
+                data.forEach(evento => {
+                const option = document.createElement('option');
+                option.value = evento.codigo;
+                option.textContent = `${evento.titulo} (${formatearFecha(evento.fechaInicio)})`;
+                option.setAttribute('data-tipo', (evento.tipo_evento || '').toLowerCase());
+                option.setAttribute('data-costo', evento.costo);
+                selectEvento.appendChild(option);
+                });
+
+                // Evento cambio para llenar campos adicionales
+                selectEvento.addEventListener('change', function() {
+                const selected = this.options[this.selectedIndex];
+                const tipo = selected.getAttribute('data-tipo') || '';
+                const costo = selected.getAttribute('data-costo') || '';
+
+                document.getElementById('tipo_evento').value = tipo;
+                document.getElementById('costo').value = costo;
+
+                const comprobanteGroup = document.getElementById('comprobante_group');
+                const infoGratis = document.getElementById('info_gratis');
+                const estadoPago = document.getElementById('estado_pago');
+
+                if (tipo === 'pagado') {
+                    comprobanteGroup.style.display = 'block';
+                    infoGratis.style.display = 'none';
+                    estadoPago.value = 'Pendiente';
+                } else {
+                    comprobanteGroup.style.display = 'none';
+                    infoGratis.style.display = 'block';
+                    estadoPago.value = 'Pagado';
+                }
+                });
+
+                // Si viene preseleccionado por URL, disparar cambio para actualizar campos
+                const urlParams = new URLSearchParams(window.location.search);
+                const eventoId = urlParams.get('evento');
+                if (eventoId) {
+                const optionToSelect = Array.from(selectEvento.options).find(o => o.value === eventoId);
+                if (optionToSelect) {
+                    optionToSelect.selected = true;
+                    selectEvento.dispatchEvent(new Event('change'));
+                }
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar eventos:', error);
+                const selectEvento = document.getElementById('evento');
+                selectEvento.innerHTML = '<option value="">Error al cargar eventos</option>';
+            });
+            }
+
                 .then(response => {
                     const contentType = response.headers.get('content-type');
                     if (!contentType || !contentType.includes('application/json')) {
@@ -259,7 +314,7 @@ if ($datos = pg_fetch_assoc($result)) {
                 .then(data => {
                     const selectEvento = document.getElementById('evento');
                     selectEvento.innerHTML = '<option value="">Seleccione un evento...</option>';
-
+                    
                     data.forEach(evento => {
                         const option = document.createElement('option');
                         option.value = evento.codigo;
@@ -267,6 +322,12 @@ if ($datos = pg_fetch_assoc($result)) {
                         option.setAttribute('data-tipo', evento.tipo_evento.toLowerCase());
                         option.setAttribute('data-costo', evento.costo);
                         selectEvento.appendChild(option);
+                        
+                        // Seleccionar automáticamente si coincide con el parámetro
+                        if (eventoId && evento.codigo == eventoId) {
+                            option.selected = true;
+                            selectEvento.dispatchEvent(new Event('change'));
+                        }
                     });
 
                     // Event listener para el cambio de evento

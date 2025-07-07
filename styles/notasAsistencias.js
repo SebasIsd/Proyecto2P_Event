@@ -41,13 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
               <input type="number" step="0.01" min="0" max="100" value="${p.not_fin_not_asi || ""}" data-id="${p.id_ins}" class="nota-input" placeholder="Nota final">
             </td>
             <td>
-              <select data-id="${p.id_ins}" class="asistencia-select">
-                <option value="">--</option>
-                <option value="Presente" ${p.asi_not_asi === "Presente" ? "selected" : ""}>Presente</option>
-                <option value="Ausente" ${p.asi_not_asi === "Ausente" ? "selected" : ""}>Ausente</option>
-              </select>
-            </td>
-            <td>
               <input type="number" step="1" min="0" max="100" value="${p.porc_asi_not_asi || ""}" data-id="${p.id_ins}" class="porcentaje-input" placeholder="% asistencia">
             </td>
             <td>
