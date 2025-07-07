@@ -1,4 +1,5 @@
 <?php
+session_start(); // Add this line at the very top
 include '../includes/conexion1.php';
 
 $conexion = new Conexion();
@@ -497,7 +498,6 @@ $conexion->cerrar();
     </style>
 </head>
 <body>
-    <!-- Header con logo UTA/FISEI -->
     <header class="header">
         <div class="header-container">
             <div class="logo-container">
@@ -510,7 +510,6 @@ $conexion->cerrar();
         </div>
     </header>
 
-    <!-- Barra de navegación -->
     <nav class="nav-bar">
         <div class="nav-container">
             <a href="../index.php" class="nav-link">Inicio</a>
@@ -520,7 +519,6 @@ $conexion->cerrar();
         </div>
     </nav>
 
-    <!-- Sección de búsqueda y filtros -->
     <section class="search-section">
         <div class="search-container">
             <div class="search-box">
@@ -539,7 +537,6 @@ $conexion->cerrar();
         <div class="events-container">
             <h2 class="section-title"><i class="fas fa-calendar-week"></i> Todos los Eventos</h2>
             <div class="events-grid" id="proximos-eventos-container">
-                <!-- Los eventos se cargarán aquí dinámicamente -->
                 <p>Cargando eventos...</p>
             </div>
         </div>
@@ -569,7 +566,7 @@ $conexion->cerrar();
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2023 Facultad de Ingeniería en Sistemas, Electrónica e Industrial - Universidad Técnica de Ambato</p>
+            <p>© 2023 Facultad de Ingeniería en Sistemas, Electrónica e Industrial - Universidad Técnica de Ambato</p>
         </div>
     </footer>
 
@@ -641,7 +638,11 @@ $conexion->cerrar();
                                 </div>
                             </div>
                             <div class="event-footer">
-                                <a href="login.php" class="btn-inscribirse">Inscribirse</a>
+                                <?php if (!isset($_SESSION['usuario'])): ?>
+                                    <a href="login.php?redirect=login.php&evento=${evento.codigo}" class="btn-inscribirse">Inscribirse</a>
+                                <?php else: ?>
+                                    <a href="login.php?evento=${evento.codigo}" class="btn-inscribirse">Inscribirse</a>
+                                <?php endif; ?>
                             </div>
                         `;
                         container.appendChild(card);
