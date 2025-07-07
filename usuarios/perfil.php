@@ -57,7 +57,6 @@ if ($resultCertificados) {
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -130,9 +129,11 @@ if ($resultCertificados) {
             border: none;
         }
 
+        /* Existing styles for certificate list */
         .certificate-list ul {
             list-style: none;
             padding: 0;
+            margin: 0; /* Remove default margin */
         }
 
         .certificate-list li {
@@ -163,6 +164,13 @@ if ($resultCertificados) {
 
         .certificate-list li a:hover {
             background-color: #0056b3;
+        }
+
+        /* NEW: Styles for scrollable certificate list */
+        .certificate-list-container {
+            max-height: 300px; /* Set a maximum height for the container */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Add some padding for the scrollbar */
         }
     </style>
 
@@ -208,18 +216,19 @@ if ($resultCertificados) {
 
             <div class="profile-detail-section certificate-list">
                 <h3><i class="fas fa-certificate"></i> Eventos con Certificado</h3>
-                <?php if (!empty($eventosConCertificado)): ?>
-                    <ul>
-                        <?php foreach ($eventosConCertificado as $evento): ?>
-                            <li>
-                                <span><?= htmlspecialchars($evento['nom_eve']) ?></span>
-                                <a href="#" class="view-certificate-btn" data-pdf-url="<?= htmlspecialchars($evento['ruta_certificado']) ?>">Ver Certificado</a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <p>No tienes certificados disponibles en este momento.</p>
-                <?php endif; ?>
+                <div class="certificate-list-container"> <?php if (!empty($eventosConCertificado)): ?>
+                        <ul>
+                            <?php foreach ($eventosConCertificado as $evento): ?>
+                                <li>
+                                    <span><?= htmlspecialchars($evento['tit_eve_cur']) ?></span>
+                                    <a href="#" class="view-certificate-btn" data-pdf-url="<?= htmlspecialchars($evento['ruta_certificado']) ?>">Ver Certificado</a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p>No tienes certificados disponibles en este momento.</p>
+                    <?php endif; ?>
+                </div>
             </div>
             </div>
     </div>

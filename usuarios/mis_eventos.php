@@ -40,6 +40,219 @@ $eventosInscritos = pg_fetch_all($result) ?: [];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/css/componente.css">
+<style>
+    /* General Body and Container */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f8fafd; /* Very light blue-grey */
+    color: #34495e; /* Darker blue-grey for text */
+    line-height: 1.6;
+}
+
+/* Add this :root block to define your custom color variable */
+:root {
+    --primary-event-color: rgb(129, 9, 9);
+    --primary-event-color-light: rgba(129, 9, 9, 0.8); /* A slightly lighter version for gradients if needed */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Section Header */
+.recent-activity h2 {
+    text-align: center;
+    color: #2c3e50; /* Dark blue */
+    margin-bottom: 30px;
+    font-size: 2em; /* Slightly smaller */
+    position: relative;
+    padding-bottom: 10px;
+    font-family: 'Montserrat', sans-serif; /* More elegant font for headers */
+    font-weight: 600;
+}
+
+.recent-activity h2 i {
+    margin-right: 10px;
+    color: #7c2020; /* Elegant blue */
+}
+
+.recent-activity h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px; /* Smaller underline */
+    height: 2px; /* Thinner underline */
+    background-color: #7c2020;
+    border-radius: 5px;
+}
+
+/* Events Container - Grid Layout */
+#eventos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Smaller min-width */
+    gap: 20px; /* Slightly smaller gap */
+    padding: 20px 0;
+}
+
+/* Individual Event Card */
+.evento-moderno {
+    background-color: #ffffff;
+    border-radius: 8px; /* Softer corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Faster transition */
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e6ed; /* Subtle border */
+}
+
+.evento-moderno:hover {
+    transform: translateY(-5px); /* Less dramatic lift */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* Slightly more prominent hover shadow */
+}
+
+/* Event Header */
+.evento-header {
+    /* Use your custom property here */
+    background: linear-gradient(135deg, var(--primary-event-color), var(--primary-event-color-light)); /* Apply the root variable */
+    color: white;
+    padding: 15px 20px; /* Reduced padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.evento-header h4 {
+    margin: 0;
+    font-size: 1.2em; /* Smaller title font */
+    display: flex;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.evento-header h4 i {
+    margin-right: 8px; /* Smaller margin */
+    font-size: 1em; /* Consistent icon size */
+    color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+}
+
+/* Payment Status Badge */
+.estado-pago {
+    background-color: rgba(255, 255, 255, 0.15); /* More subtle background */
+    padding: 4px 10px; /* Smaller padding */
+    border-radius: 15px; /* More rounded */
+    font-weight: 500; /* Lighter weight */
+    font-size: 0.8em; /* Smaller font */
+    text-transform: uppercase;
+}
+
+.estado-pago.pagado {
+    background-color: #2ecc71; /* Emerald Green */
+    color: white;
+}
+
+.estado-pago.pendiente {
+    background-color: #f1c40f; /* Sunflower Yellow */
+    color: #34495e; /* Dark text for contrast */
+}
+
+.estado-pago.rechazado {
+    background-color: #e74c3c; /* Alizarin Red */
+    color: white;
+}
+
+/* Event Body */
+.evento-body {
+    padding: 15px 20px; /* Reduced padding */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.9em; /* Smaller body text */
+}
+
+.evento-body p {
+    margin-bottom: 8px; /* Less margin between paragraphs */
+    display: flex;
+    align-items: flex-start; /* Align icons to the top of multi-line text */
+    color: #555;
+}
+
+.evento-body p i {
+    margin-right: 8px;
+    color: #6c7eaf; /* Softer blue for icons */
+    width: 18px; /* Slightly smaller icon width */
+    text-align: center;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.evento-body .description-text {
+    max-height: 3.2em; /* Roughly 2 lines of text, adjusted for smaller font */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.description-text.expanded {
+    max-height: none;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+}
+
+.read-more-btn {
+    background: none;
+    border: none;
+    color: #4a69bd; /* Match header blue */
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    font-size: 0.85em; /* Smaller button text */
+    margin-top: 5px;
+    text-align: left;
+}
+
+.read-more-btn:hover {
+    color: #34495e; /* Darker blue on hover */
+}
+
+.fechas-evento {
+    font-weight: 600;
+    color: #34495e;
+    margin-top: 5px; /* More space for dates */
+}
+
+/* No Events Message */
+#eventos-container .evento-moderno:only-child { /* Target only if it's the sole child */
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px; /* Slightly smaller padding */
+    font-size: 1.1em;
+    color: #7f8c8d;
+    background-color: #eff3f7; /* Lighter background */
+    box-shadow: none;
+    border: 1px dashed #c0d0e0; /* Dashed border for visual cue */
+    display: block; /* Override flex for centered text */
+}
+
+#eventos-container .evento-moderno:only-child p {
+    margin: 0;
+    justify-content: center; /* Center text within the paragraph */
+}
+
+#eventos-container .evento-moderno:only-child:hover {
+    transform: none;
+    box-shadow: none;
+}
+</style>
 </head>
 <body>
 <?php include "../includes/header.php"; ?>
