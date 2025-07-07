@@ -17,27 +17,72 @@ $id_carrera_usuario = null;
 $preselected_event_data = null;
 $preselected_event_unavailable = false;
 
-// Obtener el primer nombre y la ID de carrera del usuario
-$sql_user_name = "SELECT nom_pri_usu, car_usu FROM usuarios WHERE ced_usu = $1";
-$result_user_name = pg_query_params($conn, $sql_user_name, [$cedula_usuario]);
+// Obtener el primer nombre y la carrera del usuario
+$sql_user = "SELECT nom_pri_usu, car_usu FROM usuarios WHERE ced_usu = $1";
+$result_user = pg_query_params($conn, $sql_user, [$cedula_usuario]);
 
-if ($datos_user = pg_fetch_assoc($result_user_name)) {
+if ($datos_user = pg_fetch_assoc($result_user)) {
     $nombre_usuario = $datos_user['nom_pri_usu'];
     $id_carrera_usuario = $datos_user['car_usu'];
+
 }
 
-// Manejar evento preseleccionado desde la URL
-$evento_id_param = null;
-if (isset($_GET['evento_id'])) {
-    $evento_id_param = $_GET['evento_id'];
-} elseif (isset($_GET['evento'])) { // Verificar 'evento' si 'evento_id' no está presente
-    $evento_id_param = $_GET['evento'];
-}
+$evento_id_param = $_GET['evento_id'] ?? $_GET['evento'] ?? null;
 
 if ($evento_id_param) {
     $evento_id = pg_escape_string($conn, $evento_id_param);
 
-    // Consulta para obtener detalles del evento, incluyendo requisitos
+    $cedula = $_SESSION['cedula'] ?? null;
+    $idEvento = $evento_id; // Usamos el mismo ID, no necesitas $_GET['id']
+
+    if (!$cedula || !$idEvento) {
+        echo "Datos incompletos";
+        exit;
+    }
+
+    // Paso 1: Obtener la carrera del usuario
+    $sqlCarrera = "SELECT CAR_USU FROM USUARIOS WHERE CED_USU = $1";
+    $resCarrera = pg_query_params($conn, $sqlCarrera, [$cedula]);
+
+    if (!$resCarrera || pg_num_rows($resCarrera) === 0) {
+        echo "No se encontró la carrera del usuario.";
+        exit;
+    }
+
+    $carreraNombre = pg_fetch_result($resCarrera, 0, 0);
+
+    // Paso 2: Obtener el ID de la carrera según su nombre
+    $sqlIdCarrera = "SELECT ID_CAR FROM CARRERAS WHERE NOM_CAR = $1";
+    $resIdCarrera = pg_query_params($conn, $sqlIdCarrera, [$carreraNombre]);
+
+    if (!$resIdCarrera || pg_num_rows($resIdCarrera) === 0) {
+        echo "No se encontró ID de la carrera.";
+        exit;
+    }
+
+    $idCarrera = pg_fetch_result($resIdCarrera, 0, 0);
+
+    // Paso 3: Verificar si el evento está dirigido a la carrera
+    $sqlVerificar = "SELECT COUNT(*) FROM EVENTOS_CARRERAS WHERE ID_EVE_CUR = $1 AND ID_CAR = $2";
+    $resVerificar = pg_query_params($conn, $sqlVerificar, [$idEvento, $idCarrera]);
+
+    if (!$resVerificar) {
+        echo "Error al verificar carrera del evento.";
+        exit;
+    }
+
+    $cantidad = pg_fetch_result($resVerificar, 0, 0);
+
+    // Paso 4: Redirigir según corresponda
+    if ($cantidad > 0) {
+        header("Location: eventoDetalle.php?id=$idEvento");
+        exit;
+    } else {
+        echo "<script>alert('Usted no pertenece a la carrera a la que está dirigido este evento.'); window.location.href = 'eventos.php';</script>";
+        exit;
+    }
+
+    // Consulta para obtener detalles del evento
     $sql_event_details = "SELECT
                             ec.ID_EVE_CUR as codigo,
                             ec.TIT_EVE_CUR as titulo,
@@ -53,29 +98,25 @@ if ($evento_id_param) {
                           LEFT JOIN requisitos r ON er.id_req = r.id_req
                           WHERE ec.ID_EVE_CUR = $1
                           GROUP BY ec.ID_EVE_CUR, ec.TIT_EVE_CUR, ec.DES_EVE_CUR, ec.FEC_INI_EVE_CUR, ec.FEC_FIN_EVE_CUR, ec.COS_EVE_CUR, ec.MOD_EVE_CUR";
+
     $result_event_details = pg_query_params($conn, $sql_event_details, [$evento_id]);
 
     if ($event_data = pg_fetch_assoc($result_event_details)) {
         $preselected_event_data = $event_data;
 
-        // Verificar disponibilidad por carrera si la ID de carrera del usuario es conocida
         if ($id_carrera_usuario) {
-            // Asumiendo una tabla de enlace EVENTO_CARRERA entre eventos y carreras
             $sql_check_career = "SELECT COUNT(*) FROM EVENTOS_CARRERAS WHERE ID_EVE_CUR = $1 AND ID_CAR = $2";
             $result_check_career = pg_query_params($conn, $sql_check_career, [$evento_id, $id_carrera_usuario]);
             $count = pg_fetch_result($result_check_career, 0, 0);
-            
+
             if ($count == 0) {
-                // Si el evento no está vinculado a la carrera del usuario
                 $preselected_event_unavailable = true;
             }
         } else {
-            // Si la carrera del usuario es desconocida, considerarlo no disponible para esta verificación
-            $preselected_event_unavailable = true; 
+            $preselected_event_unavailable = true;
         }
     } else {
-        // Evento no encontrado en la base de datos
-        $preselected_event_unavailable = true; 
+        $preselected_event_unavailable = true;
     }
 }
 ?>
