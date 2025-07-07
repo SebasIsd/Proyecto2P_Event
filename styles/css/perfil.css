@@ -1,200 +1,21 @@
-/* Estilos generales */
+/*  Estilos específicos para la página de perfil */
 :root {
-    --primary-color: #6c1313;
+    --primary-color: #6c1313; 
     --secondary-color: #000000;
     --light-gray: #696969;
     --white: #ffffff;
     --hover-color: #5a0f0f;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-}
-
-body {
-    background-color: var(--white);
-    color: var(--secondary-color);
-    line-height: 1.6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
 
 .container {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
+    /
 }
 
-/* Header */
-header {
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 1rem 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.logo h1 {
-    font-weight: 700;
-    font-size: 1.8rem;
-}
-
-.logo span {
-    font-weight: 400;
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    margin-top: 1rem;
-}
-
-nav ul li a {
-    color: var(--white);
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    margin-right: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-}
-
-nav ul li a i {
-    margin-right: 8px;
-}
-
-nav ul li a:hover, nav ul li a.active {
-    background-color: var(--hover-color);
-}
-
-/* Main content */
-main {
-    flex: 1;
-    padding: 2rem 0;
-}
-
-.hero {
-    text-align: center;
-    padding: 3rem 0;
-    margin-bottom: 2rem;
-}
-
-.hero h2 {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: var(--light-gray);
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-    background-color: var(--hover-color);
-}
-
-.dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.card {
-    background-color: var(--white);
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.card i {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.card h3 {
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-}
-
-.card p {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-/* Footer */
-footer {
-    background-color: var(--secondary-color);
-    color: var(--white);
-    padding: 2rem 0 0;
-    margin-top: auto;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.footer-section h3 {
-    margin-bottom: 1rem;
-    color: var(--white);
-}
-
-.footer-section p, .footer-section a {
-    color: #cccccc;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.footer-section a:hover {
-    color: var(--white);
-}
-
-.footer-section i {
-    margin-right: 8px;
-    color: var(--primary-color);
-}
-
-.footer-bottom {
-    text-align: center;
-    padding: 1rem 0;
-    border-top: 1px solid var(--light-gray);
-    color: #cccccc;
-    font-size: 0.9rem;
-}
-
-/* Estilos específicos para la página de perfil */
-/* PERFIL - Estilos específicos */
 .profile-section {
     margin: 3rem 0;
 }
@@ -283,6 +104,13 @@ footer {
     padding: 1.5rem;
     border-radius: 8px;
     border-left: 4px solid var(--primary-color);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transform-origin: center;
+}
+
+.profile-detail-section:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
 .profile-detail-section h3 {
@@ -300,7 +128,7 @@ footer {
 
 .profile-detail-section p {
     margin-bottom: 0.8rem;
-    color: var(--text);
+    color: var(--secondary-color); 
     font-size: 1rem;
 }
 
@@ -311,45 +139,6 @@ footer {
     display: inline-block;
 }
 
-
-/* Responsive */
-@media (max-width: 768px) {
-    .profile-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .edit-btn {
-        margin: 1rem auto 0;
-    }
-    
-    .profile-avatar {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .profile-avatar i {
-        font-size: 3.5rem;
-    }
-}
-
-
-@media (max-width: 480px) {
-    .profile-card {
-        padding: 1.5rem;
-    }
-    
-    .profile-name h2 {
-        font-size: 1.5rem;
-    }
-    
-    .detail-box {
-        padding: 1.2rem;
-    }
-}
-
-
-/* Estilos para el formulario de edición */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -435,6 +224,7 @@ footer {
     border-left: 4px solid #f44336;
     margin-bottom: 1.5rem;
 }
+
 input[readonly] {
     background-color: #f5f5f5;
     color: #666;
@@ -448,16 +238,37 @@ input[readonly]:focus {
     box-shadow: none;
 }
 
-.profile-detail-section {
-    background: #f9f9f9;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid var(--primary-color);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    transform-origin: center;
+/* Responsive para la sección de perfil */
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-edit-btn { 
+        margin: 1rem auto 0;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-avatar i {
+        font-size: 3.5rem;
+    }
 }
 
-.profile-detail-section:hover {
-    transform: scale(1.03);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+@media (max-width: 480px) {
+    .profile-card {
+        padding: 1.5rem;
+    }
+
+    .profile-name { 
+        font-size: 1.5rem;
+    }
+
+    .profile-detail-section { 
+        padding: 1.2rem;
+    }
 }
