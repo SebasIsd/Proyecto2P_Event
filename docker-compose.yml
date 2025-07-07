@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   php-apache:
-    image: php:8.2-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     volumes:
