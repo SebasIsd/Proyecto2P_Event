@@ -3,6 +3,9 @@ session_start(); // Agrega sesión para mensajes flash
 
 require_once "../includes/conexion1.php";
 require_once "validaciones.php";
+require_once "../vendor/autoload.php";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 error_reporting(E_ALL);
 $error = '';
@@ -41,60 +44,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($error)) {
-        // Verificar si el usuario ya existe
-        $check_sql = "SELECT ced_usu FROM usuarios WHERE ced_usu = $1";
-        $check_result = pg_query_params($conn, $check_sql, array($cedula));
+        // Verificar si la cédula ya existe
+        $check_ced_sql = "SELECT ced_usu FROM usuarios WHERE ced_usu = $1";
+        $check_ced_result = pg_query_params($conn, $check_ced_sql, array($cedula));
 
-        if (pg_num_rows($check_result) > 0) {
+        if (pg_num_rows($check_ced_result) > 0) {
             $error = "El usuario con esta cédula ya existe";
         } else {
-            $carreras_permitidas = [
-                'Ing. Software',
-                'Ing. Industrial',
-                'Ing. Tecnologias de la Informacion',
-                'Ing. Telecomunicaciones',
-                'Ing. en Automatizacion y Robotica'
-            ];
+            // Verificar si el correo ya existe
+            $check_email_sql = "SELECT cor_usu FROM usuarios WHERE cor_usu = $1";
+            $check_email_result = pg_query_params($conn, $check_email_sql, array($correo));
 
-            if (esCorreoInstitucional($correo)) {
-                if (empty($carrera) || !in_array($carrera, $carreras_permitidas)) {
-                    $error = "Debe seleccionar una carrera válida para correos institucionales";
-                }
+            if (pg_num_rows($check_email_result) > 0) {
+                $error = "El correo electrónico ya está registrado";
             } else {
-                // Para correos NO institucionales, carrera debe estar vacía
-                if (!empty($carrera)) {
-                    $error = "No debe seleccionar una carrera si el correo no es institucional";
+                $carreras_permitidas = [
+                    'Ing. Software',
+                    'Ing. Industrial',
+                    'Ing. Tecnologias de la Informacion',
+                    'Ing. Telecomunicaciones',
+                    'Ing. en Automatizacion y Robotica'
+                ];
+
+                if (esCorreoInstitucional($correo)) {
+                    if (empty($carrera) || !in_array($carrera, $carreras_permitidas)) {
+                        $error = "Debe seleccionar una carrera válida para correos institucionales";
+                    }
                 } else {
-                    $carrera = null; // Dejar null en BD
+                    // Para correos NO institucionales, carrera debe estar vacía
+                    if (!empty($carrera)) {
+                        $error = "No debe seleccionar una carrera si el correo no es institucional";
+                    } else {
+                        $carrera = null; // Dejar null en BD
+                    }
                 }
-            }
 
-            if (empty($error)) {
-                // Insertar usuario
-                $insert_sql = "INSERT INTO usuarios 
-                  (ced_usu, nom_pri_usu, nom_seg_usu, ape_pri_usu, ape_seg_usu, 
-                   car_usu, cor_usu, tel_usu, dir_usu, fec_nac_usu, pas_usu, id_rol_usu)
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)";
+                if (empty($error)) {
+                    $email_token = bin2hex(random_bytes(32));
+                    $email_verified = 'f'; // boolean false para PostgreSQL
 
-                $params = array(
-                    $cedula, $nombre1, $nombre2, $apellido1, $apellido2,
-                    $carrera, $correo, $telefono, $direccion, $fecha_nac, $password, 2
-                );
+                    // Insertar usuario
+                    $insert_sql = "INSERT INTO usuarios 
+                        (ced_usu, nom_pri_usu, nom_seg_usu, ape_pri_usu, ape_seg_usu, 
+                         car_usu, cor_usu, tel_usu, dir_usu, fec_nac_usu, pas_usu, id_rol_usu, 
+                         email_verification_token, email_verified)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)";
 
-                $result = pg_query_params($conn, $insert_sql, $params);
+                    $params = array(
+                        $cedula, $nombre1, $nombre2, $apellido1, $apellido2,
+                        $carrera, $correo, $telefono, $direccion, $fecha_nac,
+                        $password, 2, // rol = 2
+                        $email_token, $email_verified
+                    );
 
-                if ($result) {
-                    $_SESSION['success_message'] = "Registro exitoso. Ahora puedes iniciar sesión.";
-                    header("Location: login.php");
-                    exit();
-                } else {
-                    $error = "Error al registrar el usuario: " . pg_last_error($conn);
+                    $result = pg_query_params($conn, $insert_sql, $params);
+
+                    if ($result) {
+                        // Enlace de verificación
+                        $enlace_verificacion = "http://localhost/Proyecto2P_Event/usuarios/verificar.php?token=$email_token";
+
+                        // Enviar correo con PHPMailer
+                        $mail = new PHPMailer(true);
+                        try {
+                            $mail->isSMTP();
+                            $mail->Host = 'smtp.gmail.com';
+                            $mail->SMTPAuth = true;
+                            $mail->Username = 'anthonysemblantes619@gmail.com'; // ← PON AQUÍ TU CORREO
+                            $mail->Password = 'ynytinytvxevgolm';  // ← CONTRASEÑA DE APLICACIÓN
+                            $mail->SMTPSecure = 'tls';
+                            $mail->Port = 587;
+
+                            $mail->setFrom('anthonysemblantes619@gmail.com', 'Sistema de Registro');
+                            $mail->addAddress($correo, "$nombre1 $apellido1");
+                            $mail->isHTML(true);
+                            $mail->Subject = 'Verifica tu correo';
+                            $mail->Body = "
+                                <p>Hola <b>$nombre1</b>,</p>
+                                <p>Gracias por registrarte. Haz clic en el siguiente enlace para verificar tu correo electrónico:</p>
+                                <p><a href='$enlace_verificacion'>$enlace_verificacion</a></p>
+                                <p>Si no solicitaste este registro, ignora este mensaje.</p>";
+
+                            $mail->send();
+                            $_SESSION['success_message'] = "Registro exitoso. Revisa tu correo para verificar tu cuenta.";
+                            header("Location: login.php");
+                            exit();
+                        } catch (Exception $e) {
+                            $error = "Registro guardado, pero error al enviar el correo: " . $mail->ErrorInfo;
+                        }
+                    } else {
+                        $error = "Error al guardar el registro en la base de datos.";
+                    }
                 }
             }
         }
     }
 
-    pg_close($conn);
+    pg_close($conn); 
+} else {
+    $error = '';
 }
 ?>
 
