@@ -123,19 +123,21 @@ $sql_notas = "INSERT INTO NOTAS_ASISTENCIAS (ID_INS, PORC_ASI_NOT_ASI, NOT_FIN_N
         throw new Exception("Error al crear el registro de notas/asistencias: " . pg_last_error($conn));
     }
 
-    pg_query($conn, "COMMIT");
+pg_query($conn, "COMMIT");
 
-    sendJsonResponse(true, 'Inscripción realizada exitosamente.', 200, $id_inscripcion);}
-    header('location: ../usuarios/inicio.php');
+sendJsonResponse(true, 'Inscripción realizada exitosamente.', 200, $id_inscripcion);
+header("Location: ../mis_eventos.php");
 
 } catch (Exception $e) {
     if (isset($conn)) {
         pg_query($conn, "ROLLBACK");
     }
     sendJsonResponse(false, $e->getMessage(), 500);
+
 } finally {
     if (isset($conn)) {
         pg_close($conn);
     }
 }
+
 ?>
