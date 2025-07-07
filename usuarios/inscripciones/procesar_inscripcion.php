@@ -139,5 +139,3 @@ header("Location: ../mis_eventos.php");
         pg_close($conn);
     }
 }
-
-?>
