@@ -84,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Correo o contraseña incorrectos.";
 
     }
-}
 
 // Si viene de evento, guardar para redireccionar luego
 if (isset($_GET['evento'])) {
