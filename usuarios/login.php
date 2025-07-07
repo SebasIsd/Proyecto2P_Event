@@ -24,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['rol'] = $usuario['id_rol_usu'];
                 $_SESSION['correo'] = $usuario['cor_usu'];
                 $_SESSION['cedula'] = $usuario['ced_usu'];
-                $_SESSION['id'] = $usuario['id_usu'];
 
                 // Redirigir según rol y evento
                 if ($_SESSION['rol'] == 1) {

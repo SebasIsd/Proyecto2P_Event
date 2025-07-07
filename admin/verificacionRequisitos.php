@@ -1,4 +1,8 @@
 <?php
+session_start();
+require_once('../includes/conexion1.php');
+?>
+<?php
 require_once '../conexion/conexion.php';
 $conn = CConexion::ConexionBD();
 
