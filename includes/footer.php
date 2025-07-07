@@ -1,15 +1,11 @@
 <footer class="footer">
   <div class="footer-container">
-    <div class="footer-logo">
-      <img src="https://play-lh.googleusercontent.com/EqL3NouatH9jKPfrOdoBrhbL7w0jGSB1czNYxRc5f3oRN8eja0WvsrsYtAmHypGlu4w" alt="Logo FISEI">
-    </div>
     <div class="footer-links">
       <h4>Enlaces Rápidos</h4>
       <ul>
-        <li><a href="inicio.php">Inicio</a></li>
-        <li><a href="mis_eventos.php">Eventos</a></li>
-        <li><a href="./inscripciones/inscripciones.php">Cursos</a></li>
-        <li><a href="./soli.html">Solicita un cambio</a></li>
+        <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
+        <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+
       </ul>
     </div>
     <div class="footer-links">
@@ -20,8 +16,16 @@
         <li><i class="fas fa-envelope"></i> contacto@fisei.edu.ec</li>
       </ul>
     </div>
+    <div class="footer-links">
+      <h4>Síguenos</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-square"></i></a>
+        <a href="#"><i class="fab fa-twitter-square"></i></a>
+        <a href="#"><i class="fab fa-instagram-square"></i></a>
+      </div>
+    </div>
   </div>
   <div class="copyright">
-    <p>&copy; <?= date('Y') ?> FISEI - Universidad Técnica de Ambato</p>
+    <p>&copy; <?= date('Y') ?> FISEI - Universidad Técnica de Ambato. Todos los derechos reservados.</p>
   </div>
 </footer>

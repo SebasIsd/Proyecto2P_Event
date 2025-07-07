@@ -140,7 +140,7 @@ $conexion->cerrar();
         
         /* Banner principal */
         .banner {
-            background: url('https://fisei.uta.edu.ec/wp-content/uploads/2021/05/fachada-fisei.jpg') center/cover;
+            /*background: url('https://fisei.uta.edu.ec/wp-content/uploads/2021/05/fachada-fisei.jpg') center/cover;*/
             height: 400px;
             display: flex;
             align-items: center;
@@ -272,51 +272,58 @@ $conexion->cerrar();
         }
         
         /* Añade esto a tu CSS */
-.evento-moderno {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    margin-bottom: 1.5rem;
-}
+        .evento-moderno {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
 
-.evento-moderno:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-}
+        .evento-moderno:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
 
-.evento-header {
-    background-color: var(--primary);
-    color: white;
-    padding: 1rem;
-}
+        .evento-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+        }
 
-.evento-header h4 {
-    margin: 0;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        .evento-header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-.evento-body {
-    padding: 1.5rem;
-}
+        .evento-body {
+            padding: 1.5rem;
+        }
 
-.evento-body p {
-    margin: 0.5rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        .evento-body p {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-.evento-descripcion {
-    color: var(--dark);
-    line-height: 1.5;
-    margin-bottom: 1rem !important;
-}
-        
+        .evento-descripcion {
+            color: var(--dark);
+            line-height: 1.5;
+            margin-bottom: 1rem !important;
+        }
+
+        .evento-footer {
+            text-align: right;
+            padding: 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }        
         /* Footer */
         .footer {
             background-color: var(--dark);
@@ -524,7 +531,7 @@ $conexion->cerrar();
     <header class="header">
         <div class="header-container">
             <div class="logo-container">
-                <img src="https://images.seeklogo.com/logo-png/27/2/uta-logo-png_seeklogo-272349.png" alt="Logo FISEI">
+                <img src="imagenes/evento1.png" alt="Logo FISEI">
                 <div class="logo-text">
                     <h1>FACULTAD DE INGENIERÍA EN SISTEMAS, ELECTRÓNICA E INDUSTRIAL</h1>
                     <p>UNIVERSIDAD TÉCNICA DE AMBATO</p>
@@ -538,10 +545,9 @@ $conexion->cerrar();
     <nav class="nav-bar">
         <div class="nav-container">
             <a href="#" class="nav-link active">Inicio</a>
-            <a href="#" class="nav-link">Eventos</a>
-            <a href="#" class="nav-link">Cursos</a>
-            <a href="#" class="nav-link">Inscripciones</a>
-            <a href="#" class="nav-link">Contacto</a>
+            <a href="usuarios/eventos.php" class="nav-link">Eventos</a>
+            <a href="usuarios/login.php" class="nav-link">Inscripciones</a>
+            <a href="usuarios/desarrolladores.php" class="nav-link">Contacto</a>
         </div>
     </nav>
         <!-- Carrusel dinámico -->
@@ -587,8 +593,11 @@ $conexion->cerrar();
                         <p>Por favor espera mientras cargamos los próximos eventos.</p>
                     </div>
                     <?php if (!isset($_SESSION['usuario'])): ?>
-                    <a href="usuarios/login.php?evento=<?= $evento['id_evento'] ?>" class="btn btn-primary">Inscribirse</a>                <?php else: ?>
-                    <a href="usuarios/inscripciones/inscripciones.php?evento=<?= $evento['id_evento'] ?>" class="btn btn-primary">Inscribirse</a>
+                    <!-- Modificado para pasar el ID del evento al login si no está logueado -->
+                    <a href="usuarios/login.php?redirect=inscripciones.php&evento_id=<?= $evento['codigo'] ?>" class="btn btn-primary">Inscribirse</a>
+                    <?php else: ?>
+                    <!-- Modificado para pasar el ID del evento directamente a inscripciones.php si está logueado -->
+                    <a href="usuarios/inscripciones/inscripciones.php?evento_id=<?= $evento['codigo'] ?>" class="btn btn-primary">Inscribirse</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -597,7 +606,7 @@ $conexion->cerrar();
     
 <section class="authorities-section">
     <div class="authorities-container">
-        <h2 class="section-title">Nuestras Autoridades</h2>
+        <h2 class="section-title">Nuestras Autoridades - Princiales</h2>
         <div class="authorities-grid">
             <?php if (!empty($autoridades)): ?>
                 <?php foreach($autoridades as $auth): ?>
@@ -686,6 +695,49 @@ $conexion->cerrar();
                 autoplaySpeed: 5000
             });
         });
+
+       /* // Función para cargar eventos en la sección "Próximos Eventos"
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('usuarios/inscripciones/get_eventos_disponibles.php') // Nueva API para eventos públicos
+                .then(response => response.json())
+                .then(data => {
+                    const eventosContainer = document.getElementById('proximos-eventos-container');
+                    eventosContainer.innerHTML = ''; // Limpiar el contenido de "Cargando eventos..."
+
+                    if (data.length > 0) {
+                        data.forEach(evento => {
+                            const eventoCard = `
+                                <div class="evento-moderno">
+                                    <div class="evento-header">
+                                        <h4><i class="fas fa-calendar-alt"></i> ${evento.titulo}</h4>
+                                    </div>
+                                    <div class="evento-body">
+                                        <p class="evento-descripcion">${evento.descripcion}</p>
+                                        <p><i class="fas fa-calendar-day"></i> Fecha Inicio: ${new Date(evento.fechaInicio).toLocaleDateString('es-ES')}</p>
+                                        <p><i class="fas fa-calendar-times"></i> Fecha Fin: ${new Date(evento.fechaFin).toLocaleDateString('es-ES')}</p>
+                                        <p><i class="fas fa-dollar-sign"></i> Costo: ${evento.costo === '0.00' ? 'Gratuito' : '$' + evento.costo}</p>
+                                        <p><i class="fas fa-tag"></i> Tipo: ${evento.tipo_evento}</p>
+                                    </div>
+                                    <div class="evento-footer">
+                                        <?php if (!isset($_SESSION['usuario'])): ?>
+                                            <a href="usuarios/login.php?redirect=inscripciones.php&evento_id=${evento.codigo}" class="btn btn-inscribirse">Inscribirse</a>
+                                        <?php else: ?>
+                                            <a href="usuarios/inscripciones/inscripciones.php?evento_id=${evento.codigo}" class="btn btn-inscribirse">Inscribirse</a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            `;
+                            eventosContainer.innerHTML += eventoCard;
+                        });
+                    } else {
+                        eventosContainer.innerHTML = '<p style="text-align: center; width: 100%;">No hay próximos eventos disponibles.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar los eventos:', error);
+                    document.getElementById('proximos-eventos-container').innerHTML = '<p style="text-align: center; width: 100%; color: red;">Error al cargar los eventos. Intente de nuevo más tarde.</p>';
+                });
+        });*/
     </script>
 </body>
 </html>

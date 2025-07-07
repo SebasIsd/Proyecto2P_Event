@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = pg_query_params($conn, $sql, array($correo));
 
         if ($usuario = pg_fetch_assoc($result)) {
+
             // Verificar contraseña (recomiendo usar password_hash y password_verify)
             if ($password === $usuario['pas_usu']) {
                 // Verificar si es correo institucional con preg_match
@@ -57,6 +58,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $error = "Correo o contraseña incorrectos.";
         }
+            // Consider using password_verify for hashed passwords in a real application
+            if ($password === $usuario['pas_usu']) { 
+                $_SESSION['usuario'] = $usuario['nom_pri_usu'];
+                $_SESSION['rol'] = $usuario['id_rol_usu'];
+                $_SESSION['correo'] = $usuario['cor_usu'];
+                $_SESSION['cedula'] = $usuario['ced_usu'];
+                $_SESSION['id'] = $usuario['id_usu'];
+
+                // Redirigir según rol y evento
+                if ($_SESSION['rol'] == 1) {
+                    header("Location: ../admin/admin.php");
+                } else {
+                    if (isset($_SESSION['evento_redireccion'])) {
+                        $evento_id = $_SESSION['evento_redireccion'];
+                        unset($_SESSION['evento_redireccion']);
+                        header("Location: ../usuarios/inicio.php?evento=" . urlencode($evento_id));
+                    } else {
+                        header("Location: inicio.php");
+                    }
+                }
+                exit();
+            }
+        }
+        $error = "Correo o contraseña incorrectos.";
+
     }
 }
 
@@ -115,6 +141,7 @@ if (isset($_GET['evento'])) {
         }
         .login-form .form-group {
             margin-bottom: 1.5rem;
+            position: relative; /* Added for the eye icon positioning */
         }
         .login-form label {
             display: block;
@@ -129,12 +156,14 @@ if (isset($_GET['evento'])) {
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s;
+            padding-right: 40px; /* Make space for the eye icon */
         }
         .login-form input:focus {
             border-color: #6c1313;
             box-shadow: 0 0 0 3px rgba(108, 19, 19, 0.1);
             outline: none;
         }
+
         .btn-login {
             width: 100%;
             padding: 12px;
@@ -228,6 +257,9 @@ if (isset($_GET['evento'])) {
                     <div class="form-group">
                         <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
                         <input type="password" id="password" name="password" required placeholder="••••••••">
+                        <span class="toggle-password" onclick="togglePasswordVisibility()">
+                            <i class="fas fa-eye" id="toggleIcon"></i>
+                        </span>
                     </div>
                     <div class="button-group">
                         <button type="submit" class="btn-login">
@@ -261,6 +293,7 @@ if (isset($_GET['evento'])) {
                 }
             }
         });
+
     </script>
 </body>
 </html>

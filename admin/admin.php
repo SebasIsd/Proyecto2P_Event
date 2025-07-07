@@ -96,30 +96,32 @@
   </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-container">
-            <div class="logo-container">
-                <img src="https://images.seeklogo.com/logo-png/27/2/uta-logo-png_seeklogo-272349.png" alt="Logo FISEI">
-                <div class="logo-text">
-                    <h1>FACULTAD DE INGENIERÍA EN SISTEMAS, ELECTRÓNICA E INDUSTRIAL</h1>
-                    <p>UNIVERSIDAD TÉCNICA DE AMBATO</p>
-                </div>
-            </div>
-        </div>
-    </header>
+   <?php include '../includes/header.php'?>
+  <header>
+     
+  <nav>
+    <ul>
+      <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+      <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+      <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+    </ul>
+  </nav>
+      </header>
 
   <main class="admin-panel">
-    <div class="admin-card">
+
+     <div class="admin-card">
       <i class="fas fa-calendar-plus"></i>
       <a href="../admin/ingresoEventos.php">Crear Evento/Curso</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-list"></i>
-      <a href="../admin/eventos.html">Ver / Editar Eventos</a>
+      <a href="../admin/eventos.php">Ver / Editar Eventos</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-user-check"></i>
-      <a href="../admin/verInscripciones.html">Ver Inscripciones</a>
+      <a href="../admin/inscripciones.php">Ver Inscripciones</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-money-check-alt"></i>
@@ -128,18 +130,18 @@
     <div class="admin-card">
       <i class="fas fa-graduation-cap"></i>
       <a href="../admin/notas.php">Notas y Asistencias</a>
-    </div>
-        <div class="admin-card">
+      </div>  
+      <div class="admin-card">
       <i class="fas fa-check-circle"></i>
       <a href="../admin/verificacionRequisitos.php">Validar requisitos adicionales</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-certificate"></i>
-      <a href="../admin/certificados.html">Certificados</a>
+      <a href="../admin/generarCertificado.php">Certificados</a>
     </div>
     <div class="admin-card">
       <i class="fas fa-users-cog"></i>
-      <a href="../admin/AdminUsuario.html">Gestión de Usuarios</a>
+      <a href="../admin/AdminUsuario.php">Gestión de Usuarios</a>
     </div>
     <div class="admin-card">
       <i class="fa-solid fa-id-card"></i>
@@ -151,32 +153,9 @@
     </div>-->
   </main>
 
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-          <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-        </div>
-        <div class="footer-section">
-          <h3><i class="fas fa-envelope"></i> Contacto</h3>
-          <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-          <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-          <p><i class="fas fa-phone"></i> +123 456 7890</p>
-        </div>
-        <div class="footer-section">
-          <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-          <ul>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-      </div>
-    </div>
-  </footer>
+  <?php include '../admin/footer.php'?>
+
 </body>
+
 </html>
+
