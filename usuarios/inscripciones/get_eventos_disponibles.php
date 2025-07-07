@@ -1,6 +1,6 @@
 <?php
 // Activar reporte de errores para desarrollo
-ini_set('display_errors', 0);
+ini_set('display_errors', 0); // Considerar cambiar a 1 para depuración en desarrollo
 ini_set('log_errors', 1);
 ini_set('error_log', '../../logs/php_errors.log');
 
@@ -24,37 +24,39 @@ try {
         throw new Exception("Cédula no encontrada en la sesión.");
     }
 
-    // CONSULTA FINAL (solo requiere 1 parámetro: cedula)
+    // CONSULTA PARA TRAER EVENTOS CON TODOS SUS REQUISITOS
     $query = "SELECT 
-    ec.ID_EVE_CUR as codigo,
-    ec.TIT_EVE_CUR as titulo,
-    ec.DES_EVE_CUR as descripcion,
-    ec.FEC_INI_EVE_CUR as fechaInicio,
-    ec.FEC_FIN_EVE_CUR as fechaFin,
-    ec.COS_EVE_CUR as costo,
-    ec.MOD_EVE_CUR as tipo_evento,
-    MAX(CASE WHEN r.nom_req = 'Nota mínima' THEN er.valor_req END) as nota_minima,
-    MAX(CASE WHEN r.nom_req = 'Asistencia' THEN er.valor_req END) as asistencia_requerida
-FROM EVENTOS_CURSOS ec
-LEFT JOIN eventos_requisitos er ON ec.ID_EVE_CUR = er.id_eve_cur
-LEFT JOIN requisitos r ON er.id_req = r.id_req
-WHERE ec.FEC_FIN_EVE_CUR >= CURRENT_DATE
-AND ec.ID_EVE_CUR NOT IN (
-    SELECT i.ID_EVE_CUR 
-    FROM INSCRIPCIONES i 
-    WHERE i.CED_USU = $1
-)
-GROUP BY 
-    ec.ID_EVE_CUR,
-    ec.TIT_EVE_CUR,
-    ec.DES_EVE_CUR,
-    ec.FEC_INI_EVE_CUR,
-    ec.FEC_FIN_EVE_CUR,
-    ec.COS_EVE_CUR,
-    ec.MOD_EVE_CUR
-ORDER BY ec.FEC_INI_EVE_CUR ASC, ec.TIT_EVE_CUR ASC";
+                ec.ID_EVE_CUR as codigo,
+                ec.TIT_EVE_CUR as titulo,
+                ec.DES_EVE_CUR as descripcion,
+                ec.FEC_INI_EVE_CUR as fechaInicio,
+                ec.FEC_FIN_EVE_CUR as fechaFin,
+                ec.COS_EVE_CUR as costo,
+                ec.MOD_EVE_CUR as tipo_evento,
+                CASE
+                    WHEN COUNT(er.id_req) = 0 THEN '[]'::jsonb
+                    ELSE jsonb_agg(jsonb_build_object('nom_req', r.nom_req, 'valor_req', er.valor_req))
+                END as requisitos
+            FROM EVENTOS_CURSOS ec
+            LEFT JOIN eventos_requisitos er ON ec.ID_EVE_CUR = er.id_eve_cur
+            LEFT JOIN requisitos r ON er.id_req = r.id_req
+            WHERE ec.FEC_FIN_EVE_CUR >= CURRENT_DATE
+            AND ec.ID_EVE_CUR NOT IN (
+                SELECT i.ID_EVE_CUR 
+                FROM INSCRIPCIONES i 
+                WHERE i.CED_USU = $1
+            )
+            GROUP BY 
+                ec.ID_EVE_CUR,
+                ec.TIT_EVE_CUR,
+                ec.DES_EVE_CUR,
+                ec.FEC_INI_EVE_CUR,
+                ec.FEC_FIN_EVE_CUR,
+                ec.COS_EVE_CUR,
+                ec.MOD_EVE_CUR
+            ORDER BY ec.FEC_INI_EVE_CUR ASC, ec.TIT_EVE_CUR ASC";
 
-    $params = [$cedula];  
+    $params = [$cedula];    
     $result = pg_query_params($conn, $query, $params);
 
     if (!$result) {
@@ -63,6 +65,8 @@ ORDER BY ec.FEC_INI_EVE_CUR ASC, ec.TIT_EVE_CUR ASC";
 
     $eventos = [];
     while ($row = pg_fetch_assoc($result)) {
+        // Decodificar la columna 'requisitos' que viene como JSONB
+        $row['requisitos'] = json_decode($row['requisitos'], true);
         $eventos[] = $row;
     }
 
@@ -73,10 +77,10 @@ ORDER BY ec.FEC_INI_EVE_CUR ASC, ec.TIT_EVE_CUR ASC";
     if (ob_get_length()) ob_clean();
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
-}
-
-// Cerrar conexión
-if (isset($conn)) {
-    pg_close($conn);
+} finally {
+    // Cerrar conexión si está abierta
+    if (isset($conn) && is_resource($conn)) {
+        pg_close($conn);
+    }
 }
 ?>
