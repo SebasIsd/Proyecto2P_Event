@@ -34,8 +34,8 @@ $desarrolladores = pg_fetch_all($resultDesarrolladores);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --primary: #8B0000;
-            --secondary: #D32F2F;
+            --primary: #7c2020;
+            --secondary: #5e1818;
             --accent: #FF5722;
             --light: #F5F5F5;
             --dark: #212121;
@@ -311,7 +311,7 @@ $desarrolladores = pg_fetch_all($resultDesarrolladores);
     background-color:rgb(226, 168, 168);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-}
+
     </style>
 </head>
 <body>

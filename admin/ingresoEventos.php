@@ -113,7 +113,9 @@ $requisitos = getCatalogo($conn, 'REQUISITOS', 'ID_REQ', 'NOM_REQ');
 header {
     background-color: var(--primary-color);
     color: var(--white);
-    padding: 1rem 0;
+    padding: 1rem
+16px
+ 0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -131,7 +133,10 @@ nav ul {
     list-style: none;
     margin-top: 1rem;
     flex-wrap: wrap;
+    justify-content: flex-end; 
+    gap: 1rem;
 }
+
 
 nav ul li a {
     color: var(--white);
@@ -246,24 +251,19 @@ nav ul li a:hover, nav ul li a.active {
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1 style="text-align: center; padding: 20px;"> <span>Ingreso de eventos</span></h1>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
-          <li><a href="../admin/ingresoEventos.php" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
- <li><a href="../admin/eventos.php"><i class="fas fa-eye"></i> Ver Eventos</a></li>
-          <li class="profile-link">
-                        <a href="..admin/perfil.php" ><i class="fas fa-user-circle"></i> Perfil</a>
-                    </li>
-                    <li><a href="../../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-                
-        </ul>
-      </nav>
-    </div>
-  </header>
+ <header class="main-header">
+  <div class="logo-nombre">
+    <h1>Bienvenido, Administrador 👋</h1>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="admin.php"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+      <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+    </ul>
+  </nav>
+</header>
+
   <div class="formulario-container">
     <form method="POST" id="eventoForm">
       <fieldset>
