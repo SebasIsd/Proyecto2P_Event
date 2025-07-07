@@ -18,7 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = pg_query_params($conn, $sql, array($correo));
 
         if ($usuario = pg_fetch_assoc($result)) {
-            if ($password === $usuario['pas_usu']) {
+            // Consider using password_verify for hashed passwords in a real application
+            if ($password === $usuario['pas_usu']) { 
                 $_SESSION['usuario'] = $usuario['nom_pri_usu'];
                 $_SESSION['rol'] = $usuario['id_rol_usu'];
                 $_SESSION['correo'] = $usuario['cor_usu'];
@@ -26,22 +27,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['id'] = $usuario['id_usu'];
 
                 // Redirigir según rol y evento
-            if ($_SESSION['rol'] == 1) {
-                header("Location: ../admin/admin.php");
-            } else {
-                if (isset($_SESSION['evento_redireccion'])) {
-                    $evento_id = $_SESSION['evento_redireccion'];
-                    unset($_SESSION['evento_redireccion']);
-                    header("Location: ../usuarios/inscripciones/inscripciones.php?evento=" . urlencode($evento_id));
+                if ($_SESSION['rol'] == 1) {
+                    header("Location: ../admin/admin.php");
                 } else {
-                    header("Location: inicio.php");
+                    if (isset($_SESSION['evento_redireccion'])) {
+                        $evento_id = $_SESSION['evento_redireccion'];
+                        unset($_SESSION['evento_redireccion']);
+                        header("Location: ../usuarios/inicio.php?evento=" . urlencode($evento_id));
+                    } else {
+                        header("Location: inicio.php");
+                    }
                 }
-            }
-
                 exit();
             }
         }
-
         $error = "Correo o contraseña incorrectos.";
     }
 }
@@ -108,6 +107,7 @@ if (isset($_GET['evento'])) {
         
         .login-form .form-group {
             margin-bottom: 1.5rem;
+            position: relative; /* Added for the eye icon positioning */
         }
         
         .login-form label {
@@ -124,12 +124,23 @@ if (isset($_GET['evento'])) {
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s;
+            padding-right: 40px; /* Make space for the eye icon */
         }
         
         .login-form input:focus {
             border-color: #6c1313;
             box-shadow: 0 0 0 3px rgba(108, 19, 19, 0.1);
             outline: none;
+        }
+
+        /* Styles for the eye icon */
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 70%; /* Adjust as needed */
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
         }
         
         .btn-login {
@@ -238,6 +249,9 @@ if (isset($_GET['evento'])) {
                     <div class="form-group">
                         <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
                         <input type="password" id="password" name="password" required placeholder="••••••••">
+                        <span class="toggle-password" onclick="togglePasswordVisibility()">
+                            <i class="fas fa-eye" id="toggleIcon"></i>
+                        </span>
                     </div>
                     
                     <div class="button-group">
@@ -265,17 +279,29 @@ if (isset($_GET['evento'])) {
             // Validar que el correo termine con @uta.edu.ec
             if (!correo.endsWith('@uta.edu.ec')) {
                 e.preventDefault();
-                alert('Debe usar un correo institucional @uta.edu.ec');
-                document.getElementById('correo').focus();
-                
-                // Mostrar el mensaje de error si está oculto
+                // Instead of alert, display the error message in the dedicated div
                 const errorDiv = document.querySelector('.error-message');
                 if (errorDiv) {
                     errorDiv.textContent = 'Debe usar un correo institucional @uta.edu.ec';
                     errorDiv.style.display = 'block';
                 }
+                document.getElementById('correo').focus();
             }
         });
+
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
     </script>
 </body>
 </html>
