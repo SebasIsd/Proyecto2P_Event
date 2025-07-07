@@ -8,7 +8,6 @@ Thumbs.db
 
 # Ignorar archivos de dependencias
 node_modules/
-vendor/
 
 # Ignorar archivos de compilación
 /dist/
