@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Administrar Usuarios</title>
-  <link rel="stylesheet" href="../styles/css/style.css"/>
+   <link rel="stylesheet" href="../styles/css/style.css"/>
   <link rel="stylesheet" href="../styles/css/estiloAdminusuario.css"/>
-  
    <link rel="stylesheet" href="../styles/css/pagoestilo.css">
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -23,8 +22,6 @@
     display: none;
   }
 
-  </style>
-  <style>
   .loading { 
     display: none; 
     color: #6c1313; 
@@ -82,8 +79,7 @@
     height: 25px;  /* o menos si quieres */
     font-size: 14px;
   }
-</style>
-<style>
+
   #formUsuario input {
     padding: 3px 5px;
     height: 25px;  /* o menos si quieres */
@@ -111,9 +107,9 @@
     <div class="logo"><h1>Gestion de Usuarios</h1></div>
     <nav>
       <ul>
-        <li><a href="../admin/admin.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
-        <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        <li><a href="../admin/admin.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+        <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+        <li><a href="../index.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
       </ul>
     </nav>
   </div>
@@ -225,46 +221,11 @@
     </section>
 
     <!-- Botones para mostrar/ocultar formularios -->
-    
-
-
   </aside>
 </main>
-<div style="height: 100px;"></div>
-<footer>
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-        <p>Sistema de gestión de inscripciones para eventos y cursos académicos de la institución.</p>
-        <div class="social-icons">
-          <a href="#"><i class="fab fa-facebook"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-linkedin"></i></a>
-        </div>
-      </div>
-      <div class="footer-section">
-        <h3><i class="fas fa-envelope"></i> Contacto</h3>
-        <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-        <p><i class="fas fa-phone"></i> +123 456 7890</p>
-        <p><i class="fas fa-map-marker-alt"></i> Dirección: Av. Principal 123, Ciudad</p>
-      </div>
-      <div class="footer-section">
-        <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-        <ul>
-          <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
-          <li><a href="#eventos"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-          <li><a href="#"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a></li>
-          <li><a href="#"><i class="fas fa-file-alt"></i> Políticas de Privacidad</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-    </div>
-  </div>
-</footer>
+</br>
+ <?php include '../admin/footer.php'?>
+
 
 <!-- Scripts -->
 <script src="../styles/buscarusuario.js"></script>

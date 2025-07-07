@@ -160,7 +160,7 @@ $eventoSeleccionado = $_GET['evento'] ?? '';
                 <ul>
                     <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
                <li><a href="../admin/generarCertificado.php" class="active"><i class="fas fa-certificate"></i> Certificados</a></li>
-                  <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+                  <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
                     <li><a href="../usuarios/logout.php" ><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
               </ul>
             </nav>
@@ -252,34 +252,7 @@ if ($ruta) {
     }
 }
 ?>
-<footer>
-              <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                    
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-envelope"></i> Contacto</h3>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Eventos</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
-        </div>
-
-    </footer>
+ <?php include '../admin/footer.php'?>
 
 
 </body>

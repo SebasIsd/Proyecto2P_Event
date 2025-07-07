@@ -38,6 +38,7 @@ if ($usuario = pg_fetch_assoc($result)) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mi Perfil - Sistema de Inscripciones</title>
+      <link rel="stylesheet" href="../styles/css/style.css">
     <link rel="stylesheet" href="../styles/css/perfil.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,6 +46,7 @@ if ($usuario = pg_fetch_assoc($result)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
+
     <header>
         <div class="container">
             <div class="logo">
@@ -52,8 +54,8 @@ if ($usuario = pg_fetch_assoc($result)) {
             </div>
             <nav>
                 <ul>
-                    <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-                 <li class="profile-link">
+                    <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li class="profile-link">
                         <a href="..admin/perfil.php" class="active"><i class="fas fa-user-circle"></i> Perfil</a>
                     </li>
                     <li><a href="../../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
@@ -102,32 +104,7 @@ if ($usuario = pg_fetch_assoc($result)) {
 
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Sobre el Sistema</h3>
-                    <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Enlaces Rápidos</h3>
-                    <ul>
-                        <li><a href="inicio.php">Inicio</a></li>
-                        <li><a href="perfil.php">Mi Perfil</a></li>
-                        <li><a href="#">Políticas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Sistema de Inscripciones. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+<?php include '../admin/footer.php'?>
 
     <script src="/styles/script.js"></script>
 </body>

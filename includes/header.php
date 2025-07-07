@@ -22,9 +22,19 @@ if ($datos = pg_fetch_assoc($result)) {
 ?>
 
 <header class="main-header">
-  <div class="logo-nombre">
-    <h1>Bienvenido, <?= htmlspecialchars($nombre_usuario) ?> 👋</h1>
+  <div class="header-container">
+    <div class="logo-container">
+      <img src="../images/logo.jpg" alt="Logo FISEI">
+      <div class="logo-text">
+        <h1>FACULTAD DE INGENIERÍA EN SISTEMAS, ELECTRÓNICA E INDUSTRIAL</h1>
+        <p>UNIVERSIDAD TÉCNICA DE AMBATO</p>
+      </div>
+    </div>
+    <div class="user-greeting">
+      Bienvenido, <?= htmlspecialchars($nombre_usuario) ?> 👋
+    </div>
   </div>
+
   <nav>
     <ul>
       <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
@@ -33,4 +43,5 @@ if ($datos = pg_fetch_assoc($result)) {
       <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
     </ul>
   </nav>
+
 </header>
