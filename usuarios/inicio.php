@@ -61,7 +61,7 @@ if ($evento_id_param) {
         // Verificar disponibilidad por carrera si la ID de carrera del usuario es conocida
         if ($id_carrera_usuario) {
             // Asumiendo una tabla de enlace EVENTO_CARRERA entre eventos y carreras
-            $sql_check_career = "SELECT COUNT(*) FROM EVENTO_CARRERA WHERE ID_EVE_CUR = $1 AND ID_CAR = $2";
+            $sql_check_career = "SELECT COUNT(*) FROM EVENTOS_CARRERAS WHERE ID_EVE_CUR = $1 AND ID_CAR = $2";
             $result_check_career = pg_query_params($conn, $sql_check_career, [$evento_id, $id_carrera_usuario]);
             $count = pg_fetch_result($result_check_career, 0, 0);
             
