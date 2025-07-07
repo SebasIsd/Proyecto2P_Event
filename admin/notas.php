@@ -64,8 +64,8 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
 <head>
   <meta charset="UTF-8">
   <title>Notas y Asistencias</title>
-  <link rel="stylesheet" href="../styles/css/style.css">
   <link rel="stylesheet" href="../styles/css/estilosNotas.css">
+  <link rel="stylesheet" href="../styles/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -83,6 +83,8 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
     }
     #btnFinalizar:hover {
       background-color: #a86e2e;
+
+      
     }
   </style>
 </head>
@@ -92,9 +94,9 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
     <div class="logo"><h1>Notas y <span>Asistencias</span></h1></div>
     <nav>
       <ul>
-        <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="../admin/notasAsistencia.html" class="active"><i class="fas fa-pen-alt"></i> Notas y asistencia</a></li>
-        <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+        <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
+        <li><a href="../admin/notas.php" class="active"><i class="fas fa-pen-alt"></i> Notas y asistencia</a></li>
+        <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
         <li><a href="../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
       </ul>
     </nav>
@@ -130,25 +132,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
   </div>
 </main>
 
-<footer>
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3><i class="fas fa-info-circle"></i> Sobre el Sistema</h3>
-        <p>Sistema de gestión de inscripciones para eventos y cursos académicos.</p>
-      </div>
-      <div class="footer-section">
-        <h3><i class="fas fa-envelope"></i> Contacto</h3>
-        <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-        <p><i class="fas fa-envelope"></i> contacto@institucion.edu</p>
-        <p><i class="fas fa-phone"></i> +123 456 7890</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2023 Sistema de Inscripciones. Todos los derechos reservados.</p>
-    </div>
-  </div>
-</footer>
+<?php include '../admin/footer.php'?>
 
 <script>
   const eventoSelect = document.getElementById("evento");
@@ -192,8 +176,13 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
             ? `<input type="number" min="1" max="100" step="1" value="${p.porc_asi_not_asi ?? ""}" data-id="${p.id_ins}" class="porc">`
             : `<span style="color: gray;">No requiere asistencia</span>`}
         </td>
-        <td><button onclick="guardar(${p.id_ins}, ${mostrarNota}, ${mostrarAsistencia}, this)">Guardar</button></td>
-      `;
+      <td>
+  <button 
+    onclick="guardar(${p.id_ins}, ${mostrarNota}, ${mostrarAsistencia}, this)" 
+    ${!mostrarNota && !mostrarAsistencia ? 'disabled' : ''}>
+    Guardar
+  </button>
+</td>`;
       cuerpo.appendChild(fila);
     });
   }

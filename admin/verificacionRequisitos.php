@@ -59,9 +59,9 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
     </div>
     <nav>
       <ul>
-        <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="validarRequisitos.php" class="active"><i class="fas fa-check-circle"></i> Validar requisitos</a></li>
-        <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+        <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
+        <li><a href="../admin/verificacionRequisitos.php" class="active"><i class="fas fa-check-circle"></i> Validar requisitos</a></li>
+        <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
         <li><a href="../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
       </ul>
     </nav>
@@ -69,9 +69,8 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
 </header>
 
 <main class="contenido">
-  <h2>Selecciona un Evento</h2>
   <select id="evento">
-    <option value="">-- Seleccione --</option>
+    <option value="">-- Seleccione un evento--</option>
     <?php foreach ($eventos as $e): ?>
       <option value="<?= $e['id_eve_cur'] ?>"><?= htmlspecialchars($e['tit_eve_cur']) ?></option>
     <?php endforeach; ?>
@@ -93,7 +92,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
     </table>
   </div>
 </main>
-
+<?php include '../admin/footer.php'?>
 <script>
 let rechazo_id_ins = null;
 let rechazo_id_req = null;
@@ -210,6 +209,6 @@ async function confirmarRechazo() {
     </div>
   </div>
 </div>
-
+ 
 </body>
 </html>
