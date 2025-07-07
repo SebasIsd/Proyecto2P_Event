@@ -252,9 +252,14 @@ nav ul li a:hover, nav ul li a.active {
       </div>
       <nav>
         <ul>
-          <li><a href="../admin/admin.html"><i class="fas fa-home"></i> Inicio</a></li>
-          <li><a href="../admin/ingresoEventos.html" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-          
+          <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a href="../admin/ingresoEventos.php" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
+ <li><a href="../admin/eventos.php"><i class="fas fa-eye"></i> Ver Eventos</a></li>
+          <li class="profile-link">
+                        <a href="..admin/perfil.php" ><i class="fas fa-user-circle"></i> Perfil</a>
+                    </li>
+                    <li><a href="../../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                
         </ul>
       </nav>
     </div>
