@@ -108,6 +108,7 @@ $eventoSeleccionado = $_GET['evento'] ?? '';
   <title>Certificados</title>
     <link rel="stylesheet" href="../styles/css/style.css">
   <link rel="stylesheet" href="../styles/css/estilosNotas.css">
+  <link rel="stylesheet" href="../styles/css/componente.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -154,17 +155,19 @@ $eventoSeleccionado = $_GET['evento'] ?? '';
 
 </head>
 <body>
-      <header>
-    <h1>Gestión de Certificados</h1>
-     <nav>
-                <ul>
-                    <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
-               <li><a href="../admin/generarCertificado.php" class="active"><i class="fas fa-certificate"></i> Certificados</a></li>
-                  <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
-                    <li><a href="../usuarios/logout.php" ><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-              </ul>
-            </nav>
-  </header>
+<header class="main-header">
+  
+  <div class="logo-nombre">
+    <h1>Bienvenido, Administrador 👋</h1>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="admin.php"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+      <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+    </ul>
+  </nav>
+</header>
  
   <form method="get">
 </br>
@@ -252,7 +255,7 @@ if ($ruta) {
     }
 }
 ?>
- <?php include '../admin/footer.php'?>
+ <?php include '../includes/footeradmin.php'?>
 
 
 </body>

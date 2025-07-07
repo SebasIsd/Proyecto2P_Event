@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Eventos</title>
   <link rel="stylesheet" href="../styles/css/style.css" />
+  <link rel="stylesheet" href="../styles/css/componente.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
@@ -128,19 +129,8 @@
 </head>
 
 <body>
-  <header>
-    <div class="container">
-      <h1 style="text-align: center; padding: 20px;">Eventos <span>Disponibles</span></h1>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
-          <li><a href="../admin/eventos.php" class="active"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-          
-        </ul>
-      </nav>
-    </div>
-  </header>
+
+  <?php include '../includes/headeradmin.php'?>
 
   <div class="filtro-inscripciones">
     <input type="text" id="filtroNombre" placeholder="Filtrar por nombre..." onkeyup="filtrarInscripciones()">
@@ -149,7 +139,7 @@
 
   <div class="contenedor-eventos" id="contenedor-eventos"></div>
 
-  <?php include '../admin/footer.php'?>
+  <?php include '../includes/footeradmin.php'?>
 
   <script>
     let idsFavoritos = [];

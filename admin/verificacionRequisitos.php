@@ -30,6 +30,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
   <title>Validar Requisitos</title>
   <link rel="stylesheet" href="../styles/css/style.css">
   <link rel="stylesheet" href="../styles/css/estilosNotas.css">
+  <link rel="stylesheet" href="../styles/css/componente.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -52,21 +53,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
   </style>
 </head>
 <body>
-<header>
-  <div class="container">
-    <div class="logo">
-      <h1>Validar <span>Requisitos</span></h1>
-    </div>
-    <nav>
-      <ul>
-        <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="../admin/verificacionRequisitos.php" class="active"><i class="fas fa-check-circle"></i> Validar requisitos</a></li>
-        <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
-        <li><a href="../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+<?php include '../includes/headeradmin.php'?>
 
 <main class="contenido">
   <select id="evento">
@@ -92,7 +79,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
     </table>
   </div>
 </main>
-<?php include '../admin/footer.php'?>
+<?php include '../includes/footeradmin.php'?>
 <script>
 let rechazo_id_ins = null;
 let rechazo_id_req = null;

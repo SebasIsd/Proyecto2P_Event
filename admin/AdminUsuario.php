@@ -7,6 +7,7 @@
    <link rel="stylesheet" href="../styles/css/style.css"/>
   <link rel="stylesheet" href="../styles/css/estiloAdminusuario.css"/>
    <link rel="stylesheet" href="../styles/css/pagoestilo.css">
+   <link rel="stylesheet" href="../styles/css/componente.css">
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -102,18 +103,7 @@
 </head>
 <body>
 
-<header>
-  <div class="container">
-    <div class="logo"><h1>Gestion de Usuarios</h1></div>
-    <nav>
-      <ul>
-        <li><a href="../admin/admin.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
-        <li><a href="../index.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+<?php include '../includes/headeradmin.php'?>
 
 <main class="container">
   
@@ -224,7 +214,7 @@
   </aside>
 </main>
 </br>
- <?php include '../admin/footer.php'?>
+ <?php include '../includes/footeradmin.php'?>
 
 
 <!-- Scripts -->

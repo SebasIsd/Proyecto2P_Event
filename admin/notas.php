@@ -66,6 +66,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
   <title>Notas y Asistencias</title>
   <link rel="stylesheet" href="../styles/css/estilosNotas.css">
   <link rel="stylesheet" href="../styles/css/style.css">
+  <link rel="stylesheet" href="../styles/css/componente.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -89,19 +90,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
   </style>
 </head>
 <body>
-<header>
-  <div class="container">
-    <div class="logo"><h1>Notas y <span>Asistencias</span></h1></div>
-    <nav>
-      <ul>
-        <li><a href="../admin/admin.php"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="../admin/notas.php" class="active"><i class="fas fa-pen-alt"></i> Notas y asistencia</a></li>
-        <li><a href="../admin/perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
-        <li><a href="../usuarios/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+<?php include '../includes/headeradmin.php'?>
 
 <main class="contenido">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -132,7 +121,7 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
   </div>
 </main>
 
-<?php include '../admin/footer.php'?>
+<?php include '../includes/footeradmin.php'?>
 
 <script>
   const eventoSelect = document.getElementById("evento");
