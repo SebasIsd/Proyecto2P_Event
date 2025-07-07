@@ -1,4 +1,13 @@
 /* Reset básico */
+:root {
+  --primary: #8B0000;   /* Rojo FISEI oscuro */
+  --accent: #FF5722;    /* Naranja */
+  --gray: #757575;
+  --light: #f4f6f8;
+  --white: #ffffff;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
 * {
   box-sizing: border-box;
   margin: 0;
@@ -54,40 +63,45 @@ table tbody tr:hover {
 }
 
 /* Estilos para inputs y selects dentro de la tabla */
-input.nota-input {
+input.nota,
+input.porc {
   width: 80px;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--gray);
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  transition: var(--transition);
+  box-shadow: var(--card-shadow);
 }
 
-select.asistencia-select {
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+input.nota:focus,
+input.porc:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.2);
 }
 
-/* Botón guardar */
+/* Botón Guardar */
 .guardar-btn {
-  background-color: #6c1313;
+  background-color: var(--primary);
   color: white;
   border: none;
   padding: 8px 14px;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+  transition: var(--transition);
+  box-shadow: var(--card-shadow);
 }
 
-.guardar-btn:hover {
-  background-color: #6c1313;
+.guardar-btn:hover:not(:disabled) {
+  background-color: var(--accent);
+  transform: scale(1.03);
 }
 
-
-
-input.porcentaje-input {
-  width: 80px;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.guardar-btn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
 }

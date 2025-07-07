@@ -64,8 +64,8 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
 <head>
   <meta charset="UTF-8">
   <title>Notas y Asistencias</title>
-  <link rel="stylesheet" href="../styles/css/style.css">
   <link rel="stylesheet" href="../styles/css/estilosNotas.css">
+  <link rel="stylesheet" href="../styles/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -83,6 +83,8 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
     }
     #btnFinalizar:hover {
       background-color: #a86e2e;
+
+      
     }
   </style>
 </head>
@@ -174,8 +176,13 @@ $eventos = $conn->query("SELECT ID_EVE_CUR, TIT_EVE_CUR FROM EVENTOS_CURSOS ORDE
             ? `<input type="number" min="1" max="100" step="1" value="${p.porc_asi_not_asi ?? ""}" data-id="${p.id_ins}" class="porc">`
             : `<span style="color: gray;">No requiere asistencia</span>`}
         </td>
-        <td><button onclick="guardar(${p.id_ins}, ${mostrarNota}, ${mostrarAsistencia}, this)">Guardar</button></td>
-      `;
+      <td>
+  <button 
+    onclick="guardar(${p.id_ins}, ${mostrarNota}, ${mostrarAsistencia}, this)" 
+    ${!mostrarNota && !mostrarAsistencia ? 'disabled' : ''}>
+    Guardar
+  </button>
+</td>`;
       cuerpo.appendChild(fila);
     });
   }
