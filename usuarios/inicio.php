@@ -24,7 +24,6 @@ $result_user = pg_query_params($conn, $sql_user, [$cedula_usuario]);
 if ($datos_user = pg_fetch_assoc($result_user)) {
     $nombre_usuario = $datos_user['nom_pri_usu'];
     $id_carrera_usuario = $datos_user['car_usu'];
-
 }
 
 $evento_id_param = $_GET['evento_id'] ?? $_GET['evento'] ?? null;
@@ -33,7 +32,7 @@ if ($evento_id_param) {
     $evento_id = pg_escape_string($conn, $evento_id_param);
 
     $cedula = $_SESSION['cedula'] ?? null;
-    $idEvento = $evento_id; // Usamos el mismo ID, no necesitas $_GET['id']
+    $idEvento = $evento_id; 
 
     if (!$cedula || !$idEvento) {
         echo "Datos incompletos";
@@ -75,48 +74,32 @@ if ($evento_id_param) {
 
     // Paso 4: Redirigir según corresponda
     if ($cantidad > 0) {
-        header("Location: eventoDetalle.php?id=$idEvento");
-        exit;
-    } else {
-        echo "<script>alert('Usted no pertenece a la carrera a la que está dirigido este evento.'); window.location.href = 'eventos.php';</script>";
-        exit;
-    }
+        // En lugar de redirigir a eventoDetalle.php, ahora el modal se abrirá aquí
+        // Obtener los detalles del evento para mostrar en el modal
+        $sql_event_details = "SELECT
+                                ec.ID_EVE_CUR as codigo,
+                                ec.TIT_EVE_CUR as titulo,
+                                ec.DES_EVE_CUR as descripcion,
+                                ec.FEC_INI_EVE_CUR as fechaInicio,
+                                ec.FEC_FIN_EVE_CUR as fechaFin,
+                                ec.COS_EVE_CUR as costo,
+                                ec.MOD_EVE_CUR as tipo_evento,
+                                json_agg(json_build_object('id_req', r.id_req, 'nom_req', r.nom_req, 'valor_req', er.valor_req)) FILTER (WHERE r.id_req IS NOT NULL) as requisitos
+                              FROM EVENTOS_CURSOS ec
+                              LEFT JOIN eventos_requisitos er ON ec.ID_EVE_CUR = er.id_eve_cur
+                              LEFT JOIN requisitos r ON er.id_req = r.id_req
+                              WHERE ec.ID_EVE_CUR = $1
+                              GROUP BY ec.ID_EVE_CUR, ec.TIT_EVE_CUR, ec.DES_EVE_CUR, ec.FEC_INI_EVE_CUR, ec.FEC_FIN_EVE_CUR, ec.COS_EVE_CUR, ec.MOD_EVE_CUR";
 
-    // Consulta para obtener detalles del evento
-    $sql_event_details = "SELECT
-                            ec.ID_EVE_CUR as codigo,
-                            ec.TIT_EVE_CUR as titulo,
-                            ec.DES_EVE_CUR as descripcion,
-                            ec.FEC_INI_EVE_CUR as fechaInicio,
-                            ec.FEC_FIN_EVE_CUR as fechaFin,
-                            ec.COS_EVE_CUR as costo,
-                            ec.MOD_EVE_CUR as tipo_evento,
-                            MAX(CASE WHEN r.nom_req = 'Nota mínima' THEN er.valor_req END) as nota_minima,
-                            MAX(CASE WHEN r.nom_req = 'Asistencia' THEN er.valor_req END) as asistencia_requerida
-                          FROM EVENTOS_CURSOS ec
-                          LEFT JOIN eventos_requisitos er ON ec.ID_EVE_CUR = er.id_eve_cur
-                          LEFT JOIN requisitos r ON er.id_req = r.id_req
-                          WHERE ec.ID_EVE_CUR = $1
-                          GROUP BY ec.ID_EVE_CUR, ec.TIT_EVE_CUR, ec.DES_EVE_CUR, ec.FEC_INI_EVE_CUR, ec.FEC_FIN_EVE_CUR, ec.COS_EVE_CUR, ec.MOD_EVE_CUR";
+        $result_event_details = pg_query_params($conn, $sql_event_details, [$evento_id]);
 
-    $result_event_details = pg_query_params($conn, $sql_event_details, [$evento_id]);
-
-    if ($event_data = pg_fetch_assoc($result_event_details)) {
-        $preselected_event_data = $event_data;
-
-        if ($id_carrera_usuario) {
-            $sql_check_career = "SELECT COUNT(*) FROM EVENTOS_CARRERAS WHERE ID_EVE_CUR = $1 AND ID_CAR = $2";
-            $result_check_career = pg_query_params($conn, $sql_check_career, [$evento_id, $id_carrera_usuario]);
-            $count = pg_fetch_result($result_check_career, 0, 0);
-
-            if ($count == 0) {
-                $preselected_event_unavailable = true;
-            }
+        if ($event_data = pg_fetch_assoc($result_event_details)) {
+            $preselected_event_data = $event_data;
         } else {
-            $preselected_event_unavailable = true;
+            $preselected_event_unavailable = true; // Evento no encontrado o error
         }
     } else {
-        $preselected_event_unavailable = true;
+        $preselected_event_unavailable = true; // No pertenece a la carrera
     }
 }
 ?>
@@ -652,33 +635,36 @@ if ($evento_id_param) {
           <label class="modal-label">Modalidad:</label>
           <input type="text" class="modal-input" id="modalTipo" readonly>
         </div>
-        <div class="modal-field" id="modalNotaMinimaDiv">
+        <div class="modal-field" id="modalNotaMinimaDiv" style="display: none;">
           <label class="modal-label">Nota Mínima Requerida:</label>
           <input type="text" class="modal-input" id="modalNotaMinima" readonly>
         </div>
-        <div class="modal-field" id="modalAsistenciaRequeridaDiv">
+        <div class="modal-field" id="modalAsistenciaRequeridaDiv" style="display: none;">
           <label class="modal-label">Asistencia Requerida (%):</label>
           <input type="text" class="modal-input" id="modalAsistenciaRequerida" readonly>
         </div>
-        <div class="modal-field" id="modalComprobanteDiv" style="display: none;">
-          <label class="modal-label">Subir Comprobante (JPG/PNG, máx 2MB):</label>
-          <input type="file" class="modal-input" name="comprobante" id="modalComprobante" accept="image/png, image/jpeg">
-        </div>
-      </div>
-      <div class="modal-footer">
-          <input type="hidden" name="evento" id="inputEventoId">
-          <input type="hidden" name="cedula" value="<?= htmlspecialchars($cedula_usuario) ?>">
-          <input type="hidden" name="fecha_inscripcion" value="<?= date('Y-m-d') ?>">
-          <input type="hidden" name="estado_pago" id="estadoPagoInput">
-          <button type="submit" class="btn-inscribir">
-            <i class="fas fa-check-circle"></i> Confirmar Inscripción
-          </button>
-      </div>
-      </form>
+        <div id="requisitosDinamicosContainer">
+      <!-- Aquí se insertarán dinámicamente los campos de requisitos -->
+    </div>
+
+    <div class="modal-field" id="modalComprobanteDiv" style="display: none;">
+      <label class="modal-label">Subir Comprobante (JPG/PNG, máx 2MB):</label>
+      <input type="file" class="modal-input" name="comprobante" id="modalComprobante" accept="image/png, image/jpeg">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <input type="hidden" name="evento" id="inputEventoId">
+    <input type="hidden" name="cedula" value="<?= htmlspecialchars($cedula_usuario) ?>">
+    <input type="hidden" name="fecha_inscripcion" value="<?= date('Y-m-d') ?>">
+    <input type="hidden" name="estado_pago" id="estadoPagoInput">
+    <button type="submit" class="btn-inscribir">
+      <i class="fas fa-check-circle"></i> Confirmar Inscripción
+    </button>
+  </div>
+</form>
     </div>
   </div>
 
-  <!-- Modal de Evento No Disponible -->
   <div class="modal" id="modalEventoNoDisponible">
     <div class="modal-content">
       <div class="modal-header">
@@ -715,7 +701,6 @@ function obtenerImagenAleatoria() {
   return imagenesEventos[indice];
 }
 
-// Función mejorada para formatear fechas - Solo día, mes y año
 // Función robusta para formatear fechas - Solo día, mes y año
 function formatearFecha(fechaStr) {
   if (!fechaStr || fechaStr === 'null' || fechaStr.trim() === '' || fechaStr === undefined) {
@@ -777,53 +762,79 @@ function mostrarModal(evento) {
   document.getElementById('modalTitulo').textContent = evento.titulo;
   document.getElementById('modalDescripcion').value = evento.descripcion || 'No disponible';
   
-  // AQUÍ ESTÁ EL CAMBIO IMPORTANTE - usar las claves correctas
-  document.getElementById('modalFechaInicio').value = formatearFecha(evento.fechainicio); // minúscula
-  document.getElementById('modalFechaFin').value = formatearFecha(evento.fechafin); // minúscula
+  // Usar las claves correctas (fechaInicio y fechaFin)
+  document.getElementById('modalFechaInicio').value = formatearFecha(evento.fechaInicio);
+  document.getElementById('modalFechaFin').value = formatearFecha(evento.fechaFin);
   
   const esGratuito = parseFloat(evento.costo) === 0;
-  const costoTexto = esGratuito ? 'Gratuito' : `${parseFloat(evento.costo || '0').toFixed(2)}`;
+  const costoTexto = esGratuito ? 'Gratuito' : `$${parseFloat(evento.costo || '0').toFixed(2)}`;
   
   document.getElementById('modalCosto').value = costoTexto;
   document.getElementById('modalTipo').value = evento.tipo_evento || 'No especificado';
   document.getElementById('inputEventoId').value = evento.codigo;
   document.getElementById('estadoPagoInput').value = esGratuito ? 'Pagado' : 'Pendiente';
 
-  // Mostrar/ocultar campos de requisitos en el modal
-  const notaMinimaDiv = document.getElementById('modalNotaMinimaDiv');
-  const asistenciaRequeridaDiv = document.getElementById('modalAsistenciaRequeridaDiv');
+  // Ocultar/limpiar campos de requisitos estáticos y comprobante
+  document.getElementById('modalNotaMinimaDiv').style.display = 'none';
+  document.getElementById('modalAsistenciaRequeridaDiv').style.display = 'none';
 
-  const notaMinima = parseFloat(evento.nota_minima);
-  const asistenciaRequerida = parseFloat(evento.asistencia_requerida);
-
-  if (!isNaN(notaMinima) && notaMinima > 0) {
-    document.getElementById('modalNotaMinima').value = notaMinima;
-    notaMinimaDiv.style.display = 'block';
-  } else {
-    notaMinimaDiv.style.display = 'none';
+  // Limpiar cualquier requisito dinámico previo para evitar duplicados al abrir el modal varias veces
+  const requisitosDinamicosContainer = document.getElementById('requisitosDinamicosContainer');
+  if (requisitosDinamicosContainer) {
+    requisitosDinamicosContainer.innerHTML = ''; // Limpiar contenido anterior
   }
 
-  if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
-    document.getElementById('modalAsistenciaRequerida').value = asistenciaRequerida + '%';
-    asistenciaRequeridaDiv.style.display = 'block';
-  } else {
-    asistenciaRequeridaDiv.style.display = 'none';
+  // **** CAMBIO CLAVE AQUÍ: Generar campos dinámicamente para los requisitos 'actual' ****
+  if (evento.requisitos && Array.isArray(evento.requisitos)) {
+    // Convertir la cadena JSON de requisitos a un objeto JavaScript si es necesario
+    let requisitosParsed;
+    try {
+        requisitosParsed = (typeof evento.requisitos === 'string') ? JSON.parse(evento.requisitos) : evento.requisitos;
+    } catch (e) {
+        console.error("Error al parsear requisitos JSON:", e);
+        requisitosParsed = [];
+    }
+
+    requisitosParsed.forEach(req => {
+      // Requisitos de Nota y Asistencia (se mantienen estáticos pero su visibilidad se controla)
+      if (req.nom_req === 'Nota mínima' && !isNaN(parseFloat(req.valor_req)) && parseFloat(req.valor_req) > 0) {
+        document.getElementById('modalNotaMinima').value = parseFloat(req.valor_req);
+        document.getElementById('modalNotaMinimaDiv').style.display = 'block';
+      } else if (req.nom_req === 'Asistencia' && !isNaN(parseFloat(req.valor_req)) && parseFloat(req.valor_req) > 0) {
+        document.getElementById('modalAsistenciaRequerida').value = parseFloat(req.valor_req) + '%';
+        document.getElementById('modalAsistenciaRequeridaDiv').style.display = 'block';
+      } 
+      // Requisitos 'actual' que requieren archivo
+      else if (req.valor_req === 'actual') {
+        const reqDiv = document.createElement('div');
+        reqDiv.className = 'modal-field';
+        reqDiv.innerHTML = `
+          <label class="modal-label">${req.nom_req} (PDF requerido):</label>
+          <input type="file" class="modal-input" name="requisito_file_${req.id_req}" accept="application/pdf" required>
+        `;
+        if (requisitosDinamicosContainer) {
+            requisitosDinamicosContainer.appendChild(reqDiv);
+        } else {
+            console.error("El contenedor 'requisitosDinamicosContainer' no se encontró en el DOM.");
+        }
+      }
+    });
   }
 
-  // Mostrar/ocultar campo de comprobante solo para eventos pagados
+  // Si es pagado, mostrar el campo de comprobante
   const comprobanteDiv = document.getElementById('modalComprobanteDiv');
   const comprobanteInput = document.getElementById('modalComprobante');
   
-  if (esGratuito) {
-    comprobanteDiv.style.display = 'none';
-    comprobanteInput.required = false;
-  } else {
+  if (!esGratuito) {
     comprobanteDiv.style.display = 'block';
     comprobanteInput.required = true;
+  } else {
+    comprobanteDiv.style.display = 'none';
+    comprobanteInput.required = false;
   }
   
   modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden'; // Prevenir scroll del body
 }
 
 function renderizarEventos(filtrados) {
@@ -837,23 +848,43 @@ function renderizarEventos(filtrados) {
   filtrados.forEach((ev, index) => {
     const esGratuito = parseFloat(ev.costo) === 0;
     const tipoClase = esGratuito ? 'gratuito' : 'pagado';
-    const precioTexto = esGratuito ? 'Gratuito' : `${parseFloat(ev.costo || '0').toFixed(2)}`;
+    const precioTexto = esGratuito ? 'Gratuito' : `$${parseFloat(ev.costo || '0').toFixed(2)}`;
     const imagenEvento = obtenerImagenAleatoria();
     
     let requisitosHtml = '';
-    const notaMinima = parseFloat(ev.nota_minima);
-    const asistenciaRequerida = parseFloat(ev.asistencia_requerida);
+    // Necesitamos parsear la cadena JSON de requisitos si viene como string
+    let requisitosParaMostrar = [];
+    if (ev.requisitos) {
+        try {
+            requisitosParaMostrar = (typeof ev.requisitos === 'string') ? JSON.parse(ev.requisitos) : ev.requisitos;
+        } catch (e) {
+            console.error("Error al parsear requisitos para renderizado:", e);
+            requisitosParaMostrar = [];
+        }
+    }
 
-    if ((!isNaN(notaMinima) && notaMinima > 0) || (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0)) {
+    const notaMinimaObj = requisitosParaMostrar.find(r => r.nom_req === 'Nota mínima');
+    const asistenciaRequeridaObj = requisitosParaMostrar.find(r => r.nom_req === 'Asistencia');
+    const tieneRequisitosArchivo = requisitosParaMostrar.some(r => r.valor_req === 'actual');
+
+    const notaMinima = notaMinimaObj ? parseFloat(notaMinimaObj.valor_req) : NaN;
+    const asistenciaRequerida = asistenciaRequeridaObj ? parseFloat(asistenciaRequeridaObj.valor_req) : NaN;
+
+    if ((!isNaN(notaMinima) && notaMinima > 0) || (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) || tieneRequisitosArchivo) {
+        requisitosHtml += `<p class="event-description"><strong>Requisitos:</strong></p>`;
         if (!isNaN(notaMinima) && notaMinima > 0) {
-            requisitosHtml += `<p class="event-description"><strong>Nota Mínima:</strong> ${notaMinima}</p>`;
+            requisitosHtml += `<p class="event-description">- Nota Mínima: ${notaMinima}</p>`;
         }
         if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
-            requisitosHtml += `<p class="event-description"><strong>Asistencia Requerida:</strong> ${asistenciaRequerida}%</p>`;
+            requisitosHtml += `<p class="event-description">- Asistencia Requerida: ${asistenciaRequerida}%</p>`;
+        }
+        if (tieneRequisitosArchivo) {
+            requisitosHtml += `<p class="event-description">- Se requiere(n) archivo(s) adicional(es).</p>`;
         }
     } else {
         requisitosHtml += `<p class="event-description">No se requieren requisitos específicos para este evento.</p>`;
     }
+
 
     const card = document.createElement('div');
     card.className = 'event-card';
@@ -866,15 +897,14 @@ function renderizarEventos(filtrados) {
         <div class="event-meta">
           <div class="event-date">
             <i class="far fa-calendar-alt"></i>
-            ${formatearFecha(ev.fechainicio)}
+            ${formatearFecha(ev.fechaInicio)}
           </div>
           <span class="event-type ${tipoClase}">
             ${ev.tipo_evento || 'Sin especificar'}
           </span>
         </div>
         <p class="event-description">${ev.descripcion || 'Descripción no disponible'}</p>
-        ${requisitosHtml}
-        <div class="event-footer">
+        ${requisitosHtml} <div class="event-footer">
           <div class="event-price ${tipoClase}">${precioTexto}</div>
           <button class="event-btn" onclick='mostrarModal(${JSON.stringify(ev).replace(/'/g, "\\'")})'}>
             <i class="fas fa-ticket-alt"></i> Inscribirse
@@ -884,121 +914,6 @@ function renderizarEventos(filtrados) {
     `;
     container.appendChild(card);
   });
-}// Función robusta para formatear fechas - Solo día, mes y año
-function formatearFecha(fechaStr) {
-  console.log('Fecha recibida:', fechaStr); // Para debug
-  
-  if (!fechaStr || fechaStr === 'null' || fechaStr.trim() === '' || fechaStr === undefined) {
-    return 'Sin fecha definida';
-  }
-  
-  try {
-    let fechaObj;
-    
-    // Convertir string a fecha manejando diferentes formatos
-    if (typeof fechaStr === 'string') {
-      // Si es formato YYYY-MM-DD (común en PostgreSQL)
-      if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr.trim())) {
-        const partes = fechaStr.trim().split('-');
-        fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
-      }
-      // Si es formato DD/MM/YYYY
-      else if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr.trim())) {
-        const partes = fechaStr.trim().split('/');
-        fechaObj = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
-      }
-      // Si es formato MM/DD/YYYY
-      else if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr.trim())) {
-        fechaObj = new Date(fechaStr.trim());
-      }
-      // Si ya incluye hora (formato ISO)
-      else if (fechaStr.includes('T') || fechaStr.includes(' ')) {
-        fechaObj = new Date(fechaStr);
-      }
-      // Último intento con el constructor Date
-      else {
-        fechaObj = new Date(fechaStr);
-      }
-    } else {
-      fechaObj = new Date(fechaStr);
-    }
-
-    console.log('Fecha convertida:', fechaObj); // Para debug
-
-    if (isNaN(fechaObj.getTime())) {
-      return 'Sin fecha definida';
-    }
-
-    // Array de meses en español
-    const meses = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ];
-
-    const dia = fechaObj.getDate();
-    const mes = meses[fechaObj.getMonth()];
-    const año = fechaObj.getFullYear();
-
-    return `${dia} de ${mes} de ${año}`;
-    
-  } catch (error) {
-    console.error('Error al formatear fecha:', error);
-    return 'Sin fecha definida';
-  }
-}
-
-function mostrarModal(evento) {
-  const modal = document.getElementById('modalEvento');
-  
-  document.getElementById('modalTitulo').textContent = evento.titulo;
-  document.getElementById('modalDescripcion').value = evento.descripcion || 'No disponible';
-  document.getElementById('modalFechaInicio').value = formatearFecha(evento.fechaInicio);
-  document.getElementById('modalFechaFin').value = formatearFecha(evento.fechaFin);
-  
-  const esGratuito = parseFloat(evento.costo) === 0; // Usar parseFloat para comparar el costo
-  const costoTexto = esGratuito ? 'Gratuito' : `$${parseFloat(evento.costo || '0').toFixed(2)}`;
-  
-  document.getElementById('modalCosto').value = costoTexto;
-  document.getElementById('modalTipo').value = evento.tipo_evento || 'No especificado';
-  document.getElementById('inputEventoId').value = evento.codigo;
-  document.getElementById('estadoPagoInput').value = esGratuito ? 'Pagado' : 'Pendiente'; // 'completado' para gratuito
-
-  // Mostrar/ocultar campos de requisitos en el modal
-  const notaMinimaDiv = document.getElementById('modalNotaMinimaDiv');
-  const asistenciaRequeridaDiv = document.getElementById('modalAsistenciaRequeridaDiv');
-
-  // Convertir a número para una comparación precisa, si es null o 0 se considera no requerido
-  const notaMinima = parseFloat(evento.nota_minima);
-  const asistenciaRequerida = parseFloat(evento.asistencia_requerida);
-
-  if (!isNaN(notaMinima) && notaMinima > 0) {
-    document.getElementById('modalNotaMinima').value = notaMinima;
-    notaMinimaDiv.style.display = 'block';
-  } else {
-    notaMinimaDiv.style.display = 'none';
-  }
-
-  if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
-    document.getElementById('modalAsistenciaRequerida').value = asistenciaRequerida + '%';
-    asistenciaRequeridaDiv.style.display = 'block';
-  } else {
-    asistenciaRequeridaDiv.style.display = 'none';
-  }
-
-  // Mostrar/ocultar campo de comprobante solo para eventos pagados
-  const comprobanteDiv = document.getElementById('modalComprobanteDiv');
-  const comprobanteInput = document.getElementById('modalComprobante');
-  
-  if (esGratuito) {
-    comprobanteDiv.style.display = 'none';
-    comprobanteInput.required = false;
-  } else {
-    comprobanteDiv.style.display = 'block';
-    comprobanteInput.required = true;
-  }
-  
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden'; // Prevenir scroll del body
 }
 
 function cerrarModal() {
@@ -1069,65 +984,6 @@ function validarComprobante() {
 
 
 let eventos = [];
-
-function renderizarEventos(filtrados) {
-  const container = document.getElementById('eventosContainer');
-  container.innerHTML = '';
-  if (!filtrados.length) {
-    container.innerHTML = '<p style="text-align:center;color:#777">No se encontraron eventos</p>';
-    return;
-  }
-filtrados.forEach((ev, index) => {
-    const esGratuito = parseFloat(ev.costo) === 0;
-    const tipoClase = esGratuito ? 'gratuito' : 'pagado';
-    const precioTexto = esGratuito ? 'Gratuito' : `$${parseFloat(ev.costo || '0').toFixed(2)}`;
-    const imagenEvento = obtenerImagenAleatoria(); // Imagen aleatoria para cada evento
-    
-    let requisitosHtml = '';
-    const notaMinima = parseFloat(ev.nota_minima);
-    const asistenciaRequerida = parseFloat(ev.asistencia_requerida);
-
-    if ((!isNaN(notaMinima) && notaMinima > 0) || (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0)) {
-        if (!isNaN(notaMinima) && notaMinima > 0) {
-            requisitosHtml += `<p class="event-description"><strong>Nota Mínima:</strong> ${notaMinima}</p>`;
-        }
-        if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
-            requisitosHtml += `<p class="event-description"><strong>Asistencia Requerida:</strong> ${asistenciaRequerida}%</p>`;
-        }
-    } else {
-        requisitosHtml += `<p class="event-description">No se requieren requisitos específicos para este evento.</p>`;
-    }
-
-    const card = document.createElement('div');
-    card.className = 'event-card';
-    card.innerHTML = `
-      <div class="event-image">
-        <img src="${imagenEvento}" alt="${ev.titulo}" onerror="this.src='https://via.placeholder.com/300x180/4361ee/ffffff?text=Evento'">
-      </div>
-      <div class="event-content">
-        <h3 class="event-title">${ev.titulo}</h3>
-        <div class="event-meta">
-          <div class="event-date">
-            <i class="far fa-calendar-alt"></i>
-            ${formatearFecha(ev.fechaInicio)}
-          </div>
-          <span class="event-type ${tipoClase}">
-            ${ev.tipo_evento || 'Sin especificar'}
-          </span>
-        </div>
-        <p class="event-description">${ev.descripcion || 'Descripción no disponible'}</p>
-        ${requisitosHtml} <!-- Insertar requisitos aquí -->
-        <div class="event-footer">
-          <div class="event-price ${tipoClase}">${precioTexto}</div>
-          <button class="event-btn" onclick='mostrarModal(${JSON.stringify(ev).replace(/'/g, "\\'")})'}>
-            <i class="fas fa-ticket-alt"></i> Inscribirse
-          </button>
-        </div>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
 
 document.addEventListener('DOMContentLoaded', function() {
   // Verificar evento preseleccionado desde PHP
@@ -1205,18 +1061,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
 function enviarInscripcion(event) {
   event.preventDefault();
   const form = event.target;
   const formData = new FormData(form);
   
+  // Mostrar loader o mensaje de procesamiento
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+  submitBtn.disabled = true;
+
   fetch(form.action, {
     method: 'POST',
     body: formData
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error('Error en la red');
+      return response.text().then(text => {
+        // Intenta parsear como JSON si es posible
+        try {
+          const jsonData = JSON.parse(text);
+          throw new Error(jsonData.message || 'Error en el servidor');
+        } catch {
+          throw new Error(text || 'Error en la red: ' + response.status);
+        }
+      });
     }
     return response.json();
   })
@@ -1224,14 +1095,19 @@ function enviarInscripcion(event) {
     if (data.success) {
       alert(data.message);
       cerrarModal();
-      // Recargar eventos o hacer otra acción
+      // Opcional: recargar la página o actualizar la lista de eventos
+      window.location.reload();
     } else {
-      alert('Error: ' + data.message);
+      throw new Error(data.message || 'Error desconocido');
     }
   })
   .catch(error => {
     console.error('Error:', error);
-    alert('Ocurrió un error al procesar la inscripción');
+    alert('Error al procesar la inscripción: ' + error.message);
+  })
+  .finally(() => {
+    submitBtn.innerHTML = originalBtnText;
+    submitBtn.disabled = false;
   });
 }
 </script>
