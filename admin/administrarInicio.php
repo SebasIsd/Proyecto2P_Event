@@ -75,15 +75,6 @@ $desarrolladores = pg_fetch_all($resultDesarrolladores);
             text-align: center;
         }
 
-        form {
-            margin-bottom: 2rem;
-            border: 1px solid #ddd;
-            padding: 1.5rem;
-            border-radius: 8px;
-            background-color: var(--light);
-            box-shadow: var(--card-shadow);
-        }
-
         label {
             font-weight: 500;
             display: block;
