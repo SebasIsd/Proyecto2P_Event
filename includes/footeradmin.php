@@ -5,6 +5,7 @@
       <ul>
         <li><a href="admin.php"><i class="fas fa-home"></i> Inicio</a></li>
         <li><a href="perfil.php"><i class="fas fa-user-circle"></i> Perfil</a></li>
+        <li><a href="https://sdsnt2003.atlassian.net/servicedesk/customer/portal/36"><i class="fa-solid fa-alarm-clock"></i> Solicitar un Cambio</a></li>
 
       </ul>
     </div>

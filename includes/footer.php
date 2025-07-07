@@ -5,7 +5,7 @@
       <ul>
         <li><a href="inicio.php"><i class="fas fa-home"></i> Inicio</a></li>
         <li><a href="mis_eventos.php"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
-
+      <li><a href="https://sdsnt2003.atlassian.net/servicedesk/customer/portal/36"><i class="fa-solid fa-alarm-clock"></i> Solicitar un Cambio</a></li>
       </ul>
     </div>
     <div class="footer-links">

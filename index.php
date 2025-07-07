@@ -660,9 +660,9 @@ $conexion->cerrar();
                 <h4>Enlaces Rápidos</h4>
                 <ul>
                     <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Eventos</a></li>
-                    <li><a href="#">Cursos</a></li>
-                    <li><a href="#">Inscripciones</a></li>
+                    <li><a href="usuarios/eventos.php">Eventos</a></li>
+                    <li><a href="usuarios/login.php">Inscripciones</a></li>
+                    <li><a href="https://sdsnt2003.atlassian.net/servicedesk/customer/portal/36" target="_blank">Solicitar un Cambio</a></li>
                 </ul>
             </div>
         <div class="footer-links">
