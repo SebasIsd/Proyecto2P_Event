@@ -593,8 +593,11 @@ $conexion->cerrar();
                         <p>Por favor espera mientras cargamos los próximos eventos.</p>
                     </div>
                     <?php if (!isset($_SESSION['usuario'])): ?>
-                    <a href="usuarios/login.php?evento=<?= $evento['id_evento'] ?>" class="btn btn-primary">Inscribirse</a>                <?php else: ?>
-                    <a href="usuarios/inscripciones/inscripciones.php?evento=<?= $evento['id_evento'] ?>" class="btn btn-primary">Inscribirse</a>
+                    <!-- Modificado para pasar el ID del evento al login si no está logueado -->
+                    <a href="usuarios/login.php?redirect=inscripciones.php&evento_id=<?= $evento['codigo'] ?>" class="btn btn-primary">Inscribirse</a>
+                    <?php else: ?>
+                    <!-- Modificado para pasar el ID del evento directamente a inscripciones.php si está logueado -->
+                    <a href="usuarios/inscripciones/inscripciones.php?evento_id=<?= $evento['codigo'] ?>" class="btn btn-primary">Inscribirse</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -692,6 +695,49 @@ $conexion->cerrar();
                 autoplaySpeed: 5000
             });
         });
+
+       /* // Función para cargar eventos en la sección "Próximos Eventos"
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('usuarios/inscripciones/get_eventos_disponibles.php') // Nueva API para eventos públicos
+                .then(response => response.json())
+                .then(data => {
+                    const eventosContainer = document.getElementById('proximos-eventos-container');
+                    eventosContainer.innerHTML = ''; // Limpiar el contenido de "Cargando eventos..."
+
+                    if (data.length > 0) {
+                        data.forEach(evento => {
+                            const eventoCard = `
+                                <div class="evento-moderno">
+                                    <div class="evento-header">
+                                        <h4><i class="fas fa-calendar-alt"></i> ${evento.titulo}</h4>
+                                    </div>
+                                    <div class="evento-body">
+                                        <p class="evento-descripcion">${evento.descripcion}</p>
+                                        <p><i class="fas fa-calendar-day"></i> Fecha Inicio: ${new Date(evento.fechaInicio).toLocaleDateString('es-ES')}</p>
+                                        <p><i class="fas fa-calendar-times"></i> Fecha Fin: ${new Date(evento.fechaFin).toLocaleDateString('es-ES')}</p>
+                                        <p><i class="fas fa-dollar-sign"></i> Costo: ${evento.costo === '0.00' ? 'Gratuito' : '$' + evento.costo}</p>
+                                        <p><i class="fas fa-tag"></i> Tipo: ${evento.tipo_evento}</p>
+                                    </div>
+                                    <div class="evento-footer">
+                                        <?php if (!isset($_SESSION['usuario'])): ?>
+                                            <a href="usuarios/login.php?redirect=inscripciones.php&evento_id=${evento.codigo}" class="btn btn-inscribirse">Inscribirse</a>
+                                        <?php else: ?>
+                                            <a href="usuarios/inscripciones/inscripciones.php?evento_id=${evento.codigo}" class="btn btn-inscribirse">Inscribirse</a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            `;
+                            eventosContainer.innerHTML += eventoCard;
+                        });
+                    } else {
+                        eventosContainer.innerHTML = '<p style="text-align: center; width: 100%;">No hay próximos eventos disponibles.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar los eventos:', error);
+                    document.getElementById('proximos-eventos-container').innerHTML = '<p style="text-align: center; width: 100%; color: red;">Error al cargar los eventos. Intente de nuevo más tarde.</p>';
+                });
+        });*/
     </script>
 </body>
 </html>

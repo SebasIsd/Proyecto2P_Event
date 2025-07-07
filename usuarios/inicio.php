@@ -12,12 +12,71 @@ $conexion = new Conexion();
 $conn = $conexion->getConexion();
 
 $nombre_usuario = 'Usuario';
+$cedula_usuario = $_SESSION['cedula'];
+$id_carrera_usuario = null;
+$preselected_event_data = null;
+$preselected_event_unavailable = false;
 
-$sql = "SELECT nom_pri_usu FROM usuarios WHERE ced_usu = $1";
-$result = pg_query_params($conn, $sql, [$_SESSION['cedula']]);
+// Obtener el primer nombre y la ID de carrera del usuario
+$sql_user_name = "SELECT nom_pri_usu, car_usu FROM usuarios WHERE ced_usu = $1";
+$result_user_name = pg_query_params($conn, $sql_user_name, [$cedula_usuario]);
 
-if ($datos = pg_fetch_assoc($result)) {
-    $nombre_usuario = $datos['nom_pri_usu'];
+if ($datos_user = pg_fetch_assoc($result_user_name)) {
+    $nombre_usuario = $datos_user['nom_pri_usu'];
+    $id_carrera_usuario = $datos_user['car_usu'];
+}
+
+// Manejar evento preseleccionado desde la URL
+$evento_id_param = null;
+if (isset($_GET['evento_id'])) {
+    $evento_id_param = $_GET['evento_id'];
+} elseif (isset($_GET['evento'])) { // Verificar 'evento' si 'evento_id' no está presente
+    $evento_id_param = $_GET['evento'];
+}
+
+if ($evento_id_param) {
+    $evento_id = pg_escape_string($conn, $evento_id_param);
+
+    // Consulta para obtener detalles del evento, incluyendo requisitos
+    $sql_event_details = "SELECT
+                            ec.ID_EVE_CUR as codigo,
+                            ec.TIT_EVE_CUR as titulo,
+                            ec.DES_EVE_CUR as descripcion,
+                            ec.FEC_INI_EVE_CUR as fechaInicio,
+                            ec.FEC_FIN_EVE_CUR as fechaFin,
+                            ec.COS_EVE_CUR as costo,
+                            ec.MOD_EVE_CUR as tipo_evento,
+                            MAX(CASE WHEN r.nom_req = 'Nota mínima' THEN er.valor_req END) as nota_minima,
+                            MAX(CASE WHEN r.nom_req = 'Asistencia' THEN er.valor_req END) as asistencia_requerida
+                          FROM EVENTOS_CURSOS ec
+                          LEFT JOIN eventos_requisitos er ON ec.ID_EVE_CUR = er.id_eve_cur
+                          LEFT JOIN requisitos r ON er.id_req = r.id_req
+                          WHERE ec.ID_EVE_CUR = $1
+                          GROUP BY ec.ID_EVE_CUR, ec.TIT_EVE_CUR, ec.DES_EVE_CUR, ec.FEC_INI_EVE_CUR, ec.FEC_FIN_EVE_CUR, ec.COS_EVE_CUR, ec.MOD_EVE_CUR";
+    $result_event_details = pg_query_params($conn, $sql_event_details, [$evento_id]);
+
+    if ($event_data = pg_fetch_assoc($result_event_details)) {
+        $preselected_event_data = $event_data;
+
+        // Verificar disponibilidad por carrera si la ID de carrera del usuario es conocida
+        if ($id_carrera_usuario) {
+            // Asumiendo una tabla de enlace EVENTO_CARRERA entre eventos y carreras
+            $sql_check_career = "SELECT COUNT(*) FROM EVENTO_CARRERA WHERE ID_EVE_CUR = $1 AND ID_CAR = $2";
+            $result_check_career = pg_query_params($conn, $sql_check_career, [$evento_id, $id_carrera_usuario]);
+            $count = pg_fetch_result($result_check_career, 0, 0);
+            
+            if ($count == 0) {
+                // Si el evento no está vinculado a la carrera del usuario
+                $preselected_event_unavailable = true;
+            }
+        } else {
+            // Si la carrera del usuario es desconocida, considerarlo no disponible para esta verificación
+            $preselected_event_unavailable = true; 
+        }
+    } else {
+        // Evento no encontrado en la base de datos
+        $preselected_event_unavailable = true; 
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -254,112 +313,167 @@ if ($datos = pg_fetch_assoc($result)) {
       background: #3a56d4;
       transform: translateY(-2px);
     }
-    
-    /* Modal mejorado */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      overflow-y: auto;
-      padding: 2rem 0;
-    }
-    .modal.active {
-      display: flex;
-      opacity: 1;
-    }
-    .modal-content {
-      background: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 90vh;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-      transform: translateY(-20px);
-      transition: transform 0.3s ease;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-    .modal-body {
-      padding: 1.5rem;
-      overflow-y: auto;
-      flex-grow: 1;
-    }
-    .modal.active .modal-content {
-      transform: translateY(0);
-    }
-    .modal-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid #e9ecef;
-      position: relative;
-    }
-    .modal-title {
-      font-size: 1.5rem;
-      color: #2b2d42;
-      margin: 0;
-      font-weight: 600;
-    }
-    .modal-close {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      font-size: 1.5rem;
-      color: #6c757d;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .modal-close:hover {
-      color: #dc3545;
-    }
-    .modal-label {
-      display: block;
-      font-weight: 600;
-      color: #343a40;
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
-    }
-    .modal-input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ced4da;
-      border-radius: 6px;
-      background: #f8f9fa;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95rem;
-    }
-    .modal-footer {
-      padding: 1.5rem;
-      border-top: 1px solid #e9ecef;
-      text-align: right;
-    }
-    .btn-inscribir {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background:rgb(145, 21, 21);
-      color: white;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-    }
-    .btn-inscribir:hover {
-      background: #218838;
-      transform: translateY(-2px);
-    }
-    
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  overflow-y: auto;
+  padding: 2rem 0;
+  backdrop-filter: blur(5px);
+}
+
+.modal.active {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px; /* Aumentado para mejor espacio */
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  transform: translateY(-20px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  max-height: 100vh; /* Permite scroll si el contenido es muy largo */
+}
+
+.modal.active .modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  position: relative;
+  background: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  color: #2b2d42;
+  margin: 0;
+  font-weight: 600;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  color: #6c757d;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.modal-close:hover {
+  color: #dc3545;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto; /* Permite scroll dentro del cuerpo del modal */
+  flex-grow: 1;
+}
+
+.modal-field {
+  margin-bottom: 1.2rem;
+}
+
+.modal-label {
+  display: block;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background: #f8f9fa;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #4361ee;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e9ecef;
+  text-align: right;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+}
+
+.btn-inscribir {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.btn-inscribir:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Estilo para campos de solo lectura */
+.modal-input[readonly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* Mejoras para el modal de evento no disponible */
+#modalEventoNoDisponible .modal-content {
+  text-align: center;
+}
+
+#modalEventoNoDisponible .modal-body {
+  padding: 2rem;
+}
+
+#modalEventoNoDisponible .modal-body p {
+  margin-bottom: 1rem;
+}
+
+#modalEventoNoDisponible .modal-footer {
+  text-align: center;
+  justify-content: center;
+}
     /* Responsive */
     @media (max-width: 768px) {
       .hero {
@@ -475,7 +589,7 @@ if ($datos = pg_fetch_assoc($result)) {
         <h3 class="modal-title" id="modalTitulo"></h3>
         <span class="modal-close" onclick="cerrarModal()">&times;</span>
       </div>
-      <form id="formInscribir" method="POST" action="../usuarios/inscripciones/procesar_inscripcion.php" enctype="multipart/form-data" onsubmit="return validarComprobante()">
+<form id="formInscribir" method="POST" action="../usuarios/inscripciones/procesar_inscripcion.php" enctype="multipart/form-data" onsubmit="enviarInscripcion(event)">
       <div class="modal-body">
         <div class="modal-field">
           <label class="modal-label">Descripción:</label>
@@ -497,6 +611,14 @@ if ($datos = pg_fetch_assoc($result)) {
           <label class="modal-label">Modalidad:</label>
           <input type="text" class="modal-input" id="modalTipo" readonly>
         </div>
+        <div class="modal-field" id="modalNotaMinimaDiv">
+          <label class="modal-label">Nota Mínima Requerida:</label>
+          <input type="text" class="modal-input" id="modalNotaMinima" readonly>
+        </div>
+        <div class="modal-field" id="modalAsistenciaRequeridaDiv">
+          <label class="modal-label">Asistencia Requerida (%):</label>
+          <input type="text" class="modal-input" id="modalAsistenciaRequerida" readonly>
+        </div>
         <div class="modal-field" id="modalComprobanteDiv" style="display: none;">
           <label class="modal-label">Subir Comprobante (JPG/PNG, máx 2MB):</label>
           <input type="file" class="modal-input" name="comprobante" id="modalComprobante" accept="image/png, image/jpeg">
@@ -504,7 +626,7 @@ if ($datos = pg_fetch_assoc($result)) {
       </div>
       <div class="modal-footer">
           <input type="hidden" name="evento" id="inputEventoId">
-          <input type="hidden" name="cedula" value="<?= $_SESSION['cedula'] ?>">
+          <input type="hidden" name="cedula" value="<?= htmlspecialchars($cedula_usuario) ?>">
           <input type="hidden" name="fecha_inscripcion" value="<?= date('Y-m-d') ?>">
           <input type="hidden" name="estado_pago" id="estadoPagoInput">
           <button type="submit" class="btn-inscribir">
@@ -512,6 +634,23 @@ if ($datos = pg_fetch_assoc($result)) {
           </button>
       </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal de Evento No Disponible -->
+  <div class="modal" id="modalEventoNoDisponible">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Evento No Disponible</h3>
+        <span class="modal-close" onclick="cerrarModalNoDisponible()">&times;</span>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <p style="font-size: 1.1rem; color: #555;">Lo sentimos, este evento no está disponible para tu carrera.</p>
+        <p style="font-size: 0.9rem; color: #777;">Por favor, explora otros eventos disponibles.</p>
+      </div>
+      <div class="modal-footer" style="text-align: center;">
+        <button type="button" class="btn-primary" onclick="cerrarModalNoDisponible()">Entendido</button>
+      </div>
     </div>
   </div>
 </main>
@@ -535,42 +674,235 @@ function obtenerImagenAleatoria() {
   return imagenesEventos[indice];
 }
 
-// Función mejorada para formatear fechas
-function formatearFecha(fecha) {
-  if (!fecha || fecha === 'null' || fecha === '') return 'Sin fecha definida';
-
+// Función mejorada para formatear fechas - Solo día, mes y año
+// Función robusta para formatear fechas - Solo día, mes y año
+function formatearFecha(fechaStr) {
+  if (!fechaStr || fechaStr === 'null' || fechaStr.trim() === '' || fechaStr === undefined) {
+    return 'Sin fecha definida';
+  }
+  
   try {
     let fechaObj;
     
-    // Si la fecha viene con formato YYYY-MM-DD HH:MM:SS
-    if (fecha.includes(' ')) {
-      fechaObj = new Date(fecha.replace(' ', 'T'));
-    } 
-    // Si la fecha viene con formato YYYY-MM-DD
-    else if (fecha.includes('-')) {
-      fechaObj = new Date(fecha + 'T00:00:00');
-    } 
-    // Otros formatos
-    else {
-      fechaObj = new Date(fecha);
+    // Convertir string a fecha manejando diferentes formatos
+    if (typeof fechaStr === 'string') {
+      // Si es formato YYYY-MM-DD (común en PostgreSQL)
+      if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr.trim())) {
+        const partes = fechaStr.trim().split('-');
+        fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+      }
+      // Si es formato DD/MM/YYYY
+      else if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr.trim())) {
+        const partes = fechaStr.trim().split('/');
+        fechaObj = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+      }
+      // Si ya incluye hora (formato ISO)
+      else if (fechaStr.includes('T') || fechaStr.includes(' ')) {
+        fechaObj = new Date(fechaStr);
+      }
+      // Último intento con el constructor Date
+      else {
+        fechaObj = new Date(fechaStr);
+      }
+    } else {
+      fechaObj = new Date(fechaStr);
     }
 
-    // Verificar si la fecha es válida
     if (isNaN(fechaObj.getTime())) {
-      console.warn('Fecha inválida:', fecha);
-      return 'Fecha no válida';
+      return 'Sin fecha definida';
     }
 
-    // Formatear la fecha en español
-    return fechaObj.toLocaleDateString('es-ES', {
-      weekday: 'short',
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
+    // Array de meses en español
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    const dia = fechaObj.getDate();
+    const mes = meses[fechaObj.getMonth()];
+    const año = fechaObj.getFullYear();
+
+    return `${dia} de ${mes} de ${año}`;
+    
   } catch (error) {
-    console.error('Error al formatear fecha:', error, fecha);
-    return 'Error en fecha';
+    console.error('Error al formatear fecha:', error);
+    return 'Sin fecha definida';
+  }
+}
+
+function mostrarModal(evento) {
+  const modal = document.getElementById('modalEvento');
+  
+  document.getElementById('modalTitulo').textContent = evento.titulo;
+  document.getElementById('modalDescripcion').value = evento.descripcion || 'No disponible';
+  
+  // AQUÍ ESTÁ EL CAMBIO IMPORTANTE - usar las claves correctas
+  document.getElementById('modalFechaInicio').value = formatearFecha(evento.fechainicio); // minúscula
+  document.getElementById('modalFechaFin').value = formatearFecha(evento.fechafin); // minúscula
+  
+  const esGratuito = parseFloat(evento.costo) === 0;
+  const costoTexto = esGratuito ? 'Gratuito' : `${parseFloat(evento.costo || '0').toFixed(2)}`;
+  
+  document.getElementById('modalCosto').value = costoTexto;
+  document.getElementById('modalTipo').value = evento.tipo_evento || 'No especificado';
+  document.getElementById('inputEventoId').value = evento.codigo;
+  document.getElementById('estadoPagoInput').value = esGratuito ? 'Pagado' : 'Pendiente';
+
+  // Mostrar/ocultar campos de requisitos en el modal
+  const notaMinimaDiv = document.getElementById('modalNotaMinimaDiv');
+  const asistenciaRequeridaDiv = document.getElementById('modalAsistenciaRequeridaDiv');
+
+  const notaMinima = parseFloat(evento.nota_minima);
+  const asistenciaRequerida = parseFloat(evento.asistencia_requerida);
+
+  if (!isNaN(notaMinima) && notaMinima > 0) {
+    document.getElementById('modalNotaMinima').value = notaMinima;
+    notaMinimaDiv.style.display = 'block';
+  } else {
+    notaMinimaDiv.style.display = 'none';
+  }
+
+  if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
+    document.getElementById('modalAsistenciaRequerida').value = asistenciaRequerida + '%';
+    asistenciaRequeridaDiv.style.display = 'block';
+  } else {
+    asistenciaRequeridaDiv.style.display = 'none';
+  }
+
+  // Mostrar/ocultar campo de comprobante solo para eventos pagados
+  const comprobanteDiv = document.getElementById('modalComprobanteDiv');
+  const comprobanteInput = document.getElementById('modalComprobante');
+  
+  if (esGratuito) {
+    comprobanteDiv.style.display = 'none';
+    comprobanteInput.required = false;
+  } else {
+    comprobanteDiv.style.display = 'block';
+    comprobanteInput.required = true;
+  }
+  
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderizarEventos(filtrados) {
+  const container = document.getElementById('eventosContainer');
+  container.innerHTML = '';
+  if (!filtrados.length) {
+    container.innerHTML = '<p style="text-align:center;color:#777">No se encontraron eventos</p>';
+    return;
+  }
+
+  filtrados.forEach((ev, index) => {
+    const esGratuito = parseFloat(ev.costo) === 0;
+    const tipoClase = esGratuito ? 'gratuito' : 'pagado';
+    const precioTexto = esGratuito ? 'Gratuito' : `${parseFloat(ev.costo || '0').toFixed(2)}`;
+    const imagenEvento = obtenerImagenAleatoria();
+    
+    let requisitosHtml = '';
+    const notaMinima = parseFloat(ev.nota_minima);
+    const asistenciaRequerida = parseFloat(ev.asistencia_requerida);
+
+    if ((!isNaN(notaMinima) && notaMinima > 0) || (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0)) {
+        if (!isNaN(notaMinima) && notaMinima > 0) {
+            requisitosHtml += `<p class="event-description"><strong>Nota Mínima:</strong> ${notaMinima}</p>`;
+        }
+        if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
+            requisitosHtml += `<p class="event-description"><strong>Asistencia Requerida:</strong> ${asistenciaRequerida}%</p>`;
+        }
+    } else {
+        requisitosHtml += `<p class="event-description">No se requieren requisitos específicos para este evento.</p>`;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'event-card';
+    card.innerHTML = `
+      <div class="event-image">
+        <img src="${imagenEvento}" alt="${ev.titulo}" onerror="this.src='https://via.placeholder.com/300x180/4361ee/ffffff?text=Evento'">
+      </div>
+      <div class="event-content">
+        <h3 class="event-title">${ev.titulo}</h3>
+        <div class="event-meta">
+          <div class="event-date">
+            <i class="far fa-calendar-alt"></i>
+            ${formatearFecha(ev.fechainicio)}
+          </div>
+          <span class="event-type ${tipoClase}">
+            ${ev.tipo_evento || 'Sin especificar'}
+          </span>
+        </div>
+        <p class="event-description">${ev.descripcion || 'Descripción no disponible'}</p>
+        ${requisitosHtml}
+        <div class="event-footer">
+          <div class="event-price ${tipoClase}">${precioTexto}</div>
+          <button class="event-btn" onclick='mostrarModal(${JSON.stringify(ev).replace(/'/g, "\\'")})'}>
+            <i class="fas fa-ticket-alt"></i> Inscribirse
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}// Función robusta para formatear fechas - Solo día, mes y año
+function formatearFecha(fechaStr) {
+  console.log('Fecha recibida:', fechaStr); // Para debug
+  
+  if (!fechaStr || fechaStr === 'null' || fechaStr.trim() === '' || fechaStr === undefined) {
+    return 'Sin fecha definida';
+  }
+  
+  try {
+    let fechaObj;
+    
+    // Convertir string a fecha manejando diferentes formatos
+    if (typeof fechaStr === 'string') {
+      // Si es formato YYYY-MM-DD (común en PostgreSQL)
+      if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr.trim())) {
+        const partes = fechaStr.trim().split('-');
+        fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+      }
+      // Si es formato DD/MM/YYYY
+      else if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr.trim())) {
+        const partes = fechaStr.trim().split('/');
+        fechaObj = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+      }
+      // Si es formato MM/DD/YYYY
+      else if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr.trim())) {
+        fechaObj = new Date(fechaStr.trim());
+      }
+      // Si ya incluye hora (formato ISO)
+      else if (fechaStr.includes('T') || fechaStr.includes(' ')) {
+        fechaObj = new Date(fechaStr);
+      }
+      // Último intento con el constructor Date
+      else {
+        fechaObj = new Date(fechaStr);
+      }
+    } else {
+      fechaObj = new Date(fechaStr);
+    }
+
+    console.log('Fecha convertida:', fechaObj); // Para debug
+
+    if (isNaN(fechaObj.getTime())) {
+      return 'Sin fecha definida';
+    }
+
+    // Array de meses en español
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    const dia = fechaObj.getDate();
+    const mes = meses[fechaObj.getMonth()];
+    const año = fechaObj.getFullYear();
+
+    return `${dia} de ${mes} de ${año}`;
+    
+  } catch (error) {
+    console.error('Error al formatear fecha:', error);
+    return 'Sin fecha definida';
   }
 }
 
@@ -582,15 +914,37 @@ function mostrarModal(evento) {
   document.getElementById('modalFechaInicio').value = formatearFecha(evento.fechaInicio);
   document.getElementById('modalFechaFin').value = formatearFecha(evento.fechaFin);
   
-  const esGratuito = evento.tipo_evento && evento.tipo_evento.trim().toLowerCase() === 'gratuito';
-  const costoTexto = esGratuito ? 'Gratuito' : `$${evento.costo || '0'}`;
+  const esGratuito = parseFloat(evento.costo) === 0; // Usar parseFloat para comparar el costo
+  const costoTexto = esGratuito ? 'Gratuito' : `$${parseFloat(evento.costo || '0').toFixed(2)}`;
   
   document.getElementById('modalCosto').value = costoTexto;
   document.getElementById('modalTipo').value = evento.tipo_evento || 'No especificado';
   document.getElementById('inputEventoId').value = evento.codigo;
-  document.getElementById('estadoPagoInput').value = esGratuito ? 'Pagado' : 'Pendiente';
-  
-  // Mostrar/ocultar campo de comprobante
+  document.getElementById('estadoPagoInput').value = esGratuito ? 'Pagado' : 'Pendiente'; // 'completado' para gratuito
+
+  // Mostrar/ocultar campos de requisitos en el modal
+  const notaMinimaDiv = document.getElementById('modalNotaMinimaDiv');
+  const asistenciaRequeridaDiv = document.getElementById('modalAsistenciaRequeridaDiv');
+
+  // Convertir a número para una comparación precisa, si es null o 0 se considera no requerido
+  const notaMinima = parseFloat(evento.nota_minima);
+  const asistenciaRequerida = parseFloat(evento.asistencia_requerida);
+
+  if (!isNaN(notaMinima) && notaMinima > 0) {
+    document.getElementById('modalNotaMinima').value = notaMinima;
+    notaMinimaDiv.style.display = 'block';
+  } else {
+    notaMinimaDiv.style.display = 'none';
+  }
+
+  if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
+    document.getElementById('modalAsistenciaRequerida').value = asistenciaRequerida + '%';
+    asistenciaRequeridaDiv.style.display = 'block';
+  } else {
+    asistenciaRequeridaDiv.style.display = 'none';
+  }
+
+  // Mostrar/ocultar campo de comprobante solo para eventos pagados
   const comprobanteDiv = document.getElementById('modalComprobanteDiv');
   const comprobanteInput = document.getElementById('modalComprobante');
   
@@ -609,7 +963,30 @@ function mostrarModal(evento) {
 function cerrarModal() {
   document.getElementById('modalEvento').classList.remove('active');
   document.body.style.overflow = 'auto'; // Restaurar scroll del body
+  // Eliminar el evento_id o evento de la URL después de cerrar el modal
+  const url = new URL(window.location.href);
+  url.searchParams.delete('evento_id');
+  url.searchParams.delete('evento');
+  window.history.replaceState({}, document.title, url.toString());
 }
+
+// Funciones para el modal de evento no disponible
+function mostrarModalNoDisponible() {
+  const modal = document.getElementById('modalEventoNoDisponible');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalNoDisponible() {
+  document.getElementById('modalEventoNoDisponible').classList.remove('active');
+  document.body.style.overflow = 'auto';
+  // Eliminar el evento_id o evento de la URL después de cerrar el modal
+  const url = new URL(window.location.href);
+  url.searchParams.delete('evento_id');
+  url.searchParams.delete('evento');
+  window.history.replaceState({}, document.title, url.toString());
+}
+
 
 function mostrarCarga() {
   const container = document.getElementById('eventosContainer');
@@ -622,8 +999,10 @@ function mostrarCarga() {
 }
 
 function validarComprobante() {
-  const tipo = document.getElementById('modalTipo').value.toLowerCase();
-  if (tipo === 'gratuito') return true;
+  const costoInput = document.getElementById('modalCosto').value;
+  const esGratuito = costoInput.toLowerCase() === 'gratuito';
+  
+  if (esGratuito) return true; // No se requiere comprobante para eventos gratuitos
   
   const archivo = document.getElementById('modalComprobante');
   if (!archivo.files.length) {
@@ -658,11 +1037,26 @@ function renderizarEventos(filtrados) {
     return;
   }
 filtrados.forEach((ev, index) => {
-    const esGratuito = ev.tipo_evento && ev.tipo_evento.toLowerCase() === 'gratuito';
+    const esGratuito = parseFloat(ev.costo) === 0;
     const tipoClase = esGratuito ? 'gratuito' : 'pagado';
-    const precioTexto = esGratuito ? 'Gratuito' : `$${ev.costo || '0'}`;
+    const precioTexto = esGratuito ? 'Gratuito' : `$${parseFloat(ev.costo || '0').toFixed(2)}`;
     const imagenEvento = obtenerImagenAleatoria(); // Imagen aleatoria para cada evento
     
+    let requisitosHtml = '';
+    const notaMinima = parseFloat(ev.nota_minima);
+    const asistenciaRequerida = parseFloat(ev.asistencia_requerida);
+
+    if ((!isNaN(notaMinima) && notaMinima > 0) || (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0)) {
+        if (!isNaN(notaMinima) && notaMinima > 0) {
+            requisitosHtml += `<p class="event-description"><strong>Nota Mínima:</strong> ${notaMinima}</p>`;
+        }
+        if (!isNaN(asistenciaRequerida) && asistenciaRequerida > 0) {
+            requisitosHtml += `<p class="event-description"><strong>Asistencia Requerida:</strong> ${asistenciaRequerida}%</p>`;
+        }
+    } else {
+        requisitosHtml += `<p class="event-description">No se requieren requisitos específicos para este evento.</p>`;
+    }
+
     const card = document.createElement('div');
     card.className = 'event-card';
     card.innerHTML = `
@@ -681,6 +1075,7 @@ filtrados.forEach((ev, index) => {
           </span>
         </div>
         <p class="event-description">${ev.descripcion || 'Descripción no disponible'}</p>
+        ${requisitosHtml} <!-- Insertar requisitos aquí -->
         <div class="event-footer">
           <div class="event-price ${tipoClase}">${precioTexto}</div>
           <button class="event-btn" onclick='mostrarModal(${JSON.stringify(ev).replace(/'/g, "\\'")})'}>
@@ -694,6 +1089,19 @@ filtrados.forEach((ev, index) => {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Verificar evento preseleccionado desde PHP
+  const preselectedEvent = <?php echo json_encode($preselected_event_data); ?>;
+  const preselectedEventUnavailable = <?php echo json_encode($preselected_event_unavailable); ?>;
+
+  if (preselectedEvent) {
+    if (preselectedEventUnavailable) {
+      mostrarModalNoDisponible();
+    } else {
+      mostrarModal(preselectedEvent);
+    }
+  }
+
+  // Cargar y renderizar eventos
   mostrarCarga();
   
   fetch('../usuarios/inscripciones/get_eventos_disponibles.php')
@@ -740,7 +1148,51 @@ document.addEventListener('DOMContentLoaded', function() {
     currentSlide = (currentSlide + 1) % slides.length;
     showSlide(currentSlide);
   }, 5000);
+
+  // Cerrar modal al hacer clic fuera del contenido
+  const modalEvento = document.getElementById('modalEvento');
+  modalEvento.addEventListener('click', function(event) {
+    if (event.target === modalEvento) {
+      cerrarModal();
+    }
+  });
+
+  const modalEventoNoDisponible = document.getElementById('modalEventoNoDisponible');
+  modalEventoNoDisponible.addEventListener('click', function(event) {
+    if (event.target === modalEventoNoDisponible) {
+      cerrarModalNoDisponible();
+    }
+  });
 });
+function enviarInscripcion(event) {
+  event.preventDefault();
+  const form = event.target;
+  const formData = new FormData(form);
+  
+  fetch(form.action, {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Error en la red');
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      alert(data.message);
+      cerrarModal();
+      // Recargar eventos o hacer otra acción
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Ocurrió un error al procesar la inscripción');
+  });
+}
 </script>
 </body>
 </html>
