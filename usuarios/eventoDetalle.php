@@ -76,12 +76,13 @@ $evento = pg_fetch_assoc($resEvento);
 <head>
     <meta charset="UTF-8">
     <title>Detalle del Evento</title>
-    <link rel="stylesheet" href="../styles/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="../styles/css/componente.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-        }
         .evento-detalle {
             max-width: 700px;
             margin: 0 auto;
@@ -111,6 +112,7 @@ $evento = pg_fetch_assoc($resEvento);
     </style>
 </head>
 <body>
+    <?php include "../includes/header.php"; ?>
     <div class="evento-detalle">
         <h2><?= htmlspecialchars($evento['tit_eve_cur']) ?></h2>
         <p><strong>Descripción:</strong> <?= nl2br(htmlspecialchars($evento['des_eve_cur'])) ?></p>
@@ -122,5 +124,7 @@ $evento = pg_fetch_assoc($resEvento);
 
         <a class="btn-inscribirse" href="inscripciones/inscripciones.php?evento_id=<?= $evento['id_eve_cur'] ?>">Inscribirse</a>
     </div>
+
+       <?php include "../includes/footer.php"; ?>
 </body>
 </html>
