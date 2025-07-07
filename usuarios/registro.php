@@ -9,7 +9,7 @@ use PHPMailer\PHPMailer\Exception;
 
 error_reporting(E_ALL);
 $error = '';
-$success = '';
+$success = ''; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conexion = new Conexion();
