@@ -39,6 +39,7 @@
 ## 🚀 Instalación y Configuración
 
 ### Requisitos del Sistema
+- Servidor Web (Apache) o cualquiera de su preferencia
 - PHP 7.4 o superior
 - PostgreSQL 17
 - Composer (para dependencias PHP)
@@ -90,13 +91,9 @@ Proyecto2P_Event/
 ## 📧 Contacto
 
 - **Desarrolladores**:
-- [Sebastián]  - SebasIsd
-- [viviana]    - maribelsailema
-- [Alex]       - alexJonarey
-- [Anthony]    - zamukay
+  - [Sebastián]  - SebasIsd
+  - [viviana]    - maribelsailema
+  - [Alex]       - alexJonarey
+  - [Anthony]    - zamukay
 - **GitHub**: [https://github.com/SebasIsd](https://github.com/SebasIsd)
 - **Issues**: [Reportar problemas](https://github.com/SebasIsd/Proyecto2P_Event/issues)
-
-## 📄 Licencia
-
-Este proyecto está bajo la licencia MIT. Ver archivo `LICENSE` para más detalles.
