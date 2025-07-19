@@ -1,6 +1,5 @@
     <?php
     // validaciones.php
-
     function validarCedulaEcuatoriana($cedula) {
         if (strlen($cedula) != 10 || !is_numeric($cedula)) {
             return false;
