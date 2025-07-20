@@ -553,11 +553,11 @@ $conexion->cerrar();
         <!-- Carrusel dinámico -->
         <div class="banner-carousel main-carousel">
             <?php foreach($slides as $slide): ?>
-            <div class="slide" style="background-image: url('<?= htmlspecialchars($slide['link_url']) ?>')">
+            <div class="slide" style="background-image: url('<?= htmlspecialchars($slide['imagen_url']) ?>')">
                 <div class="slide-content">
                     <h2><?= htmlspecialchars($slide['titulo']) ?></h2>
                     <p><?= htmlspecialchars($slide['descripcion']) ?></p>
-                    <a href="<?= htmlspecialchars($slide['imagen_url']) ?>" class="btn">Ver mas</a>
+                    <a href="<?= htmlspecialchars($slide['link_url']) ?>" class="btn">Ver mas</a>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -668,14 +668,19 @@ $conexion->cerrar();
         <div class="footer-links">
             <h4>Contacto</h4>
             <ul>
-                <li><i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($contacto['direccion'] ?? 'No disponible') ?></li>
+                <li>
+                <i class="fas fa-map-marker-alt"></i> 
+                <a href="<?= htmlspecialchars($contacto['ubi_link']) ?>" target="_blank">
+                    <?= htmlspecialchars($contacto['direccion'] ?? 'No disponible') ?>
+                </a>
+                </li>
                 <li><i class="fas fa-phone"></i> <?= htmlspecialchars($contacto['telefono'] ?? 'No disponible') ?></li>
                 <li><i class="fas fa-envelope"></i> <?= htmlspecialchars($contacto['correo'] ?? 'No disponible') ?></li>
             </ul>
         </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2023 Facultad de Ingeniería en Sistemas, Electrónica e Industrial - Universidad Técnica de Ambato</p>
+            <p>&copy; 2025 Facultad de Ingeniería en Sistemas, Electrónica e Industrial - Universidad Técnica de Ambato</p>
         </div>
     </footer>
     

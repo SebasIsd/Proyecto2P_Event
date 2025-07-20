@@ -386,8 +386,8 @@ $conexion->cerrar();
                                 <?php if (!empty($dev['github_url'])): ?>
                                     <a href="<?= htmlspecialchars($dev['github_url']) ?>" class="social-link" target="_blank"><i class="fab fa-github"></i></a>
                                 <?php endif; ?>
-                                <?php if (!empty($dev['linkedin_url'])): ?>
-                                    <a href="<?= htmlspecialchars($dev['linkedin_url']) ?>" class="social-link" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+                                <?php if (!empty($dev['whats_url'])): ?>
+                                    <a href="<?= htmlspecialchars($dev['whats_url']) ?>" class="social-link" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
                                 <?php endif; ?>
                                 <?php if (!empty($dev['email'])): ?>
                                     <a href="mailto:<?= htmlspecialchars($dev['email']) ?>" class="social-link"><i class="fas fa-envelope"></i></a>

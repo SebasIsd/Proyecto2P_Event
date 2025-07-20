@@ -21,7 +21,7 @@ switch ($action) {
         $habilidades = $_POST['habilidades'] ?? '';
         $imagen_url = $_POST['imagen_url'] ?? '';
         $github_url = $_POST['github_url'] ?? '';
-        $linkedin_url = $_POST['linkedin_url'] ?? '';
+        $whats_url = $_POST['whats_url'] ?? '';
         $email = $_POST['email'] ?? '';
 
         // Manejo de la subida de imagen
@@ -41,8 +41,8 @@ switch ($action) {
             }
         }
 
-        $query = "INSERT INTO desarrolladores (nombre, cargo, descripcion, habilidades, imagen_url, github_url, linkedin_url, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
-        $result = pg_query_params($conn, $query, array($nombre, $cargo, $descripcion, $habilidades, $imagen_url, $github_url, $linkedin_url, $email));
+        $query = "INSERT INTO desarrolladores (nombre, cargo, descripcion, habilidades, imagen_url, github_url, whats_url, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
+        $result = pg_query_params($conn, $query, array($nombre, $cargo, $descripcion, $habilidades, $imagen_url, $github_url, $whats_url, $email));
 
         if ($result) {
             header('Location: administrarInicio.php#desarrolladores');
@@ -60,7 +60,7 @@ switch ($action) {
         $habilidades = $_POST['habilidades'] ?? '';
         $imagen_url = $_POST['imagen_url'] ?? ''; // URL existente o vacía si se sube una nueva
         $github_url = $_POST['github_url'] ?? '';
-        $linkedin_url = $_POST['linkedin_url'] ?? '';
+        $whats_url = $_POST['whats_url'] ?? '';
         $email = $_POST['email'] ?? '';
 
         // Obtener la URL de la imagen actual para posible eliminación
@@ -94,8 +94,8 @@ switch ($action) {
         }
 
 
-        $query = "UPDATE desarrolladores SET nombre = $1, cargo = $2, descripcion = $3, habilidades = $4, imagen_url = $5, github_url = $6, linkedin_url = $7, email = $8 WHERE id = $9";
-        $result = pg_query_params($conn, $query, array($nombre, $cargo, $descripcion, $habilidades, $imagen_url, $github_url, $linkedin_url, $email, $id));
+        $query = "UPDATE desarrolladores SET nombre = $1, cargo = $2, descripcion = $3, habilidades = $4, imagen_url = $5, github_url = $6, whats_url = $7, email = $8 WHERE id = $9";
+        $result = pg_query_params($conn, $query, array($nombre, $cargo, $descripcion, $habilidades, $imagen_url, $github_url, $whats_url, $email, $id));
 
         if ($result) {
             header('Location: administrarInicio.php#desarrolladores');

@@ -8,40 +8,64 @@ $conn = $db->getConexion();
 $action = $_POST['action'] ?? '';
 
 switch ($action) {
-    case 'update': // Contacto generalmente solo se actualiza, no se añade o elimina múltiples
-        $id = $_POST['id'] ?? '';
-        $direccion = $_POST['direccion'] ?? '';
-        $telefono = $_POST['telefono'] ?? '';
-        $correo = $_POST['correo'] ?? '';
-
-        $query = "UPDATE contacto SET direccion = $1, telefono = $2, correo = $3 WHERE id = $4";
-        $result = pg_query_params($conn, $query, array($direccion, $telefono, $correo, $id));
-
+    case 'add':
+        $nombre = $_POST['nombre'] ?? '';
+        $cargo = $_POST['cargo'] ?? '';
+        $dependencia = $_POST['dependencia'] ?? '';
+        $imagen_url = $_POST['imagen_url'] ?? '';
+        
+        $query = "INSERT INTO autoridades (nombre, cargo, dependencia, imagen_url) 
+                  VALUES ($1, $2, $3, $4)";
+        $result = pg_query_params($conn, $query, array($nombre, $cargo, $dependencia, $imagen_url));
+        
         if (!$result) {
-            error_log("Error al actualizar contacto: " . pg_last_error($conn));
-            echo "Error al actualizar la información de contacto.";
+            error_log("Error al agregar autoridad: " . pg_last_error($conn));
+            $_SESSION['error'] = "Error al agregar la autoridad.";
+        } else {
+            $_SESSION['success'] = "Autoridad agregada correctamente.";
         }
         break;
 
-    // Puedes añadir un caso 'add' si necesitas inicializar el contacto si no existe
-    // case 'add':
-    //     $direccion = $_POST['direccion'] ?? '';
-    //     $telefono = $_POST['telefono'] ?? '';
-    //     $correo = $_POST['correo'] ?? '';
-    //     $query = "INSERT INTO contacto (direccion, telefono, correo) VALUES ($1, $2, $3)";
-    //     $result = pg_query_params($conn, $query, array($direccion, $telefono, $correo));
-    //     if (!$result) {
-    //         error_log("Error al agregar contacto: " . pg_last_error($conn));
-    //         echo "Error al agregar la información de contacto.";
-    //     }
-    //     break;
+    case 'update':
+        $id = $_POST['id'] ?? '';
+        $nombre = $_POST['nombre'] ?? '';
+        $cargo = $_POST['cargo'] ?? '';
+        $dependencia = $_POST['dependencia'] ?? '';
+        $imagen_url = $_POST['imagen_url'] ?? '';
+        
+        $query = "UPDATE autoridades 
+                  SET nombre = $1, cargo = $2, dependencia = $3, imagen_url = $4 
+                  WHERE id = $5";
+        $result = pg_query_params($conn, $query, array($nombre, $cargo, $dependencia, $imagen_url, $id));
+        
+        if (!$result) {
+            error_log("Error al actualizar autoridad: " . pg_last_error($conn));
+            $_SESSION['error'] = "Error al actualizar la autoridad.";
+        } else {
+            $_SESSION['success'] = "Autoridad actualizada correctamente.";
+        }
+        break;
+
+    case 'delete':
+        $id = $_POST['id'] ?? '';
+        
+        $query = "DELETE FROM autoridades WHERE id = $1";
+        $result = pg_query_params($conn, $query, array($id));
+        
+        if (!$result) {
+            error_log("Error al eliminar autoridad: " . pg_last_error($conn));
+            $_SESSION['error'] = "Error al eliminar la autoridad.";
+        } else {
+            $_SESSION['success'] = "Autoridad eliminada correctamente.";
+        }
+        break;
 
     default:
-        // No action specified, do nothing or redirect
+        $_SESSION['error'] = "Acción no válida.";
         break;
 }
 
 $db->cerrar();
-header("Location: administrarInicio.php#contacto");
+header("Location: administrarInicio.php#autoridades");
 exit;
 ?>

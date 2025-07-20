@@ -45,7 +45,8 @@ CREATE TABLE EVENTOS_CURSOS (
     FEC_FIN_EVE_CUR DATE NOT NULL,
     COS_EVE_CUR DECIMAL(10,2) NOT NULL,
     MOD_EVE_CUR tipo_modalidad NOT NULL,
-    ID_TIPO_EVE 
+    ID_TIPO_EVE INT NOT NULL,  -- Columna definida primero
+    -- Luego las restricciones
     FOREIGN KEY (ID_TIPO_EVE) REFERENCES TIPOS_EVENTO(ID_TIPO_EVE) ON DELETE RESTRICT
 );
 
@@ -87,8 +88,7 @@ CREATE TABLE CERTIFICADOS (
     ID_INS INT NOT NULL,
     FEC_EMI_CER DATE NOT NULL,
     HTML_GENERADO TEXT,
-    FOREIGN KEY (ID_INS) REFERENCES INSCRIPCIONES(ID_INS),
-    FOREIGN KEY (ID_PLAN_CER) REFERENCES PLANTILLAS_CERTIFICADOS(ID_PLAN_CER)
+    FOREIGN KEY (ID_INS) REFERENCES INSCRIPCIONES(ID_INS)
 );
 
 
@@ -154,4 +154,47 @@ CREATE TABLE EVIDENCIAS_REQUISITOS (
     FECHA_SUBIDA TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ID_INS) REFERENCES INSCRIPCIONES(ID_INS),
     FOREIGN KEY (ID_REQ) REFERENCES REQUISITOS(ID_REQ)
+);
+
+CREATE TABLE carrusel (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255),
+    descripcion TEXT,
+    link_url VARCHAR(255),
+    imagen_url VARCHAR(255) -- ruta del archivo
+);
+
+CREATE TABLE autoridades (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255),
+    cargo VARCHAR(255),
+    dependencia VARCHAR(255),
+    imagen_url VARCHAR(255) -- ruta del archivo
+);
+
+CREATE TABLE contacto (
+    id SERIAL PRIMARY KEY,
+    direccion TEXT,
+    telefono VARCHAR(50),
+    correo VARCHAR(100),
+    ubi_link VARCHAR(255) -- Enlace a Google Maps u otra ubicación
+);
+
+CREATE TABLE sobre_nosotros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255),
+    descripcion TEXT,
+    imagen_url VARCHAR(255) -- ruta del archivo
+);
+
+CREATE TABLE DESARROLLADORES (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255),
+    cargo VARCHAR(255),
+    descripcion TEXT,
+    habilidades VARCHAR(255),
+    github_url VARCHAR(255), 
+    whats_url VARCHAR(255),
+    email VARCHAR(100),
+    imagen_url VARCHAR(255) -- ruta del archivo
 );

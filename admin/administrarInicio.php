@@ -563,6 +563,8 @@ $desarrolladores = pg_fetch_all($resultDesarrolladores);
                 <input type="text" name="telefono" id="edit-contacto-telefono" value="<?= htmlspecialchars($contacto['telefono']) ?>" required>
                 <label>Correo Electrónico</label>
                 <input type="email" name="correo" id="edit-contacto-correo" value="<?= htmlspecialchars($contacto['correo']) ?>" required>
+                <label>URL de Google Maps</label>
+                <input type="text" name="ubi_link" id="edit-contacto-ubi" value="<?= htmlspecialchars($contacto['ubi_link']) ?>" required>
                 <button type="submit" class="btn">Guardar Cambios</button>
             </form>
         </div>
@@ -873,6 +875,7 @@ $desarrolladores = pg_fetch_all($resultDesarrolladores);
             form.querySelector('#edit-contacto-direccion').value = data.direccion;
             form.querySelector('#edit-contacto-telefono').value = data.telefono;
             form.querySelector('#edit-contacto-correo').value = data.correo;
+            form.querySelector('#edit-contacto-ubi').value = data.ubi_link;
         } else if (modalId === 'sobre-edit-modal') {
             // Sobre Nosotros specific fields
             form.querySelector('#edit-sobre-titulo').value = data.titulo;
